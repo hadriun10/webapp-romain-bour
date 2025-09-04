@@ -426,7 +426,7 @@ export default function ResultsPage() {
         transition={{ duration: 0.6, ease: 'easeOut' }}
         className="bg-white shadow-sm py-4 relative z-10"
       >
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center">
             <Image
               src="/mimprep-logo.png"
@@ -440,7 +440,7 @@ export default function ResultsPage() {
       </motion.header>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-6 py-8 relative z-10">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 relative z-10">
         {/* Espaceur invisible pour centrer la barre de chargement */}
         {showSpacer && (
           <motion.div

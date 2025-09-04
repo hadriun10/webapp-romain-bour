@@ -58,9 +58,9 @@ export default function SectionScores({ sections, onComplete }: SectionScoresPro
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut', delay: 0.2 }}
-      className="w-full bg-white rounded-xl shadow-lg mb-8 overflow-hidden"
+      className="w-full bg-white rounded-xl shadow-lg mb-8 overflow-hidden mx-2 sm:mx-0"
     >
-      <h2 className="text-2xl font-bold text-gray-900 mb-8 p-8 pb-0 text-center relative">
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8 p-4 sm:p-8 pb-0 text-center relative">
         <span className="relative inline-block">
           Score Breakdown
           <motion.div
@@ -77,9 +77,9 @@ export default function SectionScores({ sections, onComplete }: SectionScoresPro
         </span>
       </h2>
       
-      <div className="px-8 pb-8">
+      <div className="px-4 sm:px-8 pb-6 sm:pb-8">
         {/* En-tête du tableau avec style de la page de garde */}
-        <div className="grid grid-cols-12 gap-4 bg-[#2C2C2C] text-white font-bold py-3 px-4 border border-[#555555]"
+        <div className="grid grid-cols-12 gap-2 sm:gap-4 bg-[#2C2C2C] text-white font-bold py-2 sm:py-3 px-2 sm:px-4 border border-[#555555] text-sm sm:text-base"
              style={{ 
                boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
              }}>
@@ -100,18 +100,18 @@ export default function SectionScores({ sections, onComplete }: SectionScoresPro
                 ease: 'easeOut',
                 delay: index * 0.5
               }}
-              className={`grid grid-cols-12 gap-4 py-3 px-4 border-b border-gray-100 last:border-b-0 ${
+              className={`grid grid-cols-12 gap-2 sm:gap-4 py-2 sm:py-3 px-2 sm:px-4 border-b border-gray-100 last:border-b-0 ${
                 index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
               }`}
             >
               {/* Colonne 1: Category */}
               <div className="col-span-4 flex items-center">
-                <span className="font-medium text-gray-800">{section.name}</span>
+                <span className="font-medium text-gray-800 text-sm sm:text-base">{section.name}</span>
               </div>
               
               {/* Colonne 2: Score */}
               <div className="col-span-2 flex items-center justify-center">
-                <div className="text-lg font-bold text-gray-900">
+                <div className="text-base sm:text-lg font-bold text-gray-900">
                   <AnimatedCounter 
                     value={section.score} 
                     duration={2000}
@@ -144,13 +144,13 @@ export default function SectionScores({ sections, onComplete }: SectionScoresPro
           transition={{ duration: 0.3, ease: 'easeOut', delay: 0.4 }}
           className="mt-3 mb-4 flex justify-center"
         >
-          <div className="bg-[#2C2C2C] text-white font-bold py-3 px-16 border border-[#555555] rounded-xl flex items-center gap-6"
+          <div className="bg-[#2C2C2C] text-white font-bold py-2 sm:py-3 px-8 sm:px-16 border border-[#555555] rounded-xl flex items-center gap-3 sm:gap-6"
                style={{ 
                  boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
                }}>
-            <span className="text-lg">Total Score</span>
-            <div className="px-6 py-2 rounded-lg bg-blue-50 text-blue-700 border-blue-200">
-              <span className="font-bold text-lg">
+            <span className="text-sm sm:text-lg">Total Score</span>
+            <div className="px-4 sm:px-6 py-1 sm:py-2 rounded-lg bg-blue-50 text-blue-700 border-blue-200">
+              <span className="font-bold text-sm sm:text-lg">
                 {sortedSections.reduce((sum, section) => sum + section.score, 0)}/
                 {sortedSections.reduce((sum, section) => sum + section.maxScore, 0)}
               </span>

@@ -82,7 +82,7 @@ export default function GlobalScore({ score, maxScore, onComplete }: GlobalScore
       className="w-full mb-6"
     >
       <div className="text-center mb-4">
-        <h2 className="text-2xl font-bold text-gray-900 relative inline-block">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 relative inline-block">
           Your CV Score
           <motion.div
             className="absolute bottom-0 left-0 h-1.5 bg-blue-500 rounded-full"
@@ -99,9 +99,9 @@ export default function GlobalScore({ score, maxScore, onComplete }: GlobalScore
       </div>
       
       {/* Container avec marge et ombres */}
-      <div className="p-4 bg-white rounded-3xl shadow-lg border border-gray-100">
+      <div className="p-3 sm:p-4 bg-white rounded-3xl shadow-lg border border-gray-100 mx-2 sm:mx-0">
         {/* Barre de progression */}
-        <div className="relative w-full h-20 bg-gray-200 rounded-2xl overflow-hidden mb-4">
+        <div className="relative w-full h-16 sm:h-20 bg-gray-200 rounded-2xl overflow-hidden mb-4">
           {/* Barre de progression - prend toute la largeur */}
           <motion.div
             className="absolute inset-0 rounded-2xl"
@@ -118,20 +118,20 @@ export default function GlobalScore({ score, maxScore, onComplete }: GlobalScore
         {/* Case isolée pour le score */}
         <div className="flex justify-center">
           <motion.div
-            className="bg-white border-2 border-gray-200 rounded-xl px-8 py-4 shadow-lg"
+            className="bg-white border-2 border-gray-200 rounded-xl px-6 sm:px-8 py-3 sm:py-4 shadow-lg"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3, delay: 0.2 }}
           >
             <div className="text-center">
-              <div className="text-4xl font-bold text-gray-800">
+              <div className="text-3xl sm:text-4xl font-bold text-gray-800">
                 <AnimatedCounter 
                   value={score} 
                   duration={6000}
                   shouldStart={shouldStartCounter}
                   onComplete={handleCounterComplete}
                 />
-                <span className="text-2xl text-gray-600">/{maxScore}</span>
+                <span className="text-xl sm:text-2xl text-gray-600">/{maxScore}</span>
               </div>
             </div>
           </motion.div>

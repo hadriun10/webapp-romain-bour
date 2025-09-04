@@ -57,7 +57,7 @@ export default function DetailSection({
         transition={{ duration: 0.5, ease: 'easeOut' }}
         className="text-center mb-6"
       >
-        <h3 className="text-3xl font-bold text-gray-900 relative inline-block">
+        <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 relative inline-block">
           {title}
           <motion.div
             className="absolute bottom-0 left-0 h-1.5 bg-blue-500 rounded-full"
@@ -78,10 +78,10 @@ export default function DetailSection({
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
         transition={{ duration: 0.5, ease: 'easeOut', delay: delay + 0.1 }}
-        className="bg-white rounded-xl shadow-lg overflow-hidden"
+        className="bg-white rounded-xl shadow-lg overflow-hidden mx-2 sm:mx-0"
       >
         {/* En-tête du tableau avec style de la page de garde */}
-        <div className="grid grid-cols-12 gap-4 bg-[#2C2C2C] text-white font-bold py-3 px-4 border border-[#555555]"
+        <div className="grid grid-cols-12 gap-2 sm:gap-4 bg-[#2C2C2C] text-white font-bold py-2 sm:py-3 px-2 sm:px-4 border border-[#555555] text-sm sm:text-base"
              style={{ 
                boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
              }}>
@@ -101,7 +101,7 @@ export default function DetailSection({
                 ease: 'easeOut',
                 delay: 0.2 + (index * 0.05)
               }}
-              className={`grid grid-cols-12 gap-4 py-3 px-4 border-b border-gray-100 last:border-b-0 ${
+              className={`grid grid-cols-12 gap-2 sm:gap-4 py-2 sm:py-3 px-2 sm:px-4 border-b border-gray-100 last:border-b-0 ${
                 index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
               }`}
             >
@@ -111,11 +111,11 @@ export default function DetailSection({
                   ? 'items-center' 
                   : 'flex-col'
               }`}>
-                <span className="font-bold text-gray-800">
+                <span className="font-bold text-gray-800 text-sm sm:text-base">
                   {criterion.name}
                 </span>
                 {criterion.feedback && criterion.score < criterion.maxScore && (
-                  <div className="mt-1 text-sm text-gray-600 text-justify">
+                  <div className="mt-1 text-xs sm:text-sm text-gray-600 text-justify">
                     <span className="font-bold">→ Feedback :</span> {criterion.feedback}
                   </div>
                 )}
@@ -136,13 +136,13 @@ export default function DetailSection({
           transition={{ duration: 0.3, ease: 'easeOut', delay: delay + 0.4 }}
           className="mt-3 mb-4 flex justify-center"
         >
-          <div className="bg-[#2C2C2C] text-white font-bold py-3 px-16 border border-[#555555] rounded-xl flex items-center gap-6"
+          <div className="bg-[#2C2C2C] text-white font-bold py-2 sm:py-3 px-8 sm:px-16 border border-[#555555] rounded-xl flex items-center gap-3 sm:gap-6"
                style={{ 
                  boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
                }}>
-            <span className="text-lg">Score</span>
-            <div className={`px-6 py-2 rounded-lg ${getTotalBadgeStyle()}`}>
-              <span className="font-bold text-lg">{totalScore}/{maxScore}</span>
+            <span className="text-sm sm:text-lg">Score</span>
+            <div className={`px-4 sm:px-6 py-1 sm:py-2 rounded-lg ${getTotalBadgeStyle()}`}>
+              <span className="font-bold text-sm sm:text-lg">{totalScore}/{maxScore}</span>
             </div>
           </div>
         </motion.div>
