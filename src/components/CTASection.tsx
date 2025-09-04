@@ -15,14 +15,14 @@ export default function CTASection({ targetFlag, targetReason, delay = 0 }: CTAS
     <motion.div
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
+      transition={{ duration: 0.4, ease: 'easeOut', delay }}
       className="w-full mb-8"
     >
       {isTop5Percent ? (
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-8 text-white text-center">
           <h3 className="text-2xl font-bold mb-4">You have the potential to aim very high</h3>
           <p className="text-blue-100 mb-6 leading-relaxed text-justify">
-            {targetReason || "Our tool has identified your profile as exceptional - you have the exact combination of experiences, achievements, and potential that top-tier programs are looking for."} We've already successfully guided candidates with similar profiles to their dream schools, and we can do the same for you.
+            {targetReason || "Our tool has identified your profile as exceptional - you have the exact combination of experiences, achievements, and potential that top-tier programs are looking for."} We&apos;ve already successfully guided candidates with similar profiles to their dream schools, and we can do the same for you.
           </p>
           <p className="text-blue-100 mb-6 text-justify">
             We don&apos;t offer this to everyone, but we&apos;d love to help you prepare for your entire application 

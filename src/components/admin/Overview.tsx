@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 // Données factices mais réalistes et visibles
 const generateRealisticChartData = (days: number, baseValue: number, variance: number, trend: number = 0) => {
@@ -30,13 +30,13 @@ export default function Overview() {
   const [targetLeadsChartData] = useState(generateRealisticChartData(30, 8, 5, 0.1))
 
   // Trouver les valeurs max pour l'échelle des graphiques
-  const getMaxValue = (data: any[]) => {
+  const getMaxValue = (data: { value: number; date: string }[]) => {
     return Math.max(...data.map(item => item.value))
   }
 
   // Composant de graphique en ligne avec vraies données
   const LineChart = ({ data, title, color, maxValue }: { 
-    data: any[], 
+    data: { value: number; date: string }[], 
     title: string, 
     color: string,
     maxValue: number

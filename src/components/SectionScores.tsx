@@ -51,7 +51,7 @@ export default function SectionScores({ sections, onComplete }: SectionScoresPro
       
       return () => clearTimeout(timer)
     })
-  }, [sortedSections.length])
+  }, [sortedSections])
 
   return (
     <motion.div

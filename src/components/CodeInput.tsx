@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { Key, AlertCircle, X } from 'lucide-react'
 
@@ -13,7 +13,6 @@ interface CodeInputProps {
 
 export default function CodeInput({ onCodeSubmit, isLoading = false, error, onClose }: CodeInputProps) {
   const [code, setCode] = useState('')
-  const [showForm, setShowForm] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()

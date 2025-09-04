@@ -11,6 +11,10 @@ interface NotificationState {
 export function useNotification() {
   const [notifications, setNotifications] = useState<NotificationState[]>([])
 
+  const removeNotification = useCallback((id: string) => {
+    setNotifications(prev => prev.filter(notification => notification.id !== id))
+  }, [])
+
   const addNotification = useCallback((
     type: 'success' | 'error' | 'info',
     message: string
@@ -24,11 +28,7 @@ export function useNotification() {
     setTimeout(() => {
       removeNotification(id)
     }, 5000)
-  }, [])
-
-  const removeNotification = useCallback((id: string) => {
-    setNotifications(prev => prev.filter(notification => notification.id !== id))
-  }, [])
+  }, [removeNotification])
 
   const success = useCallback((message: string) => {
     addNotification('success', message)

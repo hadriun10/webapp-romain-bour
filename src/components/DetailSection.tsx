@@ -24,8 +24,8 @@ export default function DetailSection({
   title, 
   criteria, 
   totalScore, 
-  maxScore, 
-  delay = 0 
+  maxScore,
+  delay = 0
 }: DetailSectionProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
@@ -77,7 +77,7 @@ export default function DetailSection({
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-        transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
+        transition={{ duration: 0.5, ease: 'easeOut', delay: delay + 0.1 }}
         className="bg-white rounded-xl shadow-lg overflow-hidden"
       >
         {/* En-tête du tableau avec style de la page de garde */}
@@ -133,7 +133,7 @@ export default function DetailSection({
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.3, ease: 'easeOut', delay: 0.4 }}
+          transition={{ duration: 0.3, ease: 'easeOut', delay: delay + 0.4 }}
           className="mt-3 mb-4 flex justify-center"
         >
           <div className="bg-[#2C2C2C] text-white font-bold py-3 px-16 border border-[#555555] rounded-xl flex items-center gap-6"

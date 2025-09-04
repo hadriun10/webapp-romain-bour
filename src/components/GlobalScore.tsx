@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, useMotionValue, useTransform } from 'framer-motion'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import AnimatedCounter from './AnimatedCounter'
 
 interface GlobalScoreProps {
@@ -12,9 +12,7 @@ interface GlobalScoreProps {
 
 export default function GlobalScore({ score, maxScore, onComplete }: GlobalScoreProps) {
   const [animationComplete, setAnimationComplete] = useState(false)
-  const [counterComplete, setCounterComplete] = useState(false)
   const [shouldStartCounter, setShouldStartCounter] = useState(false)
-  const animationRef = useRef<number | null>(null)
 
   // Animation de la barre avec vitesse constante
   const progress = (score / maxScore) * 100
@@ -39,7 +37,7 @@ export default function GlobalScore({ score, maxScore, onComplete }: GlobalScore
   })
 
   const handleCounterComplete = () => {
-    setCounterComplete(true)
+    // Counter completed
   }
 
   // Démarrer l'animation de la barre immédiatement
@@ -64,7 +62,7 @@ export default function GlobalScore({ score, maxScore, onComplete }: GlobalScore
     }
     
     requestAnimationFrame(animate)
-  }, []) // Déclencher seulement une fois au montage
+  }, [motionValue, progress]) // Déclencher seulement une fois au montage
 
   const handleComplete = () => {
     setAnimationComplete(true)

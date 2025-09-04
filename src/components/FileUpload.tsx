@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useState, useRef } from 'react'
 import { Upload, FileText, X } from 'lucide-react'
 
@@ -15,7 +15,6 @@ export default function FileUpload({ onFileSelect, onEmailSubmit, isUploading = 
   const [dragActive, setDragActive] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [email, setEmail] = useState('')
-  const [showForm, setShowForm] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleDrag = (e: React.DragEvent) => {

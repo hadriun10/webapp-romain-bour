@@ -1,7 +1,7 @@
 'use client'
 
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { motion, useMotionValue, useTransform } from 'framer-motion'
+import { useEffect } from 'react'
 
 interface LargeLoadingBarProps {
   onComplete?: () => void
@@ -9,7 +9,6 @@ interface LargeLoadingBarProps {
 }
 
 export default function LargeLoadingBar({ onComplete, isCompact = false }: LargeLoadingBarProps) {
-  const [animationComplete, setAnimationComplete] = useState(false)
   
   // Animation de la barre avec vitesse constante
   const motionValue = useMotionValue(0)
@@ -40,7 +39,7 @@ export default function LargeLoadingBar({ onComplete, isCompact = false }: Large
 
     // L'animation se termine exactement après 6 secondes
     const completeTimer = setTimeout(() => {
-      setAnimationComplete(true)
+      // Animation completed
       if (onComplete) {
         onComplete()
       }

@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import FileUpload from '@/components/FileUpload'
 import CodeInput from '@/components/CodeInput'
-import LoadingBar from '@/components/LoadingBar'
 import { supabase } from '@/lib/supabase'
 import FloatingNav from '@/components/FloatingNav'
 
@@ -18,7 +17,7 @@ export default function Home() {
   const [activeInterface, setActiveInterface] = useState<'none' | 'upload' | 'code'>('none')
   const router = useRouter()
 
-  const handleFileSelect = (file: File) => {
+  const handleFileSelect = () => {
     // File selected for upload
   }
 
@@ -28,7 +27,7 @@ export default function Home() {
       // Upload handled by FileUpload component
       setUploadMessage('Upload received. You will receive a code by email within 10 minutes to view your analysis.')
       setActiveInterface('none')
-    } catch (error) {
+    } catch {
       // Handle upload error
     } finally {
       setIsUploading(false)
@@ -64,7 +63,7 @@ export default function Home() {
 
       // Rediriger vers la page de résultats
       router.push(`/resultats/${code}`)
-    } catch (error) {
+    } catch {
       // Code check error occurred
       setCodeError('Erreur lors de la vérification du code.')
     } finally {
@@ -161,9 +160,11 @@ export default function Home() {
                 
                 {/* Logo Instagram principal */}
                 <div className="relative z-10 w-full h-full">
-                  <img 
+                  <Image 
                     src="/logos/logo-instagram.png" 
                     alt="Instagram" 
+                    width={200}
+                    height={200}
                     className="w-full h-full object-contain"
                   />
                 </div>
@@ -190,9 +191,11 @@ export default function Home() {
                 
                 {/* Logo Instagram principal */}
                 <div className="relative z-10 w-full h-full">
-                  <img 
+                  <Image 
                     src="/logos/logo-instagram.png" 
                     alt="Instagram" 
+                    width={200}
+                    height={200}
                     className="w-full h-full object-contain"
                   />
                 </div>
@@ -219,9 +222,11 @@ export default function Home() {
                 
                 {/* Logo Instagram principal */}
                 <div className="relative z-10 w-full h-full">
-                  <img 
+                  <Image 
                     src="/logos/logo-instagram.png" 
                     alt="Instagram" 
+                    width={200}
+                    height={200}
                     className="w-full h-full object-contain"
                   />
                 </div>
@@ -242,8 +247,8 @@ export default function Home() {
         >
           {activeInterface === 'none' && (
             <>
-              {/* Boutons côte à côte */}
-              <div className="flex gap-4 items-center">
+              {/* Boutons empilés sur mobile, côte à côte sur desktop */}
+              <div className="flex flex-col md:flex-row gap-4 items-center">
               <motion.button
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -332,96 +337,122 @@ export default function Home() {
             className="flex items-center space-x-24"
           >
             {/* HEC Paris */}
-            <img 
-              src="/logos/HEC_Paris.svg.png" 
-              alt="HEC Paris" 
-              className="h-16 w-auto object-contain"
-            />
+            <Image 
+                    src="/logos/HEC_Paris.svg.png" 
+                    alt="HEC Paris" 
+                    width={200}
+                    height={200}
+                    className="h-16 w-auto object-contain"
+                  />
 
             {/* ESSEC */}
-            <img 
-              src="/logos/ESSEC_Logo.svg" 
-              alt="ESSEC" 
-              className="h-16 w-auto object-contain"
-            />
+            <Image 
+                    src="/logos/ESSEC_Logo.svg" 
+                    alt="ESSEC" 
+                    width={200}
+                    height={200}
+                    className="h-16 w-auto object-contain"
+                  />
 
             {/* ESCP */}
-            <img 
-              src="/logos/ESCP_LOGO_CMJN.png" 
-              alt="ESCP" 
-              className="h-16 w-auto object-contain"
-            />
+            <Image 
+                    src="/logos/ESCP_LOGO_CMJN.png" 
+                    alt="ESCP" 
+                    width={200}
+                    height={200}
+                    className="h-16 w-auto object-contain"
+                  />
 
             {/* Bocconi */}
-            <img 
-              src="/logos/Bocconi_University_Logo.png" 
-              alt="Bocconi" 
-              className="h-16 w-auto object-contain"
-            />
+            <Image 
+                    src="/logos/Bocconi_University_Logo.png" 
+                    alt="Bocconi" 
+                    width={200}
+                    height={200}
+                    className="h-16 w-auto object-contain"
+                  />
 
             {/* Harvard */}
-            <img 
-              src="/logos/Harvard_University_shield.png" 
-              alt="Harvard" 
-              className="h-16 w-auto object-contain"
-            />
+            <Image 
+                    src="/logos/Harvard_University_shield.png" 
+                    alt="Harvard" 
+                    width={200}
+                    height={200}
+                    className="h-16 w-auto object-contain"
+                  />
 
             {/* LSE */}
-            <img 
-              src="/logos/LSE_Logo.svg.png" 
-              alt="LSE" 
-              className="h-16 w-auto object-contain"
-            />
+            <Image 
+                    src="/logos/LSE_Logo.svg.png" 
+                    alt="LSE" 
+                    width={200}
+                    height={200}
+                    className="h-16 w-auto object-contain"
+                  />
 
             {/* MIT */}
-            <img 
-              src="/logos/MIT_logo.svg.png" 
-              alt="MIT" 
-              className="h-16 w-auto object-contain"
-            />
+            <Image 
+                    src="/logos/MIT_logo.svg.png" 
+                    alt="MIT" 
+                    width={200}
+                    height={200}
+                    className="h-16 w-auto object-contain"
+                  />
 
             {/* London Business School */}
-            <img 
-              src="/logos/RS9327_LBS_Standard_Logo_RGB_AW-hpr.jpg" 
-              alt="LBS" 
-              className="h-16 w-auto object-contain"
-            />
+            <Image 
+                    src="/logos/RS9327_LBS_Standard_Logo_RGB_AW-hpr.jpg" 
+                    alt="LBS" 
+                    width={200}
+                    height={200}
+                    className="h-16 w-auto object-contain"
+                  />
 
             {/* Duplicate pour effet continu */}
             {/* HEC Paris */}
-            <img 
-              src="/logos/HEC_Paris.svg.png" 
-              alt="HEC Paris" 
-              className="h-16 w-auto object-contain"
-            />
+            <Image 
+                    src="/logos/HEC_Paris.svg.png" 
+                    alt="HEC Paris" 
+                    width={200}
+                    height={200}
+                    className="h-16 w-auto object-contain"
+                  />
 
             {/* ESSEC */}
-            <img 
-              src="/logos/ESSEC_Logo.svg" 
-              alt="ESSEC" 
-              className="h-16 w-auto object-contain"
-            />
+            <Image 
+                    src="/logos/ESSEC_Logo.svg" 
+                    alt="ESSEC" 
+                    width={200}
+                    height={200}
+                    className="h-16 w-auto object-contain"
+                  />
 
             {/* ESCP */}
-            <img 
-              src="/logos/ESCP_LOGO_CMJN.png" 
-              alt="ESCP" 
-              className="h-16 w-auto object-contain"
-            />
+            <Image 
+                    src="/logos/ESCP_LOGO_CMJN.png" 
+                    alt="ESCP" 
+                    width={200}
+                    height={200}
+                    className="h-16 w-auto object-contain"
+                  />
 
             {/* Bocconi */}
-            <img 
-              src="/logos/Bocconi_University_Logo.png" 
-              alt="Bocconi" 
-              className="h-16 w-auto object-contain"
-            />
+            <Image 
+                    src="/logos/Bocconi_University_Logo.png" 
+                    alt="Bocconi" 
+                    width={200}
+                    height={200}
+                    className="h-16 w-auto object-contain"
+                  />
 
             {/* Harvard */}
-            <img 
-              src="/logos/Harvard_University_shield.png" 
-              alt="Harvard" 
-              className="h-16 w-auto object-contain"
-            />
+            <Image 
+                    src="/logos/Harvard_University_shield.png" 
+                    alt="Harvard" 
+                    width={200}
+                    height={200}
+                    className="h-16 w-auto object-contain"
+                  />
           </motion.div>
         </div>
       </motion.div>

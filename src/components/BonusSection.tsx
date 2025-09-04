@@ -13,8 +13,8 @@ interface BonusSectionProps {
 export default function BonusSection({ 
   originalBullet, 
   feedback, 
-  suggestion, 
-  delay = 0 
+  suggestion,
+  delay = 0
 }: BonusSectionProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
@@ -48,18 +48,18 @@ export default function BonusSection({
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-        transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
+        transition={{ duration: 0.5, ease: 'easeOut', delay: delay + 0.1 }}
         className="w-full bg-white rounded-xl shadow-lg p-8"
       >
         {/* Texte d'introduction */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.3, ease: 'easeOut', delay: 0.2 }}
+          transition={{ duration: 0.3, ease: 'easeOut', delay: delay + 0.2 }}
           className="mb-6"
         >
           <p className="text-gray-700 leading-relaxed">
-            <span className="font-bold">The structure of your bullet points is absolutely crucial:</span> you can have the best experiences in the world, but if you don't know how to showcase them, they won't serve any purpose.
+            <span className="font-bold">The structure of your bullet points is absolutely crucial:</span> you can have the best experiences in the world, but if you don&apos;t know how to showcase them, they won&apos;t serve any purpose.
           </p>
         </motion.div>
 
@@ -67,7 +67,7 @@ export default function BonusSection({
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.3, ease: 'easeOut', delay: 0.3 }}
+          transition={{ duration: 0.3, ease: 'easeOut', delay: delay + 0.3 }}
           className="bg-gray-100 border border-gray-400 rounded-lg p-6 mb-6"
         >
           <h4 className="font-semibold text-gray-800 mb-4">Each bullet point should follow these 4 rules:</h4>
@@ -95,7 +95,7 @@ export default function BonusSection({
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.3, ease: 'easeOut', delay: 0.4 }}
+          transition={{ duration: 0.3, ease: 'easeOut', delay: delay + 0.4 }}
           className="text-center mb-8"
         >
           <p className="text-lg font-semibold text-gray-800">
@@ -107,7 +107,7 @@ export default function BonusSection({
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.3, ease: 'easeOut', delay: 0.5 }}
+          transition={{ duration: 0.3, ease: 'easeOut', delay: delay + 0.5 }}
           className="bg-blue-50 border border-blue-200 rounded-lg p-6"
         >
           <p className="text-gray-700 mb-4">

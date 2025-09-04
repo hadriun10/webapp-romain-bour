@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 
@@ -40,11 +40,7 @@ export default function Database() {
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(50)
 
-  useEffect(() => {
-    fetchUsers()
-  }, [])
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('unique_users')
@@ -62,7 +58,11 @@ export default function Database() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [sortField, sortDirection])
+
+  useEffect(() => {
+    fetchUsers()
+  }, [fetchUsers])
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -303,7 +303,7 @@ export default function Database() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {paginatedUsers.map((user, index) => (
+              {paginatedUsers.map((user) => (
                 <tr 
                   key={user.candidate_email}
                   onClick={() => setSelectedUser(user)}

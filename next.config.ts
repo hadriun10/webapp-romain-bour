@@ -33,8 +33,7 @@ const nextConfig: NextConfig = {
   // Compression
   compress: true,
   
-  // Optimisation pour la production
-  swcMinify: true,
+  // Optimisation pour la production (swcMinify est activé par défaut dans Next.js 15)
   
   // Variables d'environnement publiques
   env: {
