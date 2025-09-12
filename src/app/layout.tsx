@@ -1,23 +1,25 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const geistSans = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "MiMPrep - CV Analyser",
-  description: "Get your CV analysed in 5 minutes with our proprietary AI tool trained on 400+ successful CVs from top firms.",
-  keywords: ["CV", "resume", "analysis", "career", "job application", "MiMPrep"],
-  authors: [{ name: "MiMPrep" }],
-};
-
-export const viewport = {
-  width: "device-width",
-  initialScale: 1,
+  title: "Mimprep - Analyseur de CV",
+  description: "Analysez et optimisez votre CV avec notre outil d'analyse intelligent",
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
+  },
 };
 
 export default function RootLayout({
@@ -26,8 +28,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="font-sans antialiased bg-white text-mimprep-neutral-900">
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         {children}
       </body>
     </html>

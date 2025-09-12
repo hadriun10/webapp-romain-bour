@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Upload, FileText, X } from 'lucide-react'
 
 interface FileUploadProps {
@@ -15,7 +15,20 @@ export default function FileUpload({ onFileSelect, onEmailSubmit, isUploading = 
   const [dragActive, setDragActive] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [email, setEmail] = useState('')
+  const [feedbackGoal, setFeedbackGoal] = useState<string>('')
+  const [origin, setOrigin] = useState<string>('direct')
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Récupérer le paramètre 'origin' depuis l'URL
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const originParam = urlParams.get('origin')
+      if (originParam) {
+        setOrigin(originParam)
+      }
+    }
+  }, [])
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault()
@@ -77,7 +90,7 @@ export default function FileUpload({ onFileSelect, onEmailSubmit, isUploading = 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (email && selectedFile) {
+    if (email && selectedFile && feedbackGoal) {
       try {
         // Créer FormData pour l'envoi
         const formData = new FormData()
@@ -85,6 +98,8 @@ export default function FileUpload({ onFileSelect, onEmailSubmit, isUploading = 
         formData.append('CV', selectedFile)
         formData.append('submittedAt', new Date().toISOString())
         formData.append('formMode', 'test')
+        formData.append('origin', origin)
+        formData.append('feedback_goal', feedbackGoal)
 
         // Envoyer au webhook
         const response = await fetch('https://bankingvault.app.n8n.cloud/webhook/4b60d52f-4035-425f-aad4-f851f68a063e', {
@@ -193,9 +208,29 @@ export default function FileUpload({ onFileSelect, onEmailSubmit, isUploading = 
                 />
               </div>
 
+              <div>
+                <label htmlFor="feedback_goal" className="block text-xs font-medium text-gray-700 mb-1">
+                  Optimize my CV for:
+                </label>
+                <select
+                  id="feedback_goal"
+                  value={feedbackGoal}
+                  onChange={(e) => setFeedbackGoal(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white"
+                >
+                  <option value="" disabled>Select your goal</option>
+                  <option value="mim_mif">Top MiM / MiF Programs (LSE, HEC, LBS…)</option>
+                  <option value="finance_internship">Finance Internship</option>
+                  <option value="mba">MBA Applications</option>
+                  <option value="bachelor">Bachelor Admission</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
               <button
                 type="submit"
-                disabled={!selectedFile || !email || isUploading}
+                disabled={!selectedFile || !email || !feedbackGoal || isUploading}
                 className="w-full bg-[#2C2C2C] text-white py-2.5 px-4 rounded-lg font-semibold hover:bg-[#3C3C3C] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm border border-[#555555] shadow-sm"
               >
                 {isUploading ? 'Uploading...' : 'Get my analysis'}
