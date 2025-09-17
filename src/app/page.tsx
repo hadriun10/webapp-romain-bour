@@ -286,7 +286,7 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.8 }}
                 className="text-sm text-black font-medium -mt-1"
               >
-                (100% free - Feedbacks in 5mn)
+                (100% free - Feedback in 5mn)
               </motion.div>
             </>
           )}
