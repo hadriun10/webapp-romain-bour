@@ -99,7 +99,7 @@ export default function FileUpload({ onFileSelect, onEmailSubmit, isUploading = 
         formData.append('submittedAt', new Date().toISOString())
         formData.append('formMode', 'test')
         formData.append('origin', origin)
-        formData.append('feedback_goal', feedbackGoal)
+        formData.append('f', feedbackGoal)
 
         // Envoyer au webhook
         const response = await fetch('https://bankingvault.app.n8n.cloud/webhook/4b60d52f-4035-425f-aad4-f851f68a063e', {

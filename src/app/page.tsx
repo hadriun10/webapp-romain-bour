@@ -74,7 +74,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
       {/* Background avec carreaux gris clairs dessinés à la main */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none z-0">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="handDrawnGrid" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
@@ -98,7 +98,7 @@ export default function Home() {
       <FloatingNav />
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-6 py-12 mt-32">
+      <main className="max-w-4xl mx-auto px-6 py-12 mt-32 relative z-10">
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -117,31 +117,36 @@ export default function Home() {
           </motion.div>
 
           {/* Titre avec animation de soulignement */}
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            <span className="relative">
-              Tailored feedbacks on your CV{' '}
-              <span className="relative inline-block">
-                within 5 minutes
-                <motion.div
-                  className="absolute bottom-0 left-0 h-1.5 bg-blue-500 rounded-full"
-                  style={{ bottom: '-6px' }}
-                  initial={{ width: 0 }}
-                  animate={{ width: "100%" }}
-                  transition={{ 
-                    duration: 3.5, 
-                    ease: [0.25, 0.46, 0.45, 0.94],
-                    delay: 1
-                  }}
-                />
-              </span>
-            </span>
-          </h1>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
+            className="text-center mb-6"
+          >
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
+              Data-driven feedback on your CV
+            </h1>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 relative inline-block">
+              To turn every application into an interview.
+              <motion.div
+                className="absolute bottom-0 left-0 h-1.5 bg-blue-500 rounded-full"
+                style={{ bottom: '-6px' }}
+                initial={{ width: 0 }}
+                animate={{ width: "100%" }}
+                transition={{ 
+                  duration: 3.5, 
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                  delay: 1
+                }}
+              />
+            </h2>
+          </motion.div>
           
           {/* Espace plus grand */}
           <div className="mb-12"></div>
 
           {/* Liste avec icônes de vérification Instagram animées - Layout horizontal élargi */}
-          <div className="flex justify-center items-start space-x-16 mt-8">
+          <div className="flex justify-center items-start space-x-4 mt-8">
             <div className="flex flex-col items-center text-center">
               {/* Logo Instagram scintillant bleu avec animation montée/descente */}
               <motion.div
@@ -169,7 +174,7 @@ export default function Home() {
                   />
                 </div>
               </motion.div>
-              <span className="text-sm text-gray-700 font-medium max-w-40">Comprehensive score & explanations</span>
+              <span className="text-sm text-gray-700 font-medium max-w-52">Based on target-school career center templates</span>
             </div>
             
             <div className="flex flex-col items-center text-center">
@@ -200,7 +205,7 @@ export default function Home() {
                   />
                 </div>
               </motion.div>
-              <span className="text-sm text-gray-700 font-medium max-w-40">Section-by-section feedback</span>
+              <span className="text-sm text-gray-700 font-medium max-w-52">Comprehensive score benchmarked against elite CVs</span>
             </div>
 
             <div className="flex flex-col items-center text-center">
@@ -231,7 +236,7 @@ export default function Home() {
                   />
                 </div>
               </motion.div>
-              <span className="text-sm text-gray-700 font-medium max-w-40">Bullet point reframing tips</span>
+              <span className="text-sm text-gray-700 font-medium max-w-52">Actionable feedback on every point of your CV</span>
             </div>
           </div>
         </motion.div>
@@ -281,7 +286,7 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.8 }}
                 className="text-sm text-black font-medium -mt-1"
               >
-                (100% free)
+                (100% free - Feedbacks in 5mn)
               </motion.div>
             </>
           )}
