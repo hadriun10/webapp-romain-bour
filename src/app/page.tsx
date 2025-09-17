@@ -126,7 +126,7 @@ export default function Home() {
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
               Data-driven feedback on your CV
             </h1>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 relative inline-block">
+            <h2 className="text-base md:text-2xl font-bold text-gray-900 relative inline-block">
               To turn every application into an interview.
               <motion.div
                 className="absolute bottom-0 left-0 h-1.5 bg-blue-500 rounded-full"
