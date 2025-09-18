@@ -117,12 +117,7 @@ export default function Home() {
           </motion.div>
 
           {/* Titre avec animation de soulignement */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
-            className="text-center mb-6"
-          >
+          <div className="text-center mb-6">
             <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-2">
               Data-driven feedback on your CV
             </h1>
@@ -140,7 +135,7 @@ export default function Home() {
                 }}
               />
             </h2>
-          </motion.div>
+          </div>
           
           {/* Espace plus grand */}
           <div className="mb-12"></div>
