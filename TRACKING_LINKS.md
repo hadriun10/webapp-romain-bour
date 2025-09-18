@@ -109,7 +109,8 @@ Quand un utilisateur clique sur `https://cv.mimprep.com?origin=linkedin`, le web
   "CV": "[File object]",
   "submittedAt": "2024-01-15T14:30:00.000Z",
   "formMode": "test",
-  "origin": "linkedin"
+  "origin": "linkedin",
+  "feedback_goal": "Get into consulting"
 }
 ```
 
