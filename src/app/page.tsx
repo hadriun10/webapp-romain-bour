@@ -98,20 +98,20 @@ export default function Home() {
       <FloatingNav />
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-6 py-12 mt-32 relative z-10">
+      <main className="max-w-4xl mx-auto px-6 py-12 mt-16 md:mt-32 relative z-10">
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
-          className="text-center mb-12"
+          className="text-center mb-6 md:mb-12"
         >
           {/* Petite box grise avec bordure */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: 'easeOut', delay: 0.3 }}
-            className="inline-block bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium mb-6 border border-gray-400"
+            className="inline-block bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium mb-6 md:mb-6 border border-gray-400 mt-6"
           >
             Tool trained on +400 successful CV
           </motion.div>
@@ -123,7 +123,7 @@ export default function Home() {
             transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
             className="text-center mb-6"
           >
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-2">
               Data-driven feedback on your CV
             </h1>
             <h2 className="text-base md:text-2xl font-bold text-gray-900 relative inline-block">

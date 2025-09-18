@@ -3,7 +3,14 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Optimisation des images
   images: {
-    domains: ['dzfppthjtzonegelebkq.supabase.co'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'dzfppthjtzonegelebkq.supabase.co',
+        port: '',
+        pathname: '/**',
+      },
+    ],
     formats: ['image/webp', 'image/avif'],
   },
   
