@@ -1,9 +1,10 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { X } from 'lucide-react'
 import FileUpload from '@/components/FileUpload'
 import CodeInput from '@/components/CodeInput'
 import { supabase } from '@/lib/supabase'
@@ -14,8 +15,24 @@ export default function Home() {
   const [uploadMessage, setUploadMessage] = useState('')
   const [codeError, setCodeError] = useState('')
   const [isCheckingCode, setIsCheckingCode] = useState(false)
-  const [activeInterface, setActiveInterface] = useState<'none' | 'upload' | 'code'>('none')
+  const [activeInterface, setActiveInterface] = useState<'none' | 'upload' | 'code' | 'no-cv'>('none')
+  const [noCvEmail, setNoCvEmail] = useState('')
+  const [noCvFirstName, setNoCvFirstName] = useState('')
+  const [isSendingNoCvEmail, setIsSendingNoCvEmail] = useState(false)
+  const [noCvMessage, setNoCvMessage] = useState('')
+  const [origin, setOrigin] = useState<string>('direct')
   const router = useRouter()
+
+  // Récupérer le paramètre 'origin' depuis l'URL
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const originParam = urlParams.get('origin')
+      if (originParam) {
+        setOrigin(originParam)
+      }
+    }
+  }, [])
 
   const handleFileSelect = () => {
     // File selected for upload
@@ -68,6 +85,39 @@ export default function Home() {
       setCodeError('Erreur lors de la vérification du code.')
     } finally {
       setIsCheckingCode(false)
+    }
+  }
+
+  const handleNoCvSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (noCvEmail && noCvFirstName) {
+      setIsSendingNoCvEmail(true)
+      try {
+        const response = await fetch('https://bankingvault.app.n8n.cloud/webhook/dont-have-cv', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: noCvEmail,
+            firstName: noCvFirstName,
+            origin: origin
+          })
+        })
+
+        if (response.ok) {
+          setNoCvMessage('Perfect! We\'ll send you the tool link so you can upload your CV later.')
+          setActiveInterface('none')
+        } else {
+          throw new Error('Failed to send email')
+        }
+      } catch (error) {
+        console.error('No CV email error:', error)
+        console.error('Error details:', error.message)
+        alert(`Error sending email: ${error.message}. Please try again.`)
+      } finally {
+        setIsSendingNoCvEmail(false)
+      }
     }
   }
 
@@ -253,7 +303,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 onClick={() => setActiveInterface('upload')}
-                  className="w-48 bg-[#2C2C2C] text-white px-3 py-2 rounded-lg font-semibold hover:bg-[#3C3C3C] transition-colors text-sm border border-[#555555] shadow-sm"
+                  className="w-64 bg-[#2C2C2C] text-white px-3 py-2 rounded-lg font-semibold hover:bg-[#3C3C3C] transition-colors text-sm border border-[#555555] shadow-sm"
                   style={{ 
                     boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
                   }}
@@ -264,13 +314,13 @@ export default function Home() {
               <motion.button
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                onClick={() => setActiveInterface('code')}
-                  className="w-48 bg-[#2C2C2C] text-white px-3 py-2 rounded-lg font-semibold hover:bg-[#3C3C3C] transition-colors text-sm border border-[#555555] shadow-sm"
+                onClick={() => setActiveInterface('no-cv')}
+                  className="w-64 bg-[#2C2C2C] text-white px-3 py-2 rounded-lg font-semibold hover:bg-[#3C3C3C] transition-colors text-sm border border-[#555555] shadow-sm"
                   style={{ 
                     boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
                   }}
                 >
-                  I already have a code
+                  I don't have my CV right now
                 </motion.button>
               </div>
               
@@ -303,6 +353,76 @@ export default function Home() {
               onClose={() => setActiveInterface('none')}
             />
           )}
+
+          {activeInterface === 'no-cv' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="w-full"
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="bg-white rounded-lg shadow-lg p-4 relative"
+              >
+                {/* Bouton de fermeture */}
+                <button
+                  onClick={() => setActiveInterface('none')}
+                  className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+
+                {/* Zone de message */}
+                <div className="text-center mb-3">
+                  <p className="text-gray-900 font-medium text-base">No worries!</p>
+                  <p className="text-gray-700 text-sm">Drop your email and we'll send you the tool link so you can upload your CV later.</p>
+                </div>
+
+                <form onSubmit={handleNoCvSubmit} className="space-y-3">
+                  <div>
+                    <label htmlFor="noCvFirstName" className="block text-xs font-medium text-gray-700 mb-1">
+                      First name
+                    </label>
+                    <input
+                      type="text"
+                      id="noCvFirstName"
+                      value={noCvFirstName}
+                      onChange={(e) => setNoCvFirstName(e.target.value)}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      placeholder="John"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="noCvEmail" className="block text-xs font-medium text-gray-700 mb-1">
+                      Email address
+                    </label>
+                    <input
+                      type="email"
+                      id="noCvEmail"
+                      value={noCvEmail}
+                      onChange={(e) => setNoCvEmail(e.target.value)}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={!noCvEmail || !noCvFirstName || isSendingNoCvEmail}
+                    className="w-full bg-[#2C2C2C] text-white py-2.5 px-4 rounded-lg font-semibold hover:bg-[#3C3C3C] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm border border-[#555555] shadow-sm"
+                  >
+                    {isSendingNoCvEmail ? 'Sending...' : 'Send me the link for later'}
+                  </button>
+                </form>
+              </motion.div>
+            </motion.div>
+          )}
         </motion.div>
 
         {/* Upload Message */}
@@ -313,6 +433,17 @@ export default function Home() {
             className="text-center text-blue-600 bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md mx-auto -mt-8"
           >
             {uploadMessage}
+          </motion.div>
+        )}
+
+        {/* No CV Message */}
+        {noCvMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center text-green-600 bg-green-50 border border-green-200 rounded-lg p-4 max-w-md mx-auto -mt-8"
+          >
+            {noCvMessage}
           </motion.div>
         )}
 
