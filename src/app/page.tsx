@@ -113,8 +113,9 @@ export default function Home() {
         }
       } catch (error) {
         console.error('No CV email error:', error)
-        console.error('Error details:', error.message)
-        alert(`Error sending email: ${error.message}. Please try again.`)
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+        console.error('Error details:', errorMessage)
+        alert(`Error sending email: ${errorMessage}. Please try again.`)
       } finally {
         setIsSendingNoCvEmail(false)
       }
@@ -320,7 +321,7 @@ export default function Home() {
                     boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
                   }}
                 >
-                  I don't have my CV right now
+                  I don&apos;t have my CV right now
                 </motion.button>
               </div>
               
@@ -378,7 +379,7 @@ export default function Home() {
                 {/* Zone de message */}
                 <div className="text-center mb-3">
                   <p className="text-gray-900 font-medium text-base">No worries!</p>
-                  <p className="text-gray-700 text-sm">Drop your email and we'll send you the tool link so you can upload your CV later.</p>
+                  <p className="text-gray-700 text-sm">Drop your email and we&apos;ll send you the tool link so you can upload your CV later.</p>
                 </div>
 
                 <form onSubmit={handleNoCvSubmit} className="space-y-3">
