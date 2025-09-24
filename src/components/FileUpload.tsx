@@ -210,7 +210,7 @@ export default function FileUpload({ onFileSelect, onEmailSubmit, isUploading = 
 
               <div>
                 <label htmlFor="feedback_goal" className="block text-xs font-medium text-gray-700 mb-1">
-                  Optimize my CV for:
+                  Optimise my CV for:
                 </label>
                 <select
                   id="feedback_goal"
