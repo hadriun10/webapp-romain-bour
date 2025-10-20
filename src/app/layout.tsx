@@ -13,12 +13,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mimprep - Analyseur de CV",
-  description: "Analysez et optimisez votre CV avec notre outil d'analyse intelligent",
+  title: "Mimprep - CV Analyzer",
+  description: "Analyze and optimize your CV with our intelligent analysis tool",
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/icon.png',
-    apple: '/icon.png',
+    icon: '/mimprep-logo.png',
+    shortcut: '/mimprep-logo.png',
+    apple: '/mimprep-logo.png',
   },
 };
 
