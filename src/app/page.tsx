@@ -42,7 +42,7 @@ export default function Home() {
     setIsUploading(true)
     try {
       // Upload handled by FileUpload component
-      setUploadMessage('Upload received. You will receive a code by email within 10 minutes to view your analysis.')
+      setUploadMessage('Profil reçu. Vous recevrez un code par email dans les 10 minutes pour voir votre analyse.')
       setActiveInterface('none')
     } catch {
       // Handle upload error
@@ -106,7 +106,7 @@ export default function Home() {
         })
 
         if (response.ok) {
-          setNoCvMessage('Perfect! We\'ll send you the tool link so you can upload your CV later.')
+          setNoCvMessage('Parfait ! Nous vous enverrons le lien pour configurer votre profil plus tard.')
           setActiveInterface('none')
         } else {
           throw new Error('Failed to send email')
@@ -164,16 +164,16 @@ export default function Home() {
             transition={{ duration: 0.4, ease: 'easeOut', delay: 0.3 }}
             className="inline-block bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium mb-6 md:mb-6 border border-gray-400 mt-6"
           >
-            Tool trained on +400 successful CV
+Plus de 80 personnes accompagnées
           </motion.div>
 
           {/* Titre avec animation de soulignement */}
           <div className="text-center mb-6">
             <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-2">
-              Data-driven feedback on your CV
+Feedback sur votre compte LinkedIn
             </h1>
             <h2 className="text-base md:text-2xl font-bold text-gray-900 relative inline-block">
-              To turn every application into an interview.
+Pour transformer tes 3 likes en client.
               <motion.div
                 className="absolute bottom-0 left-0 h-1.5 bg-blue-500 rounded-full"
                 style={{ bottom: '-6px' }}
@@ -220,7 +220,7 @@ export default function Home() {
                   />
                 </div>
               </motion.div>
-              <span className="text-sm text-gray-700 font-medium max-w-52">Based on target-school career center templates</span>
+              <span className="text-sm text-gray-700 font-medium max-w-52">Analyse complète de votre profil LinkedIn</span>
             </div>
             
             <div className="flex flex-col items-center text-center">
@@ -251,7 +251,7 @@ export default function Home() {
                   />
                 </div>
               </motion.div>
-              <span className="text-sm text-gray-700 font-medium max-w-52">Comprehensive score benchmarked against elite CVs</span>
+              <span className="text-sm text-gray-700 font-medium max-w-52">Score détaillé comparé aux profils LinkedIn d'élite</span>
             </div>
 
             <div className="flex flex-col items-center text-center">
@@ -282,7 +282,7 @@ export default function Home() {
                   />
                 </div>
               </motion.div>
-              <span className="text-sm text-gray-700 font-medium max-w-52">Actionable feedback on every point of your CV</span>
+              <span className="text-sm text-gray-700 font-medium max-w-52">Conseils actionables sur chaque section de votre profil</span>
             </div>
           </div>
         </motion.div>
@@ -309,7 +309,7 @@ export default function Home() {
                     boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
                   }}
               >
-                Upload my CV
+Configurer mon profil
               </motion.button>
               
               <motion.button
@@ -321,7 +321,7 @@ export default function Home() {
                     boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
                   }}
                 >
-                  I don&apos;t have my CV right now
+Pas de soucis, je réfléchis encore
                 </motion.button>
               </div>
               
@@ -332,7 +332,7 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.8 }}
                 className="text-sm text-black font-medium -mt-1"
               >
-                (100% free - Feedback in 5mn)
+(100% gratuit - Analyse en 5min)
               </motion.div>
             </>
           )}
@@ -378,14 +378,14 @@ export default function Home() {
 
                 {/* Zone de message */}
                 <div className="text-center mb-3">
-                  <p className="text-gray-900 font-medium text-base">No worries!</p>
-                  <p className="text-gray-700 text-sm">Drop your email and we&apos;ll send you the tool link so you can upload your CV later.</p>
+                  <p className="text-gray-900 font-medium text-base">Pas de soucis !</p>
+                  <p className="text-gray-700 text-sm">Laissez votre email et nous vous enverrons un rappel pour configurer votre profil plus tard.</p>
                 </div>
 
                 <form onSubmit={handleNoCvSubmit} className="space-y-3">
                   <div>
                     <label htmlFor="noCvFirstName" className="block text-xs font-medium text-gray-700 mb-1">
-                      First name
+Prénom
                     </label>
                     <input
                       type="text"
@@ -400,7 +400,7 @@ export default function Home() {
 
                   <div>
                     <label htmlFor="noCvEmail" className="block text-xs font-medium text-gray-700 mb-1">
-                      Email address
+Adresse email
                     </label>
                     <input
                       type="email"
@@ -418,7 +418,7 @@ export default function Home() {
                     disabled={!noCvEmail || !noCvFirstName || isSendingNoCvEmail}
                     className="w-full bg-[#2C2C2C] text-white py-2.5 px-4 rounded-lg font-semibold hover:bg-[#3C3C3C] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm border border-[#555555] shadow-sm"
                   >
-                    {isSendingNoCvEmail ? 'Sending...' : 'Send me the link for later'}
+                    {isSendingNoCvEmail ? 'Envoi en cours...' : 'Envoyez-moi le rappel'}
                   </button>
                 </form>
               </motion.div>

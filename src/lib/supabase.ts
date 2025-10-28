@@ -1,9 +1,168 @@
 import { createClient } from '@supabase/supabase-js'
 
 export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  'https://ijjnhbxbkvdwbzpcnosu.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlqam5oYnhia3Zkd2J6cGNub3N1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NDcxNjcsImV4cCI6MjA3NzIyMzE2N30.A7dgYlwbCcDdhvmtTwELc0i2tk6RZumOHZdxk90-Myw'
 )
+
+export interface LinkedInData {
+  id: string;
+  linkedin_url: string;
+  first_name: string;
+  last_name: string;
+  position: string;
+  photo_url: string;
+  cover_url: string;
+  analyzed_at: string;
+  source: string;
+  
+  // Scores globaux
+  global_total_points: number;
+  global_total_maximum: number;
+  
+  // Scores par catégorie
+  banner_total_points: number;
+  banner_total_maximum: number;
+  banner_total_categories: number;
+  
+  photo_total_points: number;
+  photo_total_maximum: number;
+  photo_total_categories: number;
+  
+  headline_total_points: number;
+  headline_total_maximum: number;
+  headline_total_categories: number;
+  
+  about_total_points: number;
+  about_total_maximum: number;
+  about_total_categories: number;
+  
+  contenu_total_points: number;
+  contenu_total_maximum: number;
+  contenu_total_categories: number;
+  
+  experiences_total_points: number;
+  experiences_total_maximum: number;
+  experiences_total_categories: number;
+  
+  cred_total_points: number;
+  cred_total_maximum: number;
+  cred_total_categories: number;
+  
+  // Critères Banner
+  banner_critere_1_titre: string;
+  banner_critere_1_points_obtenus: number;
+  banner_critere_1_points_maximum: number;
+  banner_critere_1_explication: string | null;
+  banner_critere_2_titre: string;
+  banner_critere_2_points_obtenus: number;
+  banner_critere_2_points_maximum: number;
+  banner_critere_2_explication: string | null;
+  banner_critere_3_titre: string;
+  banner_critere_3_points_obtenus: number;
+  banner_critere_3_points_maximum: number;
+  banner_critere_3_explication: string | null;
+  banner_critere_4_titre: string;
+  banner_critere_4_points_obtenus: number;
+  banner_critere_4_points_maximum: number;
+  banner_critere_4_explication: string | null;
+  
+  // Critères Photo
+  photo_critere_1_titre: string;
+  photo_critere_1_points_obtenus: number;
+  photo_critere_1_points_maximum: number;
+  photo_critere_1_explication: string | null;
+  photo_critere_2_titre: string;
+  photo_critere_2_points_obtenus: number;
+  photo_critere_2_points_maximum: number;
+  photo_critere_2_explication: string | null;
+  photo_critere_3_titre: string;
+  photo_critere_3_points_obtenus: number;
+  photo_critere_3_points_maximum: number;
+  photo_critere_3_explication: string | null;
+  
+  // Critères Headline
+  headline_critere_1_titre: string;
+  headline_critere_1_points_obtenus: number;
+  headline_critere_1_points_maximum: number;
+  headline_critere_1_explication: string | null;
+  headline_critere_2_titre: string;
+  headline_critere_2_points_obtenus: number;
+  headline_critere_2_points_maximum: number;
+  headline_critere_2_explication: string | null;
+  headline_critere_3_titre: string;
+  headline_critere_3_points_obtenus: number;
+  headline_critere_3_points_maximum: number;
+  headline_critere_3_explication: string | null;
+  headline_critere_4_titre: string;
+  headline_critere_4_points_obtenus: number;
+  headline_critere_4_points_maximum: number;
+  headline_critere_4_explication: string | null;
+  
+  // Critères About
+  about_critere_1_titre: string;
+  about_critere_1_points_obtenus: number;
+  about_critere_1_points_maximum: number;
+  about_critere_1_explication: string | null;
+  about_critere_2_titre: string;
+  about_critere_2_points_obtenus: number;
+  about_critere_2_points_maximum: number;
+  about_critere_2_explication: string | null;
+  about_critere_3_titre: string;
+  about_critere_3_points_obtenus: number;
+  about_critere_3_points_maximum: number;
+  about_critere_3_explication: string | null;
+  about_critere_4_titre: string;
+  about_critere_4_points_obtenus: number;
+  about_critere_4_points_maximum: number;
+  about_critere_4_explication: string | null;
+  
+  // Critères Contenu
+  contenu_critere_1_titre: string;
+  contenu_critere_1_points_obtenus: number;
+  contenu_critere_1_points_maximum: number;
+  contenu_critere_1_explication: string | null;
+  contenu_critere_2_titre: string;
+  contenu_critere_2_points_obtenus: number;
+  contenu_critere_2_points_maximum: number;
+  contenu_critere_2_explication: string | null;
+  contenu_critere_3_titre: string;
+  contenu_critere_3_points_obtenus: number;
+  contenu_critere_3_points_maximum: number;
+  contenu_critere_3_explication: string | null;
+  
+  // Critères Experiences
+  experiences_critere_1_titre: string;
+  experiences_critere_1_points_obtenus: number;
+  experiences_critere_1_points_maximum: number;
+  experiences_critere_1_explication: string | null;
+  experiences_critere_2_titre: string;
+  experiences_critere_2_points_obtenus: number;
+  experiences_critere_2_points_maximum: number;
+  experiences_critere_2_explication: string | null;
+  experiences_critere_3_titre: string;
+  experiences_critere_3_points_obtenus: number;
+  experiences_critere_3_points_maximum: number;
+  experiences_critere_3_explication: string | null;
+  experiences_critere_4_titre: string;
+  experiences_critere_4_points_obtenus: number;
+  experiences_critere_4_points_maximum: number;
+  experiences_critere_4_explication: string | null;
+  
+  // Critères Crédibilité
+  cred_critere_1_titre: string;
+  cred_critere_1_points_obtenus: number;
+  cred_critere_1_points_maximum: number;
+  cred_critere_1_explication: string | null;
+  cred_critere_2_titre: string;
+  cred_critere_2_points_obtenus: number;
+  cred_critere_2_points_maximum: number;
+  cred_critere_2_explication: string | null;
+  cred_critere_3_titre: string;
+  cred_critere_3_points_obtenus: number;
+  cred_critere_3_points_maximum: number;
+  cred_critere_3_explication: string | null;
+}
 
 export interface AdminUser {
   uid: string

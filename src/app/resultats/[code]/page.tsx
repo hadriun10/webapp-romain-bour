@@ -5,48 +5,45 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { supabase, CVData } from '@/lib/supabase'
+import { supabase, LinkedInData } from '@/lib/supabase'
 import GlobalScore from '@/components/GlobalScore'
 import SectionScores from '@/components/SectionScores'
 import DetailSection from '@/components/DetailSection'
-import CTASection from '@/components/CTASection'
-import CTASection2 from '@/components/CTASection2'
-import BonusSection from '@/components/BonusSection'
 
 export default function ResultsPage() {
   const params = useParams()
   const code = params.code as string
   
-  const [cvData, setCvData] = useState<CVData | null>(null)
+  const [linkedinData, setLinkedinData] = useState<LinkedInData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [animationPhase, setAnimationPhase] = useState(0)
   const [showSpacer, setShowSpacer] = useState(true)
 
   useEffect(() => {
-    const fetchCVData = async () => {
+    const fetchLinkedInData = async () => {
       try {
         const { data, error } = await supabase
-          .from('cv_result')
+          .from('database-analyse-profile')
           .select('*')
-          .eq('cv_id', code)
+          .eq('id', code)
           .single()
 
         if (error) {
-          setError('CV analysis not found')
+          setError('Analyse LinkedIn non trouvée')
           return
         }
 
-        setCvData(data)
+        setLinkedinData(data)
       } catch {
-        setError('Error loading CV analysis')
+        setError('Erreur lors du chargement de l\'analyse LinkedIn')
       } finally {
         setLoading(false)
       }
     }
 
     if (code) {
-      fetchCVData()
+      fetchLinkedInData()
     }
   }, [code])
 
@@ -97,14 +94,14 @@ export default function ResultsPage() {
         <div className="flex items-center justify-center min-h-screen relative z-10">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading your CV analysis...</p>
+            <p className="text-gray-600">Chargement de votre analyse LinkedIn...</p>
           </div>
         </div>
       </div>
     )
   }
 
-  if (error || !cvData) {
+  if (error || !linkedinData) {
     return (
       <div className="min-h-screen bg-white relative overflow-hidden">
         {/* Background avec carreaux gris clairs dessinés à la main */}
@@ -131,7 +128,7 @@ export default function ResultsPage() {
         
         <div className="flex items-center justify-center min-h-screen relative z-10">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Analysis not found</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Analyse non trouvée</h1>
             <p className="text-gray-600 mb-6">{error}</p>
             <Link 
               href="/" 
@@ -140,7 +137,7 @@ export default function ResultsPage() {
                 boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
               }}
             >
-              Back to Home
+              Retour à l'accueil
             </Link>
           </div>
         </div>
@@ -148,252 +145,68 @@ export default function ResultsPage() {
     )
   }
 
-  // Préparer les données pour les sections
+  // Préparer les données pour les sections LinkedIn
   const sections = [
     {
-      name: 'Structure & Visuals',
-      score: cvData.structure_visuals_awarded_sum,
-      maxScore: cvData.structure_visuals_max_sum
+      name: 'Bannière',
+      score: linkedinData.banner_total_points,
+      maxScore: linkedinData.banner_total_maximum
     },
     {
-      name: 'Education',
-      score: cvData.education_awarded_sum,
-      maxScore: cvData.education_max_sum
+      name: 'Photo',
+      score: linkedinData.photo_total_points,
+      maxScore: linkedinData.photo_total_maximum
     },
     {
-      name: 'Experience',
-      score: cvData.experience_awarded_sum,
-      maxScore: cvData.experience_max_sum
+      name: 'Headline',
+      score: linkedinData.headline_total_points,
+      maxScore: linkedinData.headline_total_maximum
     },
     {
-      name: 'Others',
-      score: cvData.others_awarded_sum,
-      maxScore: cvData.others_max_sum
+      name: 'À propos',
+      score: linkedinData.about_total_points,
+      maxScore: linkedinData.about_total_maximum
+    },
+    {
+      name: 'Contenu',
+      score: linkedinData.contenu_total_points,
+      maxScore: linkedinData.contenu_total_maximum
+    },
+    {
+      name: 'Expériences',
+      score: linkedinData.experiences_total_points,
+      maxScore: linkedinData.experiences_total_maximum
+    },
+    {
+      name: 'Crédibilité',
+      score: linkedinData.cred_total_points,
+      maxScore: linkedinData.cred_total_maximum
     }
   ]
 
-  // Préparer les critères détaillés
-  const structureCriteria = [
-    {
-      name: 'No photo',
-      description: cvData.no_photo_desc,
-      score: cvData.no_photo_points_awarded,
-      maxScore: cvData.no_photo_points_max,
-      feedback: cvData.no_photo_feedback
-    },
-    {
-      name: 'English CV',
-      description: cvData.english_cv_desc,
-      score: cvData.english_cv_points_awarded,
-      maxScore: cvData.english_cv_points_max,
-      feedback: cvData.english_cv_feedback
-    },
-    {
-      name: 'One page length',
-      description: cvData.one_page_length_desc,
-      score: cvData.one_page_length_points_awarded,
-      maxScore: cvData.one_page_length_points_max,
-      feedback: cvData.one_page_length_feedback
-    },
-    {
-      name: 'Single column layout',
-      description: cvData.single_column_layout_desc,
-      score: cvData.single_column_layout_points_awarded,
-      maxScore: cvData.single_column_layout_points_max,
-      feedback: cvData.single_column_layout_feedback
-    },
-    {
-      name: 'No color',
-      description: cvData.no_color_desc,
-      score: cvData.no_color_points_awarded,
-      maxScore: cvData.no_color_points_max,
-      feedback: cvData.no_color_feedback
-    },
-    {
-      name: 'Readable formatting',
-      description: cvData.readable_formatting_desc,
-      score: cvData.readable_formatting_points_awarded,
-      maxScore: cvData.readable_formatting_points_max,
-      feedback: cvData.readable_formatting_feedback
-    },
-    {
-      name: 'Uniform margins',
-      description: cvData.uniform_margins_desc,
-      score: cvData.uniform_margins_points_awarded,
-      maxScore: cvData.uniform_margins_points_max,
-      feedback: cvData.uniform_margins_feedback
-    },
-    {
-      name: 'Three section structure',
-      description: cvData.three_section_structure_desc,
-      score: cvData.three_section_structure_points_awarded,
-      maxScore: cvData.three_section_structure_points_max,
-      feedback: cvData.three_section_structure_feedback
+  // Fonction pour créer les critères d'une catégorie
+  const createCriteria = (category: string, count: number) => {
+    const criteria = []
+    for (let i = 1; i <= count; i++) {
+      criteria.push({
+        name: linkedinData[`${category}_critere_${i}_titre` as keyof LinkedInData] as string,
+        description: linkedinData[`${category}_critere_${i}_titre` as keyof LinkedInData] as string,
+        score: linkedinData[`${category}_critere_${i}_points_obtenus` as keyof LinkedInData] as number,
+        maxScore: linkedinData[`${category}_critere_${i}_points_maximum` as keyof LinkedInData] as number,
+        feedback: linkedinData[`${category}_critere_${i}_explication` as keyof LinkedInData] as string
+      })
     }
-  ]
+    return criteria
+  }
 
-  const educationCriteria = [
-    {
-      name: 'Education completeness',
-      description: cvData.education_completeness_desc,
-      score: cvData.education_completeness_points_awarded,
-      maxScore: cvData.education_completeness_points_max,
-      feedback: cvData.education_completeness_feedback
-    },
-    {
-      name: 'Honors & tests',
-      description: cvData.honors_tests_desc,
-      score: cvData.honors_tests_points_awarded,
-      maxScore: cvData.honors_tests_points_max,
-      feedback: cvData.honors_tests_feedback
-    },
-    {
-      name: 'Relevant courses',
-      description: cvData.relevant_courses_desc,
-      score: cvData.relevant_courses_points_awarded,
-      maxScore: cvData.relevant_courses_points_max,
-      feedback: cvData.relevant_courses_feedback
-    },
-    {
-      name: 'Exchanges & double degrees',
-      description: cvData.exchanges_double_degrees_desc,
-      score: cvData.exchanges_double_degrees_points_awarded,
-      maxScore: cvData.exchanges_double_degrees_points_max,
-      feedback: cvData.exchanges_double_degrees_feedback
-    }
-  ]
-
-  const experienceCriteria = [
-    {
-      name: 'Reverse chronological',
-      description: cvData.reverse_chronological_desc,
-      score: cvData.reverse_chronological_points_awarded,
-      maxScore: cvData.reverse_chronological_points_max,
-      feedback: cvData.reverse_chronological_feedback
-    },
-    {
-      name: 'Clear titles',
-      description: cvData.clear_titles_desc,
-      score: cvData.clear_titles_points_awarded,
-      maxScore: cvData.clear_titles_points_max,
-      feedback: cvData.clear_titles_feedback
-    },
-    {
-      name: 'Experience substance',
-      description: cvData.experience_substance_desc,
-      score: cvData.experience_substance_points_awarded,
-      maxScore: cvData.experience_substance_points_max,
-      feedback: cvData.experience_substance_feedback
-    },
-    {
-      name: 'Bullet count',
-      description: cvData.bullet_count_desc,
-      score: cvData.bullet_count_points_awarded,
-      maxScore: cvData.bullet_count_points_max,
-      feedback: cvData.bullet_count_feedback
-    },
-    {
-      name: 'Action verbs',
-      description: cvData.action_verbs_desc,
-      score: cvData.action_verbs_points_awarded,
-      maxScore: cvData.action_verbs_points_max,
-      feedback: cvData.action_verbs_feedback
-    },
-    {
-      name: 'Tangible outcomes',
-      description: cvData.tangible_outcomes_desc,
-      score: cvData.tangible_outcomes_points_awarded,
-      maxScore: cvData.tangible_outcomes_points_max,
-      feedback: cvData.tangible_outcomes_feedback
-    },
-    {
-      name: 'Use of numbers',
-      description: cvData.use_of_numbers_desc,
-      score: cvData.use_of_numbers_points_awarded,
-      maxScore: cvData.use_of_numbers_points_max,
-      feedback: cvData.use_of_numbers_feedback
-    },
-    {
-      name: 'Concision & clarity',
-      description: cvData.concision_clarity_desc,
-      score: cvData.concision_clarity_points_awarded,
-      maxScore: cvData.concision_clarity_points_max,
-      feedback: cvData.concision_clarity_feedback
-    }
-  ]
-
-  const othersCriteria = [
-    {
-      name: 'Professional email',
-      description: cvData.professional_email_desc,
-      score: cvData.professional_email_points_awarded,
-      maxScore: cvData.professional_email_points_max,
-      feedback: cvData.professional_email_feedback
-    },
-    {
-      name: 'Phone format',
-      description: cvData.phone_format_desc,
-      score: cvData.phone_format_points_awarded,
-      maxScore: cvData.phone_format_points_max,
-      feedback: cvData.phone_format_feedback
-    },
-    {
-      name: 'Location & mobility',
-      description: cvData.location_mobility_desc,
-      score: cvData.location_mobility_points_awarded,
-      maxScore: cvData.location_mobility_points_max,
-      feedback: cvData.location_mobility_feedback
-    },
-    {
-      name: 'Professional links',
-      description: cvData.professional_links_desc,
-      score: cvData.professional_links_points_awarded,
-      maxScore: cvData.professional_links_points_max,
-      feedback: cvData.professional_links_feedback
-    },
-    {
-      name: 'Banned header',
-      description: cvData.banned_header_desc,
-      score: cvData.banned_header_points_awarded,
-      maxScore: cvData.banned_header_points_max,
-      feedback: cvData.banned_header_feedback
-    },
-    {
-      name: 'Skills & tools',
-      description: cvData.skills_tools_desc,
-      score: cvData.skills_tools_points_awarded,
-      maxScore: cvData.skills_tools_points_max,
-      feedback: cvData.skills_tools_feedback
-    },
-    {
-      name: 'Languages',
-      description: cvData.languages_desc,
-      score: cvData.languages_points_awarded,
-      maxScore: cvData.languages_points_max,
-      feedback: cvData.languages_feedback
-    },
-    {
-      name: 'Certifications',
-      description: cvData.certifications_desc,
-      score: cvData.certifications_points_awarded,
-      maxScore: cvData.certifications_points_max,
-      feedback: cvData.certifications_feedback
-    },
-    {
-      name: 'Interests',
-      description: cvData.interests_desc,
-      score: cvData.interests_points_awarded,
-      maxScore: cvData.interests_points_max,
-      feedback: cvData.interests_feedback
-    },
-    {
-      name: 'Summary & profile',
-      description: cvData.summary_profile_desc,
-      score: cvData.summary_profile_points_awarded,
-      maxScore: cvData.summary_profile_points_max,
-      feedback: cvData.summary_profile_feedback
-    }
-  ]
+  // Préparer les critères détaillés pour chaque catégorie
+  const bannerCriteria = createCriteria('banner', linkedinData.banner_total_categories)
+  const photoCriteria = createCriteria('photo', linkedinData.photo_total_categories)
+  const headlineCriteria = createCriteria('headline', linkedinData.headline_total_categories)
+  const aboutCriteria = createCriteria('about', linkedinData.about_total_categories)
+  const contenuCriteria = createCriteria('contenu', linkedinData.contenu_total_categories)
+  const experiencesCriteria = createCriteria('experiences', linkedinData.experiences_total_categories)
+  const credCriteria = createCriteria('cred', linkedinData.cred_total_categories)
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
@@ -429,8 +242,8 @@ export default function ResultsPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center">
             <Image
-              src="/mimprep-logo.png"
-              alt="MiMPrep Logo"
+              src="/linkedin-coach-logo.svg"
+              alt="LinkedIn Coach Logo"
               width={200}
               height={60}
               className="mx-auto"
@@ -454,8 +267,8 @@ export default function ResultsPage() {
 
         {/* Global Score */}
         <GlobalScore
-          score={cvData.grand_total_awarded}
-          maxScore={cvData.grand_total_max}
+          score={linkedinData.global_total_points}
+          maxScore={linkedinData.global_total_maximum}
           onComplete={handleGlobalScoreComplete}
         />
 
@@ -467,58 +280,63 @@ export default function ResultsPage() {
           />
         )}
 
-        {/* CTA Section */}
-        {animationPhase >= 2 && (
-          <CTASection
-            targetFlag={cvData.candidate_target_flag}
-            targetReason={cvData.candidate_target_reason}
-          />
-        )}
-
         {/* Detail Sections */}
         {animationPhase >= 2 && (
           <div>
             <DetailSection
-              title="Structure & Visuals"
-              criteria={structureCriteria}
-              totalScore={cvData.structure_visuals_awarded_sum}
-              maxScore={cvData.structure_visuals_max_sum}
+              title="Bannière"
+              criteria={bannerCriteria}
+              totalScore={linkedinData.banner_total_points}
+              maxScore={linkedinData.banner_total_maximum}
               delay={0.6}
             />
             
             <DetailSection
-              title="Education"
-              criteria={educationCriteria}
-              totalScore={cvData.education_awarded_sum}
-              maxScore={cvData.education_max_sum}
+              title="Photo"
+              criteria={photoCriteria}
+              totalScore={linkedinData.photo_total_points}
+              maxScore={linkedinData.photo_total_maximum}
               delay={0.75}
             />
             
             <DetailSection
-              title="Experience"
-              criteria={experienceCriteria}
-              totalScore={cvData.experience_awarded_sum}
-              maxScore={cvData.experience_max_sum}
+              title="Headline"
+              criteria={headlineCriteria}
+              totalScore={linkedinData.headline_total_points}
+              maxScore={linkedinData.headline_total_maximum}
               delay={0.9}
             />
             
-            {/* CTA Section 2 */}
-            <CTASection2 targetFlag={cvData.candidate_target_flag} delay={1.0} />
-            
             <DetailSection
-              title="Others"
-              criteria={othersCriteria}
-              totalScore={cvData.others_awarded_sum}
-              maxScore={cvData.others_max_sum}
+              title="À propos"
+              criteria={aboutCriteria}
+              totalScore={linkedinData.about_total_points}
+              maxScore={linkedinData.about_total_maximum}
               delay={1.05}
             />
             
-            {/* Bonus Section */}
-            <BonusSection
-              originalBullet={cvData.pass4_bullet_original}
-              feedback={cvData.pass4_bullet_feedback}
-              suggestion={cvData.pass4_bullet_suggestion}
+            <DetailSection
+              title="Contenu"
+              criteria={contenuCriteria}
+              totalScore={linkedinData.contenu_total_points}
+              maxScore={linkedinData.contenu_total_maximum}
               delay={1.2}
+            />
+            
+            <DetailSection
+              title="Expériences"
+              criteria={experiencesCriteria}
+              totalScore={linkedinData.experiences_total_points}
+              maxScore={linkedinData.experiences_total_maximum}
+              delay={1.35}
+            />
+            
+            <DetailSection
+              title="Crédibilité"
+              criteria={credCriteria}
+              totalScore={linkedinData.cred_total_points}
+              maxScore={linkedinData.cred_total_maximum}
+              delay={1.5}
             />
           </div>
         )}

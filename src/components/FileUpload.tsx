@@ -17,6 +17,7 @@ export default function FileUpload({ onFileSelect, onEmailSubmit, isUploading = 
   const [email, setEmail] = useState('')
   const [feedbackGoal, setFeedbackGoal] = useState<string>('')
   const [origin, setOrigin] = useState<string>('direct')
+  const [linkedinReflection, setLinkedinReflection] = useState<boolean>(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Récupérer le paramètre 'origin' depuis l'URL
@@ -90,16 +91,19 @@ export default function FileUpload({ onFileSelect, onEmailSubmit, isUploading = 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (email && selectedFile && feedbackGoal) {
+    if (email && feedbackGoal) {
       try {
         // Créer FormData pour l'envoi
         const formData = new FormData()
         formData.append('Email', email)
-        formData.append('CV', selectedFile)
+        if (selectedFile) {
+          formData.append('CV', selectedFile)
+        }
         formData.append('submittedAt', new Date().toISOString())
         formData.append('formMode', 'test')
         formData.append('origin', origin)
         formData.append('feedback_goal', feedbackGoal)
+        formData.append('linkedin_reflection', linkedinReflection.toString())
 
         // Envoyer au webhook
         const response = await fetch('https://bankingvault.app.n8n.cloud/webhook/4b60d52f-4035-425f-aad4-f851f68a063e', {
@@ -143,19 +147,21 @@ export default function FileUpload({ onFileSelect, onEmailSubmit, isUploading = 
             <X className="w-4 h-4" />
           </button>
         )}
-            <div
-              className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
-                dragActive 
-                  ? 'border-blue-500 bg-blue-50' 
-                  : selectedFile 
-                    ? 'border-green-500 bg-green-50' 
-                    : 'border-gray-300 hover:border-gray-400'
-              }`}
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-            >
+            <div className="mb-4">
+              <p className="text-sm text-gray-600 mb-2">Optionnel : Téléchargez votre profil LinkedIn (PDF)</p>
+              <div
+                className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
+                  dragActive 
+                    ? 'border-blue-500 bg-blue-50' 
+                    : selectedFile 
+                      ? 'border-green-500 bg-green-50' 
+                      : 'border-gray-300 hover:border-gray-400'
+                }`}
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+              >
               {selectedFile ? (
                 <div className="space-y-2">
                   <FileText className="w-8 h-8 text-green-600 mx-auto" />
@@ -165,15 +171,15 @@ export default function FileUpload({ onFileSelect, onEmailSubmit, isUploading = 
                     className="text-red-500 hover:text-red-700 flex items-center gap-1 mx-auto text-sm"
                   >
                     <X className="w-3 h-3" />
-                    Remove
+                    Supprimer
                   </button>
                 </div>
               ) : (
                 <div className="space-y-2">
                   <Upload className="w-8 h-8 text-gray-400 mx-auto" />
                   <div>
-                    <p className="text-gray-600 font-medium text-sm">Drop your PDF here</p>
-                    <p className="text-gray-500 text-xs">or click to browse (max 1MB)</p>
+                  <p className="text-gray-600 font-medium text-sm">Déposez votre profil LinkedIn ici</p>
+                    <p className="text-gray-500 text-xs">ou cliquez pour parcourir (max 1MB)</p>
                   </div>
                   <input
                     ref={fileInputRef}
@@ -186,16 +192,17 @@ export default function FileUpload({ onFileSelect, onEmailSubmit, isUploading = 
                     onClick={() => fileInputRef.current?.click()}
                     className="text-blue-600 hover:text-blue-700 font-medium text-sm"
                   >
-                    Choose file
+                    Choisir un fichier
                   </button>
                 </div>
               )}
+              </div>
             </div>
 
             <form onSubmit={handleSubmit} className="mt-4 space-y-3">
               <div>
                 <label htmlFor="email" className="block text-xs font-medium text-gray-700 mb-1">
-                  Email address
+                  Adresse email
                 </label>
                 <input
                   type="email"
@@ -210,7 +217,7 @@ export default function FileUpload({ onFileSelect, onEmailSubmit, isUploading = 
 
               <div>
                 <label htmlFor="feedback_goal" className="block text-xs font-medium text-gray-700 mb-1">
-                  Optimise my CV for:
+                  Optimisez mon profil LinkedIn pour :
                 </label>
                 <select
                   id="feedback_goal"
@@ -219,21 +226,33 @@ export default function FileUpload({ onFileSelect, onEmailSubmit, isUploading = 
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white"
                 >
-                  <option value="" disabled>Select your goal</option>
-                  <option value="mim_mif">Top MiM / MiF Programs (LSE, HEC, LBS…)</option>
-                  <option value="finance_internship">Finance Internship</option>
-                  <option value="mba">MBA Applications</option>
-                  <option value="bachelor">Bachelor Admission</option>
-                  <option value="other">Other</option>
+                  <option value="" disabled>Sélectionnez votre objectif</option>
+                  <option value="independant">Indépendant / Freelance / Coach</option>
+                  <option value="dirigeant">Dirigeant / Créateur d'entreprise</option>
+                  <option value="salarie">Salarié / Manager</option>
+                  <option value="demandeur">Demandeur d'emploi / Étudiant</option>
                 </select>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="linkedinReflection"
+                  checked={linkedinReflection}
+                  onChange={(e) => setLinkedinReflection(e.target.checked)}
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <label htmlFor="linkedinReflection" className="text-xs text-gray-700">
+                  Je vais réfléchir à me faire un point de poignée sur LinkedIn
+                </label>
               </div>
 
               <button
                 type="submit"
-                disabled={!selectedFile || !email || !feedbackGoal || isUploading}
+                disabled={!email || !feedbackGoal || isUploading}
                 className="w-full bg-[#2C2C2C] text-white py-2.5 px-4 rounded-lg font-semibold hover:bg-[#3C3C3C] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm border border-[#555555] shadow-sm"
               >
-                {isUploading ? 'Uploading...' : 'Get my analysis'}
+                {isUploading ? 'Analyse en cours...' : 'Obtenir mon analyse'}
               </button>
             </form>
       </motion.div>

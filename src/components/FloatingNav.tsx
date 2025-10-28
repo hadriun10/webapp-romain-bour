@@ -16,11 +16,11 @@ export default function FloatingNav() {
         {/* Layout mobile - visible seulement sur mobile */}
         <div className="md:hidden">
           <div className="flex items-center justify-between px-4 py-3">
-            {/* Logo MiMPrep */}
+            {/* Logo LinkedIn Coach */}
             <div className="flex-shrink-0">
               <Image
-                src="/mimprep-logo.png"
-                alt="MiMPrep Logo"
+                src="/linkedin-coach-logo.svg"
+                alt="LinkedIn Coach Logo"
                 width={180}
                 height={54}
                 className="h-10 w-auto"
@@ -53,11 +53,11 @@ export default function FloatingNav() {
         {/* Layout desktop - caché sur mobile */}
         <div className="hidden md:block">
           <div className="flex items-center px-8 py-3">
-            {/* Logo MiMPrep */}
+            {/* Logo LinkedIn Coach */}
             <div className="flex-shrink-0">
               <Image
-                src="/mimprep-logo.png"
-                alt="MiMPrep Logo"
+                src="/linkedin-coach-logo.svg"
+                alt="LinkedIn Coach Logo"
                 width={180}
                 height={54}
                 className="h-14 w-auto"
@@ -83,7 +83,7 @@ export default function FloatingNav() {
                 rel="noopener noreferrer"
                 className="absolute left-2/5 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black hover:text-gray-700 font-medium text-base transition-colors"
               >
-                Masterclass
+                Coaching
               </a>
               
               {/* Smart Prep - 3/5 */}
@@ -93,7 +93,7 @@ export default function FloatingNav() {
                 rel="noopener noreferrer"
                 className="absolute left-3/5 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black hover:text-gray-700 font-medium text-base transition-colors"
               >
-                Smart Prep
+                Aviclient
               </a>
               
               {/* The Banking Vault - 4/5 */}
@@ -103,7 +103,7 @@ export default function FloatingNav() {
                 rel="noopener noreferrer"
                 className="absolute left-4/5 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black hover:text-gray-700 font-medium text-base transition-colors"
               >
-                The Banking Vault
+                Résultat
               </a>
             </div>
           </div>
