@@ -137,7 +137,7 @@ export default function ResultsPage() {
                 boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
               }}
             >
-              Retour à l'accueil
+              Retour à l&apos;accueil
             </Link>
           </div>
         </div>

@@ -34,8 +34,9 @@ export default function Home() {
     }
   }, [])
 
-  const handleFileSelect = () => {
-    // File selected for upload
+  const handleProfileLinkSubmit = (profileLink: string) => {
+    // Profile link submitted
+    console.log('Profile link submitted:', profileLink)
   }
 
   const handleEmailSubmit = async () => {
@@ -251,7 +252,7 @@ Pour transformer tes 3 likes en client.
                   />
                 </div>
               </motion.div>
-              <span className="text-sm text-gray-700 font-medium max-w-52">Score détaillé comparé aux profils LinkedIn d'élite</span>
+              <span className="text-sm text-gray-700 font-medium max-w-52">Score détaillé comparé aux profils LinkedIn d&apos;élite</span>
             </div>
 
             <div className="flex flex-col items-center text-center">
@@ -339,7 +340,7 @@ Pas de soucis, je réfléchis encore
           
           {activeInterface === 'upload' && (
             <FileUpload
-              onFileSelect={handleFileSelect}
+              onProfileLinkSubmit={handleProfileLinkSubmit}
               onEmailSubmit={handleEmailSubmit}
               isUploading={isUploading}
               onClose={() => setActiveInterface('none')}
