@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
+import { LINKEDIN_CRITERIA, CRITERIA_EXPECTATIONS } from '@/lib/linkedin-criteria'
 
 interface FileUploadProps {
   onProfileLinkSubmit: (profileLink: string) => void
@@ -17,6 +18,7 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
   const [feedbackGoal, setFeedbackGoal] = useState<string>('')
   const [origin, setOrigin] = useState<string>('direct')
   const [linkedinReflection, setLinkedinReflection] = useState<boolean>(false)
+  const [acceptInfo, setAcceptInfo] = useState<boolean>(false)
 
   // Récupérer le paramètre 'origin' depuis l'URL
   useEffect(() => {
@@ -53,7 +55,7 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
       return
     }
     
-    if (email && feedbackGoal && profileLink) {
+    if (email && feedbackGoal && profileLink && acceptInfo) {
       try {
         // Créer FormData pour l'envoi
         const formData = new FormData()
@@ -64,9 +66,14 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
         formData.append('origin', origin)
         formData.append('feedback_goal', feedbackGoal)
         formData.append('linkedin_reflection', linkedinReflection.toString())
+        formData.append('accept_info', acceptInfo.toString())
+        
+        // Ajouter les critères LinkedIn en dur
+        formData.append('linkedin_criteria', JSON.stringify(LINKEDIN_CRITERIA))
+        formData.append('criteria_expectations', JSON.stringify(CRITERIA_EXPECTATIONS))
 
         // Envoyer au webhook n8n
-        const response = await fetch('https://n8n.hadrien-grosbois.ovh/webhook-test/ad7525b9-8a18-47ea-8e89-74a26b00add9', {
+        const response = await fetch('https://n8n.hadrien-grosbois.ovh/webhook/ad7525b9-8a18-47ea-8e89-74a26b00add9', {
           method: 'POST',
           body: formData
         })
@@ -115,9 +122,6 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                 placeholder="https://linkedin.com/in/votre-nom"
               />
-              <p className="text-xs text-gray-500 mt-1">
-                Exemple : https://linkedin.com/in/votre-nom
-              </p>
             </div>
 
             <form onSubmit={handleSubmit} className="mt-4 space-y-3">
@@ -164,13 +168,27 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
                 <label htmlFor="linkedinReflection" className="text-xs text-gray-700">
-                  Je vais réfléchir à me faire un point de poignée sur LinkedIn
+                  Je réfléchis à me faire accompagner sur LinkedIn
+                </label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="acceptInfo"
+                  checked={acceptInfo}
+                  onChange={(e) => setAcceptInfo(e.target.checked)}
+                  required
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <label htmlFor="acceptInfo" className="text-xs text-gray-700">
+                  J&apos;accepte de recevoir des informations et conseils par email
                 </label>
               </div>
 
               <button
                 type="submit"
-                disabled={!email || !feedbackGoal || !profileLink || isUploading}
+                disabled={!email || !feedbackGoal || !profileLink || !acceptInfo || isUploading}
                 className="w-full bg-[#2C2C2C] text-white py-2.5 px-4 rounded-lg font-semibold hover:bg-[#3C3C3C] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm border border-[#555555] shadow-sm"
               >
                 {isUploading ? 'Analyse en cours...' : 'Obtenir mon analyse'}

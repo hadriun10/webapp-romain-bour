@@ -10,6 +10,8 @@ interface Criterion {
   score: number
   maxScore: number
   feedback?: string
+  expectation?: string
+  isMaxScore?: boolean
 }
 
 interface DetailSectionProps {
@@ -107,16 +109,21 @@ export default function DetailSection({
             >
               {/* Colonne 1: Criterion */}
               <div className={`col-span-10 sm:col-span-9 flex ${
-                !criterion.feedback || criterion.score >= criterion.maxScore 
+                !criterion.expectation && !criterion.feedback
                   ? 'items-center' 
                   : 'flex-col'
               }`}>
                 <span className="font-bold text-gray-800 text-sm sm:text-base">
                   {criterion.name}
                 </span>
-                {criterion.feedback && criterion.score < criterion.maxScore && (
+                {criterion.expectation && (
+                  <div className="mt-1 text-xs sm:text-sm text-gray-500 text-justify">
+                    <span className="font-bold">→ Attendu :</span> {criterion.expectation}
+                  </div>
+                )}
+                {criterion.feedback && (
                   <div className="mt-1 text-xs sm:text-sm text-gray-600 text-justify">
-                    <span className="font-bold">→ Feedback :</span> {criterion.feedback}
+                    <span className="font-bold">→ Feedback :</span> {criterion.isMaxScore ? 'Parfait !' : criterion.feedback}
                   </div>
                 )}
               </div>

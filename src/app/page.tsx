@@ -310,7 +310,7 @@ Pour transformer tes 3 likes en client.
                     boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
                   }}
               >
-Configurer mon profil
+Vérifiez mon profil
               </motion.button>
               
               <motion.button
@@ -322,7 +322,7 @@ Configurer mon profil
                     boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
                   }}
                 >
-Pas de soucis, je réfléchis encore
+Vérifiez plus tard
                 </motion.button>
               </div>
               

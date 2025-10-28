@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { supabase, LinkedInData } from '@/lib/supabase'
+import { LINKEDIN_CRITERIA, CRITERIA_EXPECTATIONS, SECTION_MAPPING, getCriteriaExpectation, getCriteriaTitle } from '@/lib/linkedin-criteria'
 import GlobalScore from '@/components/GlobalScore'
 import SectionScores from '@/components/SectionScores'
 import DetailSection from '@/components/DetailSection'
@@ -153,47 +154,57 @@ export default function ResultsPage() {
       maxScore: linkedinData.banner_total_maximum
     },
     {
-      name: 'Photo',
+      name: 'Photo de profil',
       score: linkedinData.photo_total_points,
       maxScore: linkedinData.photo_total_maximum
     },
     {
-      name: 'Headline',
+      name: 'Titre du profil',
       score: linkedinData.headline_total_points,
       maxScore: linkedinData.headline_total_maximum
     },
     {
-      name: 'À propos',
+      name: 'Section À propos',
       score: linkedinData.about_total_points,
       maxScore: linkedinData.about_total_maximum
     },
     {
-      name: 'Contenu',
+      name: 'Présence de contenu public',
       score: linkedinData.contenu_total_points,
       maxScore: linkedinData.contenu_total_maximum
     },
     {
-      name: 'Expériences',
+      name: 'Expériences professionnelles',
       score: linkedinData.experiences_total_points,
       maxScore: linkedinData.experiences_total_maximum
     },
     {
-      name: 'Crédibilité',
+      name: 'Crédibilité & Confiance',
       score: linkedinData.cred_total_points,
       maxScore: linkedinData.cred_total_maximum
     }
   ]
 
-  // Fonction pour créer les critères d'une catégorie
+  // Fonction pour créer les critères d'une catégorie avec les nouveaux critères
   const createCriteria = (category: string, count: number) => {
     const criteria = []
+    const mappedSection = SECTION_MAPPING[category as keyof typeof SECTION_MAPPING] || category
+    const sectionCriteria = LINKEDIN_CRITERIA[mappedSection as keyof typeof LINKEDIN_CRITERIA] || []
+    
     for (let i = 1; i <= count; i++) {
+      const criteriaTitle = sectionCriteria[i - 1] || linkedinData[`${category}_critere_${i}_titre` as keyof LinkedInData] as string
+      const score = linkedinData[`${category}_critere_${i}_points_obtenus` as keyof LinkedInData] as number
+      const maxScore = linkedinData[`${category}_critere_${i}_points_maximum` as keyof LinkedInData] as number
+      const feedback = linkedinData[`${category}_critere_${i}_explication` as keyof LinkedInData] as string
+      
       criteria.push({
-        name: linkedinData[`${category}_critere_${i}_titre` as keyof LinkedInData] as string,
-        description: linkedinData[`${category}_critere_${i}_titre` as keyof LinkedInData] as string,
-        score: linkedinData[`${category}_critere_${i}_points_obtenus` as keyof LinkedInData] as number,
-        maxScore: linkedinData[`${category}_critere_${i}_points_maximum` as keyof LinkedInData] as number,
-        feedback: linkedinData[`${category}_critere_${i}_explication` as keyof LinkedInData] as string
+        name: getCriteriaTitle(criteriaTitle),
+        description: criteriaTitle,
+        score: score,
+        maxScore: maxScore,
+        feedback: feedback,
+        expectation: getCriteriaExpectation(category, criteriaTitle),
+        isMaxScore: score === maxScore
       })
     }
     return criteria
@@ -292,7 +303,7 @@ export default function ResultsPage() {
             />
             
             <DetailSection
-              title="Photo"
+              title="Photo de profil"
               criteria={photoCriteria}
               totalScore={linkedinData.photo_total_points}
               maxScore={linkedinData.photo_total_maximum}
@@ -300,7 +311,7 @@ export default function ResultsPage() {
             />
             
             <DetailSection
-              title="Headline"
+              title="Titre du profil"
               criteria={headlineCriteria}
               totalScore={linkedinData.headline_total_points}
               maxScore={linkedinData.headline_total_maximum}
@@ -308,7 +319,7 @@ export default function ResultsPage() {
             />
             
             <DetailSection
-              title="À propos"
+              title="Section À propos"
               criteria={aboutCriteria}
               totalScore={linkedinData.about_total_points}
               maxScore={linkedinData.about_total_maximum}
@@ -316,7 +327,7 @@ export default function ResultsPage() {
             />
             
             <DetailSection
-              title="Contenu"
+              title="Présence de contenu public"
               criteria={contenuCriteria}
               totalScore={linkedinData.contenu_total_points}
               maxScore={linkedinData.contenu_total_maximum}
@@ -324,7 +335,7 @@ export default function ResultsPage() {
             />
             
             <DetailSection
-              title="Expériences"
+              title="Expériences professionnelles"
               criteria={experiencesCriteria}
               totalScore={linkedinData.experiences_total_points}
               maxScore={linkedinData.experiences_total_maximum}
@@ -332,7 +343,7 @@ export default function ResultsPage() {
             />
             
             <DetailSection
-              title="Crédibilité"
+              title="Crédibilité & Confiance"
               criteria={credCriteria}
               totalScore={linkedinData.cred_total_points}
               maxScore={linkedinData.cred_total_maximum}
