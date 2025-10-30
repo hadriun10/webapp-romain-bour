@@ -80,19 +80,20 @@ export default function DetailSection({
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
         transition={{ duration: 0.5, ease: 'easeOut', delay: delay + 0.1 }}
-        className="bg-white rounded-xl shadow-lg overflow-hidden mx-2 sm:mx-0"
+        className="bg-white rounded-2xl shadow-lg overflow-hidden mx-2 sm:mx-0 border-2 border-[#074482]/30"
       >
-        {/* En-tête du tableau avec style de la page de garde */}
-        <div className="grid grid-cols-12 gap-2 sm:gap-4 bg-[#2C2C2C] text-white font-bold py-2 sm:py-3 px-2 sm:px-4 border border-[#555555] text-sm sm:text-base"
+        {/* En-tête du tableau avec fond bleu style Romain Bour */}
+        <div className="grid grid-cols-12 gap-2 sm:gap-4 bg-[#074482] text-white font-bold py-2 sm:py-3 px-2 sm:px-4 text-sm sm:text-base"
              style={{ 
-               boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
+               fontFamily: 'var(--font-poppins)',
+               borderRadius: '0.875rem 0.875rem 0 0'
              }}>
-          <div className="col-span-10 sm:col-span-9">Criterion</div>
+          <div className="col-span-10 sm:col-span-9">Critères</div>
           <div className="col-span-2 sm:col-span-3 text-center">Score</div>
         </div>
         
         {/* Lignes du tableau - plus compactes */}
-        <div className="border border-gray-200 border-t-0">
+        <div className="border-2 border-[#074482]/30 border-t-0">
           {sortedCriteria.map((criterion, index) => (
             <motion.div
               key={criterion.name}
@@ -106,6 +107,10 @@ export default function DetailSection({
               className={`grid grid-cols-12 gap-2 sm:gap-4 py-2 sm:py-3 px-2 sm:px-4 border-b border-gray-100 last:border-b-0 ${
                 index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
               }`}
+              style={{
+                fontFamily: 'var(--font-poppins)',
+                fontSize: '14px'
+              }}
             >
               {/* Colonne 1: Criterion */}
               <div className={`col-span-10 sm:col-span-9 flex ${
@@ -117,13 +122,13 @@ export default function DetailSection({
                   {criterion.name}
                 </span>
                 {criterion.expectation && (
-                  <div className="mt-1 text-xs sm:text-sm text-gray-500 text-justify">
+                  <div className="mt-1 text-xs sm:text-sm text-gray-600 text-justify">
                     <span className="font-bold">→ Attendu :</span> {criterion.expectation}
                   </div>
                 )}
-                {criterion.feedback && (
+                {(criterion.feedback || criterion.isMaxScore) && (
                   <div className="mt-1 text-xs sm:text-sm text-gray-600 text-justify">
-                    <span className="font-bold">→ Feedback :</span> {criterion.isMaxScore ? 'Parfait !' : criterion.feedback}
+                    <span className="font-bold">→ Feedback :</span> {criterion.isMaxScore ? 'Parfait :)' : criterion.feedback}
                   </div>
                 )}
               </div>
@@ -136,20 +141,21 @@ export default function DetailSection({
           ))}
         </div>
         
-        {/* Score détaché dans un encadré noir avec bulle colorée */}
+        {/* Score détaché dans un encadré bleu avec bulle colorée */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.3, ease: 'easeOut', delay: delay + 0.4 }}
           className="mt-3 mb-4 flex justify-center"
         >
-          <div className="bg-[#2C2C2C] text-white font-bold py-2 sm:py-3 px-8 sm:px-16 border border-[#555555] rounded-xl flex items-center gap-3 sm:gap-6"
+          <div className="bg-[#074482] text-white font-bold py-2 sm:py-3 px-8 sm:px-16 border-2 border-[#074482] rounded-2xl flex items-center gap-3 sm:gap-6 shadow-lg"
                style={{ 
-                 boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
+                 fontFamily: 'var(--font-poppins)',
+                 fontSize: '14px'
                }}>
-            <span className="text-sm sm:text-lg">Score</span>
-            <div className={`px-4 sm:px-6 py-1 sm:py-2 rounded-lg ${getTotalBadgeStyle()}`}>
-              <span className="font-bold text-sm sm:text-lg">{totalScore}/{maxScore}</span>
+            <span>Score</span>
+            <div className={`px-4 sm:px-6 py-1 sm:py-2 rounded-full ${getTotalBadgeStyle()}`}>
+              <span className="font-bold">{totalScore}/{maxScore}</span>
             </div>
           </div>
         </motion.div>

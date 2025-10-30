@@ -98,7 +98,7 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="bg-white rounded-lg shadow-lg p-4 relative"
+        className="bg-white rounded-2xl shadow-lg p-6 relative border-2 border-[#074482]/30"
       >
         {/* Bouton de fermeture */}
         {onClose && (
@@ -109,25 +109,39 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
             <X className="w-4 h-4" />
           </button>
         )}
-            <div className="mb-4">
-              <label htmlFor="profileLink" className="block text-sm font-medium text-gray-700 mb-2">
-                Lien de votre profil LinkedIn
-              </label>
-              <input
-                type="url"
-                id="profileLink"
-                value={profileLink}
-                onChange={(e) => setProfileLink(e.target.value)}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                placeholder="https://linkedin.com/in/votre-nom"
-              />
-            </div>
-
-            <form onSubmit={handleSubmit} className="mt-4 space-y-3">
+            <form onSubmit={handleSubmit} className="space-y-3">
               <div>
-                <label htmlFor="email" className="block text-xs font-medium text-gray-700 mb-1">
-                  Adresse email
+                <label htmlFor="profileLink" className="block mb-2" style={{
+                  fontFamily: 'var(--font-poppins)',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: '#374151'
+                }}>
+                  Lien de votre profil LinkedIn :
+                </label>
+                <input
+                  type="url"
+                  id="profileLink"
+                  value={profileLink}
+                  onChange={(e) => setProfileLink(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border-2 border-[#074482]/30 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-[#074482] text-sm"
+                  style={{
+                    fontFamily: 'var(--font-poppins)',
+                    fontSize: '14px'
+                  }}
+                  placeholder="https://linkedin.com/in/votre-nom"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block mb-2" style={{
+                  fontFamily: 'var(--font-poppins)',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: '#374151'
+                }}>
+                  Adresse email :
                 </label>
                 <input
                   type="email"
@@ -135,13 +149,22 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  className="w-full px-3 py-2 border-2 border-[#074482]/30 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-[#074482] text-sm"
+                  style={{
+                    fontFamily: 'var(--font-poppins)',
+                    fontSize: '14px'
+                  }}
                   placeholder="your.email@example.com"
                 />
               </div>
 
               <div>
-                <label htmlFor="feedback_goal" className="block text-xs font-medium text-gray-700 mb-1">
+                <label htmlFor="feedback_goal" className="block mb-2" style={{
+                  fontFamily: 'var(--font-poppins)',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: '#374151'
+                }}>
                   Optimisez mon profil LinkedIn pour :
                 </label>
                 <select
@@ -149,7 +172,11 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
                   value={feedbackGoal}
                   onChange={(e) => setFeedbackGoal(e.target.value)}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white"
+                  className="w-full px-3 py-2 border-2 border-[#074482]/30 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-[#074482] text-sm bg-white"
+                  style={{
+                    fontFamily: 'var(--font-poppins)',
+                    fontSize: '14px'
+                  }}
                 >
                   <option value="" disabled>Sélectionnez votre objectif</option>
                   <option value="independant">Indépendant / Freelance / Coach</option>
@@ -165,10 +192,14 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
                   id="linkedinReflection"
                   checked={linkedinReflection}
                   onChange={(e) => setLinkedinReflection(e.target.checked)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-gray-300 text-[#074482] focus:ring-[#074482]"
                 />
-                <label htmlFor="linkedinReflection" className="text-xs text-gray-700">
-                  Je réfléchis à me faire accompagner sur LinkedIn
+                <label htmlFor="linkedinReflection" style={{
+                  fontFamily: 'var(--font-poppins)',
+                  fontSize: '14px',
+                  color: '#374151'
+                }}>
+                  Je réfléchis à me faire accompagner sur LinkedIn.
                 </label>
               </div>
 
@@ -179,19 +210,30 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
                   checked={acceptInfo}
                   onChange={(e) => setAcceptInfo(e.target.checked)}
                   required
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-gray-300 text-[#074482] focus:ring-[#074482]"
                 />
-                <label htmlFor="acceptInfo" className="text-xs text-gray-700">
-                  J&apos;accepte de recevoir des informations et conseils par email
+                <label htmlFor="acceptInfo" style={{
+                  fontFamily: 'var(--font-poppins)',
+                  fontSize: '14px',
+                  color: '#374151'
+                }}>
+                  <span>J&apos;accepte de recevoir des informations et conseils par email </span>
+                  <span className="text-[#074482]">(pour consulter votre résultat).</span>
                 </label>
               </div>
 
               <button
                 type="submit"
                 disabled={!email || !feedbackGoal || !profileLink || !acceptInfo || isUploading}
-                className="w-full bg-[#2C2C2C] text-white py-2.5 px-4 rounded-lg font-semibold hover:bg-[#3C3C3C] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm border border-[#555555] shadow-sm"
+                className="w-full bg-[#074482] text-white py-3 px-6 rounded-full font-semibold hover:bg-[#053a6b] disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl"
+                style={{
+                  fontFamily: 'var(--font-poppins)',
+                  fontSize: '16px',
+                  lineHeight: '24px',
+                  fontWeight: 600
+                }}
               >
-                {isUploading ? 'Analyse en cours...' : 'Obtenir mon analyse'}
+                {isUploading ? 'Analyse en cours...' : 'Découvrir comment améliorer mon profil'}
               </button>
             </form>
       </motion.div>

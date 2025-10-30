@@ -8,7 +8,39 @@ import { X } from 'lucide-react'
 import FileUpload from '@/components/FileUpload'
 import CodeInput from '@/components/CodeInput'
 import { supabase } from '@/lib/supabase'
-import FloatingNav from '@/components/FloatingNav'
+
+// Composant pour animer le texte mot par mot (effet blur -> focus)
+function AnimatedText({ 
+  text, 
+  className = '', 
+  style 
+}: { 
+  text: string
+  className?: string
+  style?: React.CSSProperties
+}) {
+  const words = text.split(' ')
+  
+  return (
+    <p className={className} style={style}>
+      {words.map((word, index) => (
+        <motion.span
+          key={index}
+          className="inline-block mr-1"
+          initial={{ opacity: 0, filter: 'blur(4px)', y: 6 }}
+          animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
+          transition={{
+            duration: 0.6,
+            delay: index * 0.05, // Délai de 50ms entre chaque mot
+            ease: 'easeOut'
+          }}
+        >
+          {word}
+        </motion.span>
+      ))}
+    </p>
+  )
+}
 
 export default function Home() {
   const [isUploading, setIsUploading] = useState(false)
@@ -34,6 +66,28 @@ export default function Home() {
     }
   }, [])
 
+  // Faire disparaître le message uploadMessage après 10 secondes
+  useEffect(() => {
+    if (uploadMessage) {
+      const timer = setTimeout(() => {
+        setUploadMessage('')
+      }, 10000) // 10 secondes
+
+      return () => clearTimeout(timer)
+    }
+  }, [uploadMessage])
+
+  // Faire disparaître le message noCvMessage après 10 secondes
+  useEffect(() => {
+    if (noCvMessage) {
+      const timer = setTimeout(() => {
+        setNoCvMessage('')
+      }, 10000) // 10 secondes
+
+      return () => clearTimeout(timer)
+    }
+  }, [noCvMessage])
+
   const handleProfileLinkSubmit = (profileLink: string) => {
     // Profile link submitted
     console.log('Profile link submitted:', profileLink)
@@ -43,7 +97,7 @@ export default function Home() {
     setIsUploading(true)
     try {
       // Upload handled by FileUpload component
-      setUploadMessage('Profil reçu. Vous recevrez un code par email dans les 10 minutes pour voir votre analyse.')
+      setUploadMessage('Profil reçu. Vous recevrez un lien par email dans les 10 minutes pour consulter votre analyse. Pensez à vérifier vos spams.')
       setActiveInterface('none')
     } catch {
       // Handle upload error
@@ -124,33 +178,39 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
-      {/* Background avec carreaux gris clairs dessinés à la main */}
+    <div className="min-h-screen bg-[#f6f7f9] relative overflow-hidden">
+      {/* Background avec image de fond style Romain Bour */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="handDrawnGrid" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-              {/* Carreaux avec des lignes légèrement irrégulières */}
-              <path d="M 0 0 L 60 0" stroke="#f3f4f6" strokeWidth="1" fill="none" opacity="0.6"/>
-              <path d="M 0 0 L 0 60" stroke="#f3f4f6" strokeWidth="1" fill="none" opacity="0.6"/>
-              
-              {/* Lignes horizontales avec légères variations */}
-              <path d="M 0 20 L 60 20" stroke="#e5e7eb" strokeWidth="0.8" fill="none" opacity="0.4"/>
-              <path d="M 0 40 L 60 40" stroke="#e5e7eb" strokeWidth="0.8" fill="none" opacity="0.4"/>
-              
-              {/* Lignes verticales avec légères variations */}
-              <path d="M 20 0 L 20 60" stroke="#e5e7eb" strokeWidth="0.8" fill="none" opacity="0.4"/>
-              <path d="M 40 0 L 40 60" stroke="#e5e7eb" strokeWidth="0.8" fill="none" opacity="0.4"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#handDrawnGrid)"/>
-        </svg>
+        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60" 
+             style={{ backgroundImage: 'url(/romainbour-bg.png)' }}>
         </div>
-      
-      <FloatingNav />
+      </div>
+
+      {/* Bouton "Découvrir le Bootcamp" en haut à droite - Style Romain Bour */}
+      <div className="fixed top-6 right-6 z-50">
+        <motion.a
+          href="https://romainbour.framer.website/"
+          target="_blank"
+          rel="noopener noreferrer"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.8 }}
+          className="bg-[#074482] text-white px-6 py-3.5 rounded-full font-semibold hover:bg-[#053a6b] transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl font-[var(--font-poppins)]"
+          style={{
+            fontSize: '17px',
+            lineHeight: '25.5px',
+            fontWeight: 600
+          }}
+        >
+          <span>Découvrir le Bootcamp</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </motion.a>
+      </div>
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-6 py-12 mt-16 md:mt-32 relative z-10">
+      <main className="max-w-4xl mx-auto px-6 py-12 mt-8 md:mt-16 relative z-10">
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -158,133 +218,100 @@ export default function Home() {
           transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
           className="text-center mb-6 md:mb-12"
         >
-          {/* Petite box grise avec bordure */}
+          {/* Badge style Romain Bour */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: 'easeOut', delay: 0.3 }}
-            className="inline-block bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium mb-6 md:mb-6 border border-gray-400 mt-6"
+            className="inline-block bg-white px-5 py-2 rounded-full mb-6 md:mb-6 border-2 border-[#074482] mt-2"
+            style={{
+              fontFamily: 'var(--font-poppins)',
+              fontSize: '15px',
+              fontWeight: 500,
+              lineHeight: '24px',
+              color: '#074482'
+            }}
           >
-Plus de 80 personnes accompagnées
+            Outil développé grâce à 5 ans d&apos;expérience et 400 profils refaits
           </motion.div>
 
-          {/* Titre avec animation de soulignement */}
+          {/* Titre style Romain Bour */}
           <div className="text-center mb-6">
-            <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-2">
-Feedback sur votre compte LinkedIn
-            </h1>
-            <h2 className="text-base md:text-2xl font-bold text-gray-900 relative inline-block">
-Pour transformer tes 3 likes en client.
-              <motion.div
-                className="absolute bottom-0 left-0 h-1.5 bg-blue-500 rounded-full"
-                style={{ bottom: '-6px' }}
-                initial={{ width: 0 }}
-                animate={{ width: "100%" }}
-                transition={{ 
-                  duration: 3.5, 
-                  ease: [0.25, 0.46, 0.45, 0.94],
-                  delay: 1
-                }}
-              />
-            </h2>
+            <div className="flex justify-center mb-4">
+              <h1 className="text-4xl md:text-6xl" style={{
+                fontFamily: 'var(--font-poppins)',
+                fontWeight: 600,
+                lineHeight: '1.2',
+                letterSpacing: '-0.02em',
+                color: '#191919'
+              }}>
+                Votre profil <span style={{ color: '#074482' }}>LinkedIn</span> est-il à la hauteur ?
+              </h1>
+            </div>
+            <AnimatedText
+              text="En deux minutes, découvrez tous les axes d'amélioration pour briller face à vos concurrents et transformer vos 10 likes en 3 clients"
+              className="text-base md:text-lg mx-auto"
+              style={{
+                fontFamily: 'var(--font-poppins)',
+                fontWeight: 400,
+                lineHeight: '1.6',
+                letterSpacing: '-0.01em',
+                color: '#191919',
+                maxWidth: '800px',
+                textAlign: 'center'
+              }}
+            />
           </div>
-          
-          {/* Espace plus grand */}
-          <div className="mb-12"></div>
 
-          {/* Liste avec icônes de vérification Instagram animées - Layout horizontal élargi */}
-          <div className="flex justify-center items-start space-x-4 mt-8">
-            <div className="flex flex-col items-center text-center">
-              {/* Logo Instagram scintillant bleu avec animation montée/descente */}
-              <motion.div
-                animate={{ 
-                  y: [0, -8, 0]
-                }}
-                transition={{ 
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="w-10 h-10 mb-3 relative"
-              >
-                {/* Effet scintillant bleu */}
-                <div className="absolute inset-0 bg-blue-400 rounded-full blur-md opacity-60 animate-pulse"></div>
-                
-                {/* Logo Instagram principal */}
-                <div className="relative z-10 w-full h-full">
-                  <Image 
-                    src="/logos/logo-instagram.png" 
-                    alt="Instagram" 
-                    width={200}
-                    height={200}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-              </motion.div>
-              <span className="text-sm text-gray-700 font-medium max-w-52">Analyse complète de votre profil LinkedIn</span>
-            </div>
-            
-            <div className="flex flex-col items-center text-center">
-              {/* Logo Instagram scintillant bleu avec animation montée/descente */}
-              <motion.div
-                animate={{ 
-                  y: [0, -8, 0]
-                }}
-                transition={{ 
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.5
-                }}
-                className="w-10 h-10 mb-3 relative"
-              >
-                {/* Effet scintillant bleu */}
-                <div className="absolute inset-0 bg-blue-400 rounded-full blur-md opacity-60 animate-pulse"></div>
-                
-                {/* Logo Instagram principal */}
-                <div className="relative z-10 w-full h-full">
-                  <Image 
-                    src="/logos/logo-instagram.png" 
-                    alt="Instagram" 
-                    width={200}
-                    height={200}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-              </motion.div>
-              <span className="text-sm text-gray-700 font-medium max-w-52">Score détaillé comparé aux profils LinkedIn d&apos;élite</span>
-            </div>
+          {/* Badges style Romain Bour */}
+          <div className="flex flex-col md:flex-row justify-center items-center gap-3 mt-8 px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.4 }}
+              className="flex items-center gap-3 bg-white border border-gray-200 rounded-full px-5 py-2.5 max-w-md w-full md:w-auto"
+            >
+              <div className="bg-[#074482] rounded-full p-2 flex-shrink-0">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <span className="text-sm font-medium text-gray-700" style={{ fontFamily: 'var(--font-poppins)' }}>
+                Votre profil scoré sur 100
+              </span>
+            </motion.div>
 
-            <div className="flex flex-col items-center text-center">
-              {/* Logo Instagram scintillant bleu avec animation montée/descente */}
-              <motion.div
-                animate={{ 
-                  y: [0, -8, 0]
-                }}
-                transition={{ 
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 1
-                }}
-                className="w-10 h-10 mb-3 relative"
-              >
-                {/* Effet scintillant bleu */}
-                <div className="absolute inset-0 bg-blue-400 rounded-full blur-md opacity-60 animate-pulse"></div>
-                
-                {/* Logo Instagram principal */}
-                <div className="relative z-10 w-full h-full">
-                  <Image 
-                    src="/logos/logo-instagram.png" 
-                    alt="Instagram" 
-                    width={200}
-                    height={200}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-              </motion.div>
-              <span className="text-sm text-gray-700 font-medium max-w-52">Conseils actionables sur chaque section de votre profil</span>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.5 }}
+              className="flex items-center gap-3 bg-white border border-gray-200 rounded-full px-5 py-2.5 max-w-md w-full md:w-auto"
+            >
+              <div className="bg-[#074482] rounded-full p-2 flex-shrink-0">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <span className="text-sm font-medium text-gray-700" style={{ fontFamily: 'var(--font-poppins)' }}>
+                Conseils actionables pour l&apos;améliorer
+              </span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.6 }}
+              className="flex items-center gap-3 bg-white border border-gray-200 rounded-full px-5 py-2.5 max-w-md w-full md:w-auto"
+            >
+              <div className="bg-[#074482] rounded-full p-2 flex-shrink-0">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <span className="text-sm font-medium text-gray-700" style={{ fontFamily: 'var(--font-poppins)' }}>
+                Tips secrets pour aller plus loin
+              </span>
+            </motion.div>
           </div>
         </motion.div>
 
@@ -305,24 +332,33 @@ Pour transformer tes 3 likes en client.
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 onClick={() => setActiveInterface('upload')}
-                  className="w-64 bg-[#2C2C2C] text-white px-3 py-2 rounded-lg font-semibold hover:bg-[#3C3C3C] transition-colors text-sm border border-[#555555] shadow-sm"
+                  className="w-80 bg-[#074482] text-white px-6 py-3.5 rounded-full font-semibold hover:bg-[#053a6b] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
                   style={{ 
-                    boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
+                    fontFamily: 'var(--font-poppins)',
+                    fontSize: '16px',
+                    lineHeight: '24px',
+                    fontWeight: 600
                   }}
               >
-Vérifiez mon profil
+                <span>Evaluez mon profil</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </motion.button>
               
               <motion.button
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 onClick={() => setActiveInterface('no-cv')}
-                  className="w-64 bg-[#2C2C2C] text-white px-3 py-2 rounded-lg font-semibold hover:bg-[#3C3C3C] transition-colors text-sm border border-[#555555] shadow-sm"
+                  className="w-80 bg-white text-[#074482] px-6 py-3.5 rounded-full font-semibold hover:bg-gray-50 transition-all duration-300 border-2 border-[#074482] flex items-center justify-center gap-2"
                   style={{ 
-                    boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
+                    fontFamily: 'var(--font-poppins)',
+                    fontSize: '16px',
+                    lineHeight: '24px',
+                    fontWeight: 600
                   }}
                 >
-Vérifiez plus tard
+                Evaluez mon profil plus tard
                 </motion.button>
               </div>
               
@@ -332,6 +368,12 @@ Vérifiez plus tard
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.8 }}
                 className="text-sm text-black font-medium -mt-1"
+                style={{
+                  fontFamily: 'var(--font-poppins)',
+                  fontWeight: 400,
+                  lineHeight: '1.6',
+                  letterSpacing: '-0.01em'
+                }}
               >
 (100% gratuit - Analyse en 5min)
               </motion.div>
@@ -432,9 +474,14 @@ Adresse email
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center text-blue-600 bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md mx-auto -mt-8"
+            className="bg-white rounded-2xl shadow-lg p-6 max-w-md mx-auto -mt-8 border-2 border-[#074482]/30"
+            style={{
+              fontFamily: 'var(--font-poppins)'
+            }}
           >
-            {uploadMessage}
+            <p className="text-center text-gray-800 text-base font-medium">
+              {uploadMessage}
+            </p>
           </motion.div>
         )}
 
@@ -443,152 +490,47 @@ Adresse email
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center text-green-600 bg-green-50 border border-green-200 rounded-lg p-4 max-w-md mx-auto -mt-8"
+            className="bg-white rounded-2xl shadow-lg p-6 max-w-md mx-auto -mt-8 border-2 border-[#074482]/30"
+            style={{
+              fontFamily: 'var(--font-poppins)'
+            }}
           >
-            {noCvMessage}
+            <p className="text-center text-gray-800 text-base font-medium">
+              {noCvMessage}
+            </p>
           </motion.div>
         )}
 
-      </main>
-
-      {/* Logos d'écoles qui défilent - Section 3/4 de l'écran */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 1 }}
-        className="w-3/4 mx-auto py-8"
-      >
-        <div className="relative overflow-hidden">
-          {/* Premier groupe de logos */}
+        {/* Section Bootcamp - Avatars et texte */}
+        <div className="max-w-4xl mx-auto mt-8 relative z-10">
           <motion.div
-            animate={{ x: [0, -1500] }}
-            transition={{ 
-              duration: 30, 
-              repeat: Infinity, 
-              ease: "linear" 
-            }}
-            className="flex items-center space-x-24"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.9 }}
+            className="text-center"
           >
-            {/* HEC Paris */}
-            <Image 
-                    src="/logos/HEC_Paris.svg.png" 
-                    alt="HEC Paris" 
-                    width={200}
-                    height={200}
-                    className="h-16 w-auto object-contain"
-                  />
+            {/* Avatars */}
+            <div className="flex justify-center items-center mb-3">
+              <div className="flex -space-x-3">
+                <div className="w-12 h-12 rounded-full border-4 border-white bg-gradient-to-br from-blue-400 to-blue-600"></div>
+                <div className="w-12 h-12 rounded-full border-4 border-white bg-gradient-to-br from-purple-400 to-purple-600"></div>
+                <div className="w-12 h-12 rounded-full border-4 border-white bg-gradient-to-br from-pink-400 to-pink-600"></div>
+                <div className="w-12 h-12 rounded-full border-4 border-white bg-gradient-to-br from-indigo-400 to-indigo-600"></div>
+                <div className="w-12 h-12 rounded-full border-4 border-white bg-gradient-to-br from-green-400 to-green-600"></div>
+                <div className="w-12 h-12 rounded-full border-4 border-white bg-gradient-to-br from-yellow-400 to-yellow-600"></div>
+              </div>
+            </div>
 
-            {/* ESSEC */}
-            <Image 
-                    src="/logos/ESSEC_Logo.svg" 
-                    alt="ESSEC" 
-                    width={200}
-                    height={200}
-                    className="h-16 w-auto object-contain"
-                  />
-
-            {/* ESCP */}
-            <Image 
-                    src="/logos/ESCP_LOGO_CMJN.png" 
-                    alt="ESCP" 
-                    width={200}
-                    height={200}
-                    className="h-16 w-auto object-contain"
-                  />
-
-            {/* Bocconi */}
-            <Image 
-                    src="/logos/Bocconi_University_Logo.png" 
-                    alt="Bocconi" 
-                    width={200}
-                    height={200}
-                    className="h-16 w-auto object-contain"
-                  />
-
-            {/* Harvard */}
-            <Image 
-                    src="/logos/Harvard_University_shield.png" 
-                    alt="Harvard" 
-                    width={200}
-                    height={200}
-                    className="h-16 w-auto object-contain"
-                  />
-
-            {/* LSE */}
-            <Image 
-                    src="/logos/LSE_Logo.svg.png" 
-                    alt="LSE" 
-                    width={200}
-                    height={200}
-                    className="h-16 w-auto object-contain"
-                  />
-
-            {/* MIT */}
-            <Image 
-                    src="/logos/MIT_logo.svg.png" 
-                    alt="MIT" 
-                    width={200}
-                    height={200}
-                    className="h-16 w-auto object-contain"
-                  />
-
-            {/* London Business School */}
-            <Image 
-                    src="/logos/RS9327_LBS_Standard_Logo_RGB_AW-hpr.jpg" 
-                    alt="LBS" 
-                    width={200}
-                    height={200}
-                    className="h-16 w-auto object-contain"
-                  />
-
-            {/* Duplicate pour effet continu */}
-            {/* HEC Paris */}
-            <Image 
-                    src="/logos/HEC_Paris.svg.png" 
-                    alt="HEC Paris" 
-                    width={200}
-                    height={200}
-                    className="h-16 w-auto object-contain"
-                  />
-
-            {/* ESSEC */}
-            <Image 
-                    src="/logos/ESSEC_Logo.svg" 
-                    alt="ESSEC" 
-                    width={200}
-                    height={200}
-                    className="h-16 w-auto object-contain"
-                  />
-
-            {/* ESCP */}
-            <Image 
-                    src="/logos/ESCP_LOGO_CMJN.png" 
-                    alt="ESCP" 
-                    width={200}
-                    height={200}
-                    className="h-16 w-auto object-contain"
-                  />
-
-            {/* Bocconi */}
-            <Image 
-                    src="/logos/Bocconi_University_Logo.png" 
-                    alt="Bocconi" 
-                    width={200}
-                    height={200}
-                    className="h-16 w-auto object-contain"
-                  />
-
-            {/* Harvard */}
-            <Image 
-                    src="/logos/Harvard_University_shield.png" 
-                    alt="Harvard" 
-                    width={200}
-                    height={200}
-                    className="h-16 w-auto object-contain"
-                  />
+            <p className="text-base font-semibold text-gray-800" style={{
+              fontFamily: 'var(--font-poppins)',
+              fontWeight: 600
+            }}>
+              +80 personnes déjà satisfaites par le <a href="https://romainbour.framer.website/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#074482] transition-colors">bootcamp</a>
+            </p>
           </motion.div>
         </div>
-      </motion.div>
+
+      </main>
     </div>
   )
 }

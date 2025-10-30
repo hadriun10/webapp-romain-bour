@@ -58,9 +58,13 @@ export default function SectionScores({ sections, onComplete }: SectionScoresPro
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut', delay: 0.2 }}
-      className="w-full bg-white rounded-xl shadow-lg mb-8 overflow-hidden mx-2 sm:mx-0"
+      className="w-full bg-white rounded-2xl shadow-lg mb-8 overflow-hidden mx-2 sm:mx-0 border-2 border-[#074482]/30"
     >
-      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8 p-4 sm:p-8 pb-0 text-center relative">
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8 p-4 sm:p-8 pb-0 text-center relative"
+          style={{
+            fontFamily: 'var(--font-poppins)',
+            fontWeight: 600
+          }}>
         <span className="relative inline-block">
           Score Breakdown
           <motion.div
@@ -78,18 +82,19 @@ export default function SectionScores({ sections, onComplete }: SectionScoresPro
       </h2>
       
       <div className="px-4 sm:px-8 pb-6 sm:pb-8">
-        {/* En-tête du tableau avec style de la page de garde */}
-        <div className="grid grid-cols-12 gap-2 sm:gap-4 bg-[#2C2C2C] text-white font-bold py-2 sm:py-3 px-2 sm:px-4 border border-[#555555] text-sm sm:text-base"
+        {/* En-tête du tableau avec fond bleu style Romain Bour */}
+        <div className="grid grid-cols-12 gap-2 sm:gap-4 bg-[#074482] text-white font-bold py-2 sm:py-3 px-2 sm:px-4 text-sm sm:text-base"
              style={{ 
-               boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
+               fontFamily: 'var(--font-poppins)',
+               borderRadius: '0.875rem 0.875rem 0 0'
              }}>
-          <div className="col-span-4">Category</div>
+          <div className="col-span-4">Catégorie</div>
           <div className="col-span-2 text-center">Score</div>
           <div className="col-span-6">Performance</div>
         </div>
         
         {/* Lignes du tableau */}
-        <div className="border border-gray-200 border-t-0 rounded-b-lg overflow-hidden">
+        <div className="border-2 border-[#074482]/30 border-t-0 rounded-b-lg overflow-hidden">
           {sortedSections.map((section, index) => (
             <motion.div
               key={section.name}
@@ -103,6 +108,10 @@ export default function SectionScores({ sections, onComplete }: SectionScoresPro
               className={`grid grid-cols-12 gap-2 sm:gap-4 py-2 sm:py-3 px-2 sm:px-4 border-b border-gray-100 last:border-b-0 ${
                 index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
               }`}
+              style={{
+                fontFamily: 'var(--font-poppins)',
+                fontSize: '14px'
+              }}
             >
               {/* Colonne 1: Category */}
               <div className="col-span-4 flex items-center">
@@ -137,20 +146,21 @@ export default function SectionScores({ sections, onComplete }: SectionScoresPro
           ))}
         </div>
         
-        {/* Score total détaché dans un encadré noir avec bulle colorée */}
+        {/* Score total détaché dans un encadré bleu avec bulle colorée */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: 'easeOut', delay: 0.4 }}
           className="mt-3 mb-4 flex justify-center"
         >
-          <div className="bg-[#2C2C2C] text-white font-bold py-2 sm:py-3 px-8 sm:px-16 border border-[#555555] rounded-xl flex items-center gap-3 sm:gap-6"
+          <div className="bg-[#074482] text-white font-bold py-2 sm:py-3 px-8 sm:px-16 border-2 border-[#074482] rounded-2xl flex items-center gap-3 sm:gap-6 shadow-lg"
                style={{ 
-                 boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
+                 fontFamily: 'var(--font-poppins)',
+                 fontSize: '14px'
                }}>
-            <span className="text-sm sm:text-lg">Total Score</span>
-            <div className="px-4 sm:px-6 py-1 sm:py-2 rounded-lg bg-blue-50 text-blue-700 border-blue-200">
-              <span className="font-bold text-sm sm:text-lg">
+            <span>Score total</span>
+            <div className="px-4 sm:px-6 py-1 sm:py-2 rounded-full bg-blue-50 text-blue-700 border-blue-200">
+              <span className="font-bold">
                 {sortedSections.reduce((sum, section) => sum + section.score, 0)}/
                 {sortedSections.reduce((sum, section) => sum + section.maxScore, 0)}
               </span>
