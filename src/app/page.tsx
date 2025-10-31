@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 import { X } from 'lucide-react'
 import FileUpload from '@/components/FileUpload'
 import CodeInput from '@/components/CodeInput'
@@ -49,7 +48,6 @@ export default function Home() {
   const [isCheckingCode, setIsCheckingCode] = useState(false)
   const [activeInterface, setActiveInterface] = useState<'none' | 'upload' | 'code' | 'no-cv'>('none')
   const [noCvEmail, setNoCvEmail] = useState('')
-  const [noCvFirstName, setNoCvFirstName] = useState('')
   const [isSendingNoCvEmail, setIsSendingNoCvEmail] = useState(false)
   const [noCvMessage, setNoCvMessage] = useState('')
   const [origin, setOrigin] = useState<string>('direct')
@@ -97,7 +95,7 @@ export default function Home() {
     setIsUploading(true)
     try {
       // Upload handled by FileUpload component
-      setUploadMessage('Profil reçu. Vous recevrez un lien par email dans les 10 minutes pour consulter votre analyse. Pensez à vérifier vos spams.')
+      setUploadMessage('Profil reçu. Tu recevras un lien par email dans les 5 minutes pour consulter ton analyse. Pense à vérifier tes spams.')
       setActiveInterface('none')
     } catch {
       // Handle upload error
@@ -145,7 +143,7 @@ export default function Home() {
 
   const handleNoCvSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (noCvEmail && noCvFirstName) {
+    if (noCvEmail) {
       setIsSendingNoCvEmail(true)
       try {
         const response = await fetch('https://bankingvault.app.n8n.cloud/webhook/dont-have-cv', {
@@ -155,13 +153,12 @@ export default function Home() {
           },
           body: JSON.stringify({
             email: noCvEmail,
-            firstName: noCvFirstName,
-            origin: origin
+            origin
           })
         })
 
         if (response.ok) {
-          setNoCvMessage('Parfait ! Nous vous enverrons le lien pour configurer votre profil plus tard.')
+          setNoCvMessage('Parfait ! Nous t&apos;enverrons le lien pour faire évaluer ton profil plus tard.')
           setActiveInterface('none')
         } else {
           throw new Error('Failed to send email')
@@ -184,29 +181,6 @@ export default function Home() {
         <div className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60" 
              style={{ backgroundImage: 'url(/romainbour-bg.png)' }}>
         </div>
-      </div>
-
-      {/* Bouton "Découvrir le Bootcamp" en haut à droite - Style Romain Bour */}
-      <div className="fixed top-6 right-6 z-50">
-        <motion.a
-          href="https://romainbour.framer.website/"
-          target="_blank"
-          rel="noopener noreferrer"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-          className="bg-[#074482] text-white px-6 py-3.5 rounded-full font-semibold hover:bg-[#053a6b] transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl font-[var(--font-poppins)]"
-          style={{
-            fontSize: '17px',
-            lineHeight: '25.5px',
-            fontWeight: 600
-          }}
-        >
-          <span>Découvrir le Bootcamp</span>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </motion.a>
       </div>
 
       {/* Main Content */}
@@ -232,24 +206,24 @@ export default function Home() {
               color: '#074482'
             }}
           >
-            Outil développé grâce à 5 ans d&apos;expérience et 400 profils refaits
+            Outil développé à partir d&apos;une base de 200 top profils LinkedIn
           </motion.div>
 
           {/* Titre style Romain Bour */}
           <div className="text-center mb-6">
             <div className="flex justify-center mb-4">
-              <h1 className="text-4xl md:text-6xl" style={{
+              <h1 className="text-4xl md:text-6xl max-w-6xl mx-auto px-4" style={{
                 fontFamily: 'var(--font-poppins)',
                 fontWeight: 600,
                 lineHeight: '1.2',
                 letterSpacing: '-0.02em',
                 color: '#191919'
               }}>
-                Votre profil <span style={{ color: '#074482' }}>LinkedIn</span> est-il à la hauteur ?
+                Attire plus d&apos;opportunités grâce à un profil <span style={{ color: '#074482' }}>LinkedIn</span> optimisé
               </h1>
             </div>
             <AnimatedText
-              text="En deux minutes, découvrez tous les axes d'amélioration pour briller face à vos concurrents et transformer vos 10 likes en 3 clients"
+              text="Le premier outil qui analyse ton profil LinkedIn en 5 minutes et te donne les axes d'amélioration pour transformer tes 10 likes en 3 clients."
               className="text-base md:text-lg mx-auto"
               style={{
                 fontFamily: 'var(--font-poppins)',
@@ -277,7 +251,7 @@ export default function Home() {
                 </svg>
               </div>
               <span className="text-sm font-medium text-gray-700" style={{ fontFamily: 'var(--font-poppins)' }}>
-                Votre profil scoré sur 100
+                Ton profil scoré sur 100
               </span>
             </motion.div>
 
@@ -309,7 +283,7 @@ export default function Home() {
                 </svg>
               </div>
               <span className="text-sm font-medium text-gray-700" style={{ fontFamily: 'var(--font-poppins)' }}>
-                Tips secrets pour aller plus loin
+                Astuces pour te démarquer
               </span>
             </motion.div>
           </div>
@@ -340,7 +314,7 @@ export default function Home() {
                     fontWeight: 600
                   }}
               >
-                <span>Evaluez mon profil</span>
+                <span>Évaluer mon profil</span>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -358,7 +332,7 @@ export default function Home() {
                     fontWeight: 600
                   }}
                 >
-                Evaluez mon profil plus tard
+                Évaluer mon profil plus tard
                 </motion.button>
               </div>
               
@@ -375,7 +349,7 @@ export default function Home() {
                   letterSpacing: '-0.01em'
                 }}
               >
-(100% gratuit - Analyse en 5min)
+(100% gratuit - Résultats par mail en 5 minutes)
               </motion.div>
             </>
           )}
@@ -409,7 +383,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="bg-white rounded-lg shadow-lg p-4 relative"
+                className="bg-white rounded-2xl shadow-lg p-6 relative border-2 border-[#074482]/30"
               >
                 {/* Bouton de fermeture */}
                 <button
@@ -420,30 +394,19 @@ export default function Home() {
                 </button>
 
                 {/* Zone de message */}
-                <div className="text-center mb-3">
-                  <p className="text-gray-900 font-medium text-base">Pas de soucis !</p>
-                  <p className="text-gray-700 text-sm">Laissez votre email et nous vous enverrons un rappel pour configurer votre profil plus tard.</p>
+                <div className="text-center mb-4">
+                  <p className="text-gray-900 font-semibold text-base" style={{ fontFamily: 'var(--font-poppins)', fontSize: '16px', fontWeight: 600 }}>Laisse ton email et nous t&apos;enverrons un rappel pour faire évaluer ton profil plus tard.</p>
                 </div>
 
                 <form onSubmit={handleNoCvSubmit} className="space-y-3">
                   <div>
-                    <label htmlFor="noCvFirstName" className="block text-xs font-medium text-gray-700 mb-1">
-Prénom
-                    </label>
-                    <input
-                      type="text"
-                      id="noCvFirstName"
-                      value={noCvFirstName}
-                      onChange={(e) => setNoCvFirstName(e.target.value)}
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                      placeholder="John"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="noCvEmail" className="block text-xs font-medium text-gray-700 mb-1">
-Adresse email
+                    <label htmlFor="noCvEmail" className="block mb-2" style={{
+                      fontFamily: 'var(--font-poppins)',
+                      fontSize: '14px',
+                      fontWeight: 500,
+                      color: '#374151'
+                    }}>
+                      Adresse email.
                     </label>
                     <input
                       type="email"
@@ -451,17 +414,27 @@ Adresse email
                       value={noCvEmail}
                       onChange={(e) => setNoCvEmail(e.target.value)}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      className="w-full px-3 py-2 border-2 border-[#074482]/30 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-[#074482] text-sm"
+                      style={{
+                        fontFamily: 'var(--font-poppins)',
+                        fontSize: '14px'
+                      }}
                       placeholder="your.email@example.com"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    disabled={!noCvEmail || !noCvFirstName || isSendingNoCvEmail}
-                    className="w-full bg-[#2C2C2C] text-white py-2.5 px-4 rounded-lg font-semibold hover:bg-[#3C3C3C] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm border border-[#555555] shadow-sm"
+                    disabled={!noCvEmail || isSendingNoCvEmail}
+                    className="w-full bg-[#074482] text-white py-3 px-6 rounded-full font-semibold hover:bg-[#053a6b] disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl"
+                    style={{
+                      fontFamily: 'var(--font-poppins)',
+                      fontSize: '16px',
+                      lineHeight: '24px',
+                      fontWeight: 600
+                    }}
                   >
-                    {isSendingNoCvEmail ? 'Envoi en cours...' : 'Envoyez-moi le rappel'}
+                    {isSendingNoCvEmail ? 'Envoi en cours...' : 'Envoie-moi le rappel'}
                   </button>
                 </form>
               </motion.div>
@@ -500,35 +473,6 @@ Adresse email
             </p>
           </motion.div>
         )}
-
-        {/* Section Bootcamp - Avatars et texte */}
-        <div className="max-w-4xl mx-auto mt-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.9 }}
-            className="text-center"
-          >
-            {/* Avatars */}
-            <div className="flex justify-center items-center mb-3">
-              <div className="flex -space-x-3">
-                <div className="w-12 h-12 rounded-full border-4 border-white bg-gradient-to-br from-blue-400 to-blue-600"></div>
-                <div className="w-12 h-12 rounded-full border-4 border-white bg-gradient-to-br from-purple-400 to-purple-600"></div>
-                <div className="w-12 h-12 rounded-full border-4 border-white bg-gradient-to-br from-pink-400 to-pink-600"></div>
-                <div className="w-12 h-12 rounded-full border-4 border-white bg-gradient-to-br from-indigo-400 to-indigo-600"></div>
-                <div className="w-12 h-12 rounded-full border-4 border-white bg-gradient-to-br from-green-400 to-green-600"></div>
-                <div className="w-12 h-12 rounded-full border-4 border-white bg-gradient-to-br from-yellow-400 to-yellow-600"></div>
-              </div>
-            </div>
-
-            <p className="text-base font-semibold text-gray-800" style={{
-              fontFamily: 'var(--font-poppins)',
-              fontWeight: 600
-            }}>
-              +80 personnes déjà satisfaites par le <a href="https://romainbour.framer.website/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#074482] transition-colors">bootcamp</a>
-            </p>
-          </motion.div>
-        </div>
 
       </main>
     </div>

@@ -15,9 +15,7 @@ interface FileUploadProps {
 export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploading = false, onClose }: FileUploadProps) {
   const [profileLink, setProfileLink] = useState('')
   const [email, setEmail] = useState('')
-  const [feedbackGoal, setFeedbackGoal] = useState<string>('')
   const [origin, setOrigin] = useState<string>('direct')
-  const [linkedinReflection, setLinkedinReflection] = useState<boolean>(false)
   const [acceptInfo, setAcceptInfo] = useState<boolean>(false)
 
   // Récupérer le paramètre 'origin' depuis l'URL
@@ -33,13 +31,13 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
 
   const validateLinkedInUrl = (url: string): string | null => {
     if (!url.trim()) {
-      return 'Veuillez entrer un lien LinkedIn'
+      return 'Entre un lien LinkedIn'
     }
     
     // Vérifier que c'est un lien LinkedIn valide
     const linkedinPattern = /^https?:\/\/(www\.)?linkedin\.com\/in\/[a-zA-Z0-9\-]+\/?$/
     if (!linkedinPattern.test(url)) {
-      return 'Veuillez entrer un lien LinkedIn valide (ex: https://linkedin.com/in/votre-nom)'
+      return 'Entre un lien LinkedIn valide (ex: https://linkedin.com/in/votre-nom)'
     }
     
     return null
@@ -55,7 +53,7 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
       return
     }
     
-    if (email && feedbackGoal && profileLink && acceptInfo) {
+    if (email && profileLink && acceptInfo) {
       try {
         // Créer FormData pour l'envoi
         const formData = new FormData()
@@ -64,8 +62,6 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
         formData.append('submittedAt', new Date().toISOString())
         formData.append('formMode', 'test')
         formData.append('origin', origin)
-        formData.append('feedback_goal', feedbackGoal)
-        formData.append('linkedin_reflection', linkedinReflection.toString())
         formData.append('accept_info', acceptInfo.toString())
         
         // Ajouter les critères LinkedIn en dur
@@ -86,7 +82,7 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
         }
       } catch (error) {
         console.error('Submit error:', error)
-        alert('Erreur lors de l&apos;envoi. Veuillez réessayer.')
+        alert('Erreur lors de l&apos;envoi. Réessaie.')
       }
     }
   }
@@ -117,7 +113,7 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
                   fontWeight: 500,
                   color: '#374151'
                 }}>
-                  Lien de votre profil LinkedIn :
+                  Lien de ton profil LinkedIn :
                 </label>
                 <input
                   type="url"
@@ -158,51 +154,6 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
                 />
               </div>
 
-              <div>
-                <label htmlFor="feedback_goal" className="block mb-2" style={{
-                  fontFamily: 'var(--font-poppins)',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  color: '#374151'
-                }}>
-                  Optimisez mon profil LinkedIn pour :
-                </label>
-                <select
-                  id="feedback_goal"
-                  value={feedbackGoal}
-                  onChange={(e) => setFeedbackGoal(e.target.value)}
-                  required
-                  className="w-full px-3 py-2 border-2 border-[#074482]/30 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-[#074482] text-sm bg-white"
-                  style={{
-                    fontFamily: 'var(--font-poppins)',
-                    fontSize: '14px'
-                  }}
-                >
-                  <option value="" disabled>Sélectionnez votre objectif</option>
-                  <option value="independant">Indépendant / Freelance / Coach</option>
-                  <option value="dirigeant">Dirigeant / Créateur d&apos;entreprise</option>
-                  <option value="salarie">Salarié / Manager</option>
-                  <option value="demandeur">Demandeur d&apos;emploi / Étudiant</option>
-                </select>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="linkedinReflection"
-                  checked={linkedinReflection}
-                  onChange={(e) => setLinkedinReflection(e.target.checked)}
-                  className="rounded border-gray-300 text-[#074482] focus:ring-[#074482]"
-                />
-                <label htmlFor="linkedinReflection" style={{
-                  fontFamily: 'var(--font-poppins)',
-                  fontSize: '14px',
-                  color: '#374151'
-                }}>
-                  Je réfléchis à me faire accompagner sur LinkedIn.
-                </label>
-              </div>
-
               <div className="flex items-center space-x-2">
                 <input
                   type="checkbox"
@@ -217,14 +168,13 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
                   fontSize: '14px',
                   color: '#374151'
                 }}>
-                  <span>J&apos;accepte de recevoir des informations et conseils par email </span>
-                  <span className="text-[#074482]">(pour consulter votre résultat).</span>
+                  J&apos;accepte de recevoir mon résultat par mail, ainsi que d&apos;autres informations pour m&apos;aider sur LinkedIn.
                 </label>
               </div>
 
               <button
                 type="submit"
-                disabled={!email || !feedbackGoal || !profileLink || !acceptInfo || isUploading}
+                disabled={!email || !profileLink || !acceptInfo || isUploading}
                 className="w-full bg-[#074482] text-white py-3 px-6 rounded-full font-semibold hover:bg-[#053a6b] disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl"
                 style={{
                   fontFamily: 'var(--font-poppins)',

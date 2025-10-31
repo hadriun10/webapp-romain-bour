@@ -20,12 +20,8 @@ export default function SectionScores({ sections, onComplete }: SectionScoresPro
   const [completedSections, setCompletedSections] = useState(0)
   const [animationStates, setAnimationStates] = useState<boolean[]>(new Array(sections.length).fill(false))
   
-  // Trier les sections par performance (du meilleur au pire score)
-  const sortedSections = [...sections].sort((a, b) => {
-    const scoreA = (a.score / a.maxScore) * 100
-    const scoreB = (b.score / b.maxScore) * 100
-    return scoreB - scoreA // Du plus haut au plus bas
-  })
+  // Garder l'ordre original des sections
+  const sortedSections = sections
 
   const handleSectionComplete = () => {
     setCompletedSections(prev => prev + 1)
@@ -66,7 +62,7 @@ export default function SectionScores({ sections, onComplete }: SectionScoresPro
             fontWeight: 600
           }}>
         <span className="relative inline-block">
-          Score Breakdown
+          Détail du score
           <motion.div
             className="absolute bottom-0 left-0 h-1.5 bg-blue-500 rounded-full"
             style={{ bottom: '-6px' }}
@@ -138,7 +134,7 @@ export default function SectionScores({ sections, onComplete }: SectionScoresPro
                     maxScore={section.maxScore} 
                     duration={2000}
                     shouldStart={animationStates[index]}
-                    onComplete={index === sections.length - 1 ? handleSectionComplete : undefined}
+                    onComplete={index === sortedSections.length - 1 ? handleSectionComplete : undefined}
                   />
                 </div>
               </div>
@@ -161,8 +157,8 @@ export default function SectionScores({ sections, onComplete }: SectionScoresPro
             <span>Score total</span>
             <div className="px-4 sm:px-6 py-1 sm:py-2 rounded-full bg-blue-50 text-blue-700 border-blue-200">
               <span className="font-bold">
-                {sortedSections.reduce((sum, section) => sum + section.score, 0)}/
-                {sortedSections.reduce((sum, section) => sum + section.maxScore, 0)}
+                {(sortedSections.reduce((sum, section) => sum + (section.score || 0), 0))}/
+                {(sortedSections.reduce((sum, section) => sum + (section.maxScore || 0), 0))}
               </span>
             </div>
           </div>

@@ -31,7 +31,10 @@ export default function DetailSection({
 }: DetailSectionProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
-  const percentage = (totalScore / maxScore) * 100
+  // Assurer que les valeurs sont bien numériques
+  const safeTotalScore = totalScore || 0
+  const safeMaxScore = maxScore || 0
+  const percentage = safeMaxScore > 0 ? (safeTotalScore / safeMaxScore) * 100 : 0
   
   // Trier les critères par performance (du meilleur au pire score)
   const sortedCriteria = [...criteria].sort((a, b) => {
@@ -59,7 +62,11 @@ export default function DetailSection({
         transition={{ duration: 0.5, ease: 'easeOut' }}
         className="text-center mb-6"
       >
-        <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 relative inline-block">
+        <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 relative inline-block"
+            style={{
+              fontFamily: 'var(--font-poppins)',
+              fontWeight: 600
+            }}>
           {title}
           <motion.div
             className="absolute bottom-0 left-0 h-1.5 bg-blue-500 rounded-full"
@@ -155,7 +162,7 @@ export default function DetailSection({
                }}>
             <span>Score</span>
             <div className={`px-4 sm:px-6 py-1 sm:py-2 rounded-full ${getTotalBadgeStyle()}`}>
-              <span className="font-bold">{totalScore}/{maxScore}</span>
+              <span className="font-bold">{safeTotalScore}/{safeMaxScore}</span>
             </div>
           </div>
         </motion.div>

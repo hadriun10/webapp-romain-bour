@@ -14,8 +14,12 @@ export default function GlobalScore({ score, maxScore, onComplete }: GlobalScore
   const [animationComplete, setAnimationComplete] = useState(false)
   const [shouldStartCounter, setShouldStartCounter] = useState(false)
 
+  // Assurer que les valeurs sont bien numériques
+  const safeScore = score || 0
+  const safeMaxScore = maxScore || 0
+
   // Animation de la barre avec vitesse constante
-  const progress = (score / maxScore) * 100
+  const progress = safeMaxScore > 0 ? (safeScore / safeMaxScore) * 100 : 0
   const motionValue = useMotionValue(0)
   
   const width = useTransform(motionValue, (latest) => `${latest}%`)
@@ -87,7 +91,7 @@ export default function GlobalScore({ score, maxScore, onComplete }: GlobalScore
               fontFamily: 'var(--font-poppins)',
               fontWeight: 600
             }}>
-          Score Global
+          Score Global du profil
           <motion.div
             className="absolute bottom-0 left-0 h-1.5 bg-blue-500 rounded-full"
             style={{ bottom: '-6px' }}
@@ -133,12 +137,12 @@ export default function GlobalScore({ score, maxScore, onComplete }: GlobalScore
             <div className="text-center">
               <div className="text-3xl sm:text-4xl font-bold text-white">
                 <AnimatedCounter 
-                  value={score} 
+                  value={safeScore} 
                   duration={6000}
                   shouldStart={shouldStartCounter}
                   onComplete={handleCounterComplete}
                 />
-                <span className="text-xl sm:text-2xl text-white/70">/{maxScore}</span>
+                <span className="text-xl sm:text-2xl text-white/70">/{safeMaxScore}</span>
               </div>
             </div>
           </motion.div>

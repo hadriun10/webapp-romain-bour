@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, useInView } from 'framer-motion'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import AnimatedCounter from './AnimatedCounter'
 import ScoreBar from './ScoreBar'
 
@@ -17,11 +17,14 @@ export default function PreviewScores() {
   const [animationStates, setAnimationStates] = useState<boolean[]>(new Array(3).fill(false))
   
   // Exemples de sections avec scores
-  const sections: PreviewSection[] = [
-    { name: 'Bannière', score: 11, maxScore: 20 },
-    { name: 'Photo de profil', score: 15, maxScore: 20 },
-    { name: 'etc', score: 0, maxScore: 20 } // Section avec "etc" pour indiquer qu'il y en a plus
-  ]
+  const sections: PreviewSection[] = useMemo(
+    () => [
+      { name: 'Bannière', score: 11, maxScore: 20 },
+      { name: 'Photo de profil', score: 15, maxScore: 20 },
+      { name: 'etc', score: 0, maxScore: 20 } // Section avec "etc" pour indiquer qu'il y en a plus
+    ],
+    []
+  )
 
   // Démarrer les animations pour chaque section avec délai QUAND le tableau est visible
   useEffect(() => {
@@ -43,7 +46,7 @@ export default function PreviewScores() {
         timers.forEach(timer => clearTimeout(timer))
       }
     }
-  }, [isInView])
+  }, [isInView, sections])
 
   return (
     <motion.div

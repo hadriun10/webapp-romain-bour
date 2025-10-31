@@ -7,7 +7,10 @@ interface ScoreBadgeProps {
 }
 
 export default function ScoreBadge({ score, maxScore, className = '' }: ScoreBadgeProps) {
-  const percentage = (score / maxScore) * 100
+  // Assurer que les valeurs sont bien numériques
+  const safeScore = score || 0
+  const safeMaxScore = maxScore || 0
+  const percentage = safeMaxScore > 0 ? (safeScore / safeMaxScore) * 100 : 0
   
   const getBadgeStyle = () => {
     if (percentage < 30) {
@@ -21,7 +24,7 @@ export default function ScoreBadge({ score, maxScore, className = '' }: ScoreBad
 
   return (
     <span className={`inline-flex items-center px-6 py-3 rounded-md text-base font-bold border w-full justify-center ${getBadgeStyle()} ${className}`}>
-      {score}/{maxScore}
+      {safeScore}/{safeMaxScore}
     </span>
   )
 }
