@@ -114,69 +114,71 @@ export default function Home() {
 
       {/* Main Content - Layout 2 colonnes */}
       <main className="max-w-7xl mx-auto px-6 py-12 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Badge, Titre et Description - en haut sur toute la largeur sur desktop gauche */}
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="lg:w-1/2 mb-8"
+        >
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: 'easeOut', delay: 0.2 }}
+            className="inline-block bg-white px-5 py-2 rounded-full mb-6 border-2 border-[#074482]"
+            style={{
+              fontFamily: 'var(--font-poppins)',
+              fontSize: '15px',
+              fontWeight: 500,
+              lineHeight: '24px',
+              color: '#074482'
+            }}
+          >
+            Outil développé à partir d&apos;une base de 200 top profils LinkedIn
+          </motion.div>
+
+          {/* Titre */}
+          <h1 className="text-4xl md:text-5xl mb-6" style={{
+            fontFamily: 'var(--font-poppins)',
+            fontWeight: 600,
+            lineHeight: '1.2',
+            letterSpacing: '-0.02em',
+            color: '#191919'
+          }}>
+            Optimise ton profil <span style={{ color: '#074482' }}>LinkedIn</span>
+          </h1>
+
+          {/* Description */}
+          <p className="text-base md:text-lg" style={{
+            fontFamily: 'var(--font-poppins)',
+            fontWeight: 400,
+            lineHeight: '1.6',
+            letterSpacing: '-0.01em',
+            color: '#191919'
+          }}>
+            Le premier outil qui analyse ton profil LinkedIn en 5 minutes et te donne les axes d&apos;amélioration pour transformer tes 10 likes en 3 clients.
+          </p>
+        </motion.div>
+
+        {/* Bloc Scores - Affiché ici sur mobile uniquement */}
+        <div className="lg:hidden mb-8">
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
+          >
+            <SectionScores
+              sections={demoSections}
+              onComplete={handleSectionScoresComplete}
+            />
+          </motion.div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end">
           
-          {/* COLONNE GAUCHE - Badge, Titre, Description et Formulaire */}
-          <div className="order-1 lg:order-1">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-            >
-              {/* Badge */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, ease: 'easeOut', delay: 0.2 }}
-                className="inline-block bg-white px-5 py-2 rounded-full mb-6 border-2 border-[#074482]"
-                style={{
-                  fontFamily: 'var(--font-poppins)',
-                  fontSize: '15px',
-                  fontWeight: 500,
-                  lineHeight: '24px',
-                  color: '#074482'
-                }}
-              >
-                Outil développé à partir d&apos;une base de 200 top profils LinkedIn
-              </motion.div>
-
-              {/* Titre */}
-              <h1 className="text-4xl md:text-5xl mb-6" style={{
-                fontFamily: 'var(--font-poppins)',
-                fontWeight: 600,
-                lineHeight: '1.2',
-                letterSpacing: '-0.02em',
-                color: '#191919'
-              }}>
-                Optimise ton profil <span style={{ color: '#074482' }}>LinkedIn</span>
-              </h1>
-
-              {/* Description */}
-              <p className="text-base md:text-lg mb-8" style={{
-                fontFamily: 'var(--font-poppins)',
-                fontWeight: 400,
-                lineHeight: '1.6',
-                letterSpacing: '-0.01em',
-                color: '#191919'
-              }}>
-                Le premier outil qui analyse ton profil LinkedIn en 5 minutes et te donne les axes d&apos;amélioration pour transformer tes 10 likes en 3 clients.
-              </p>
-            </motion.div>
-
-            {/* Bloc Scores - Affiché ici sur mobile uniquement */}
-            <div className="lg:hidden mb-8">
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
-              >
-                <SectionScores
-                  sections={demoSections}
-                  onComplete={handleSectionScoresComplete}
-                />
-              </motion.div>
-            </div>
-
+          {/* COLONNE GAUCHE - Formulaire seulement */}
+          <div className="order-1">
             {/* Formulaire */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -265,53 +267,54 @@ export default function Home() {
                 </button>
               </form>
             </motion.div>
-
-            {/* Notifications en dessous du formulaire */}
-            <div className="mt-4 space-y-2">
-              {notifications.map((notification) => (
-                <motion.div
-                  key={notification.id}
-                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
-                  className={`px-6 py-4 rounded-xl shadow-lg ${
-                    notification.type === 'success'
-                      ? 'bg-blue-500 text-white'
-                      : notification.type === 'error'
-                      ? 'bg-red-500 text-white'
-                      : 'bg-gray-800 text-white'
-                  }`}
-                  style={{ fontFamily: 'var(--font-poppins)' }}
-                >
-                  <div className="flex items-center justify-between gap-4">
-                    <p className="text-sm font-medium">{notification.message}</p>
-                    <button
-                      onClick={() => removeNotification(notification.id)}
-                      className="text-white hover:text-gray-200 transition-colors"
-                    >
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </button>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
           </div>
 
           {/* COLONNE DROITE - Preview des scores (Desktop uniquement) */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
-            className="hidden lg:flex lg:items-end order-2"
-          >
-            <SectionScores
-              sections={demoSections}
-              onComplete={handleSectionScoresComplete}
-            />
-          </motion.div>
+          <div className="hidden lg:block order-2">
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
+            >
+              <SectionScores
+                sections={demoSections}
+                onComplete={handleSectionScoresComplete}
+              />
+            </motion.div>
+          </div>
 
+        </div>
+
+        {/* Notifications en dessous du formulaire */}
+        <div className="mt-4 lg:w-1/2 space-y-2">
+          {notifications.map((notification) => (
+            <motion.div
+              key={notification.id}
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
+              className={`px-6 py-4 rounded-xl shadow-lg ${
+                notification.type === 'success'
+                  ? 'bg-blue-500 text-white'
+                  : notification.type === 'error'
+                  ? 'bg-red-500 text-white'
+                  : 'bg-gray-800 text-white'
+              }`}
+              style={{ fontFamily: 'var(--font-poppins)' }}
+            >
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-sm font-medium">{notification.message}</p>
+                <button
+                  onClick={() => removeNotification(notification.id)}
+                  className="text-white hover:text-gray-200 transition-colors"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </main>
     </div>
