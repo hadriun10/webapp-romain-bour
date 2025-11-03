@@ -9,6 +9,7 @@ interface SectionScore {
   name: string
   score: number
   maxScore: number
+  shouldBlur?: boolean
 }
 
 interface SectionScoresProps {
@@ -103,7 +104,7 @@ export default function SectionScores({ sections, onComplete }: SectionScoresPro
               }}
               className={`grid grid-cols-12 gap-2 sm:gap-4 py-2 sm:py-3 px-2 sm:px-4 border-b border-gray-100 last:border-b-0 ${
                 index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
-              }`}
+              } ${section.shouldBlur ? 'blur-sm select-none pointer-events-none' : ''}`}
               style={{
                 fontFamily: 'var(--font-poppins)',
                 fontSize: '14px'

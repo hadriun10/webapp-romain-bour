@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import PreviewScoresSimple from '@/components/PreviewScoresSimple'
+import SectionScores from '@/components/SectionScores'
 import { useNotification } from '@/hooks/useNotification'
 
 export default function Home() {
@@ -113,27 +113,27 @@ export default function Home() {
       </div>
 
       {/* Main Content - Layout 2 colonnes */}
-      <main className="max-w-7xl mx-auto px-2.5 lg:pl-2.5 lg:pr-2.5 py-10 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.8fr] gap-12 lg:gap-20 items-end">
+      <main className="max-w-7xl mx-auto px-6 py-12 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           
           {/* COLONNE GAUCHE - Formulaire */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="order-2 lg:order-1 w-full lg:max-w-md"
+            className="order-2 lg:order-1"
           >
             {/* Badge */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, ease: 'easeOut', delay: 0.2 }}
-              className="inline-block bg-white px-4 py-1.5 rounded-full mb-6 border-2 border-[#074482]"
+              className="inline-block bg-white px-5 py-2 rounded-full mb-6 border-2 border-[#074482]"
               style={{
                 fontFamily: 'var(--font-poppins)',
-                fontSize: '12px',
+                fontSize: '15px',
                 fontWeight: 500,
-                lineHeight: '20px',
+                lineHeight: '24px',
                 color: '#074482'
               }}
             >
@@ -141,7 +141,7 @@ export default function Home() {
             </motion.div>
 
             {/* Titre */}
-            <h1 className="text-4xl md:text-5xl mb-4" style={{
+            <h1 className="text-4xl md:text-5xl mb-6" style={{
               fontFamily: 'var(--font-poppins)',
               fontWeight: 600,
               lineHeight: '1.2',
@@ -152,7 +152,7 @@ export default function Home() {
             </h1>
 
             {/* Description */}
-            <p className="text-base md:text-lg mb-10" style={{
+            <p className="text-base md:text-lg mb-8" style={{
               fontFamily: 'var(--font-poppins)',
               fontWeight: 400,
               lineHeight: '1.6',
@@ -167,15 +167,14 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: 'easeOut', delay: 0.4 }}
-              style={{ marginTop: '50px' }}
-              className="bg-white rounded-2xl shadow-lg p-5 border-2 border-[#074482]/30"
+              className="bg-white rounded-2xl shadow-lg p-6 border-2 border-[#074482]/30"
             >
-              <form onSubmit={handleSubmit} className="space-y-3">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Champ lien LinkedIn */}
                 <div>
-                  <label htmlFor="profileLink" className="block mb-1.5" style={{
+                  <label htmlFor="profileLink" className="block mb-2" style={{
                     fontFamily: 'var(--font-poppins)',
-                    fontSize: '13px',
+                    fontSize: '14px',
                     fontWeight: 500,
                     color: '#374151'
                   }}>
@@ -187,7 +186,7 @@ export default function Home() {
                     value={profileLink}
                     onChange={(e) => setProfileLink(e.target.value)}
                     required
-                    className="w-full px-4 py-2.5 border-2 border-[#074482]/30 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-[#074482] text-sm"
+                    className="w-full px-4 py-3 border-2 border-[#074482]/30 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-[#074482] text-sm"
                     style={{ fontFamily: 'var(--font-poppins)' }}
                     placeholder="https://linkedin.com/in/ton-profil"
                   />
@@ -195,9 +194,9 @@ export default function Home() {
 
                 {/* Champ email */}
                 <div>
-                  <label htmlFor="email" className="block mb-1.5" style={{
+                  <label htmlFor="email" className="block mb-2" style={{
                     fontFamily: 'var(--font-poppins)',
-                    fontSize: '13px',
+                    fontSize: '14px',
                     fontWeight: 500,
                     color: '#374151'
                   }}>
@@ -209,7 +208,7 @@ export default function Home() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-4 py-2.5 border-2 border-[#074482]/30 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-[#074482] text-sm"
+                    className="w-full px-4 py-3 border-2 border-[#074482]/30 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-[#074482] text-sm"
                     style={{ fontFamily: 'var(--font-poppins)' }}
                     placeholder="ton.email@example.com"
                   />
@@ -234,22 +233,30 @@ export default function Home() {
                 <button
                   type="submit"
                   disabled={!profileLink || !email || !isChecked || isSubmitting}
-                  className="w-full bg-[#074482] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#053a6b] disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                  className="w-full bg-[#074482] text-white px-6 py-3.5 rounded-full font-semibold hover:bg-[#053a6b] disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
                   style={{ 
                     fontFamily: 'var(--font-poppins)',
-                    fontSize: '15px',
-                    lineHeight: '22px',
+                    fontSize: '16px',
+                    lineHeight: '24px',
                     fontWeight: 600
                   }}
                 >
                   {isSubmitting ? 'Envoi en cours...' : 'Évaluer mon profil'}
                   {!isSubmitting && (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   )}
                 </button>
               </form>
+
+              {/* Texte "100% free" */}
+              <p className="text-sm text-center text-gray-600 mt-4" style={{
+                fontFamily: 'var(--font-poppins)',
+                fontWeight: 400
+              }}>
+                (100% gratuit - Résultats par mail en 5 minutes)
+              </p>
             </motion.div>
           </motion.div>
 
@@ -258,9 +265,9 @@ export default function Home() {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
-            className="order-1 lg:order-2 flex items-center justify-center"
+            className="order-1 lg:order-2"
           >
-            <PreviewScoresSimple
+            <SectionScores
               sections={demoSections}
               onComplete={handleSectionScoresComplete}
             />
