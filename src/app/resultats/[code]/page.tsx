@@ -19,6 +19,47 @@ export default function ResultsPage() {
   const [error, setError] = useState('')
   const [animationPhase, setAnimationPhase] = useState(0)
   const [showSpacer, setShowSpacer] = useState(true)
+  const [startTime] = useState(() => Date.now())
+
+  // Tracking du temps passé sur la page
+  useEffect(() => {
+    const sendTimeTracking = () => {
+      const timeSpent = Math.floor((Date.now() - startTime) / 1000) // temps en secondes
+      
+      // Envoyer à N8n seulement si l'utilisateur a passé au moins 1 seconde
+      if (timeSpent > 0) {
+        navigator.sendBeacon(
+          'https://n8n.hadrien-grosbois.ovh/webhook/time-tracking',
+          JSON.stringify({
+            code: code,
+            timeSpent: timeSpent,
+            timestamp: new Date().toISOString()
+          })
+        )
+      }
+    }
+
+    // Détecter quand l'utilisateur quitte la page
+    const handleBeforeUnload = () => {
+      sendTimeTracking()
+    }
+
+    // Détecter quand l'onglet est caché (changement d'onglet)
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        sendTimeTracking()
+      }
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      sendTimeTracking() // Envoyer aussi au démontage du composant
+    }
+  }, [code, startTime])
 
   useEffect(() => {
     const fetchLinkedInData = async () => {
