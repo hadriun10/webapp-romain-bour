@@ -71,24 +71,24 @@ export default function Home() {
     try {
       // Envoyer au webhook N8n
       const response = await fetch('https://n8n.hadrien-grosbois.ovh/webhook/ad7525b9-8a18-47ea-8e89-74a26b00add9', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
           profileLink,
           email,
           timestamp: new Date().toISOString()
         })
-      })
+        })
 
-      if (response.ok) {
-        success('✅ Parfait ! Vérifie ta boîte mail, ton analyse arrive dans quelques minutes.')
+        if (response.ok) {
+        success('✅ Parfait ! Vérifie ta boîte mail (et tes spams), ton analyse arrive dans quelques minutes.')
         // Réinitialiser le formulaire
         setProfileLink('')
         setEmail('')
         setIsChecked(false)
-      } else {
+        } else {
         throw new Error('Erreur lors de l\'envoi')
       }
     } catch (err) {
@@ -117,59 +117,59 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end">
           
           {/* COLONNE GAUCHE - Formulaire */}
+          <div className="order-2 lg:order-1 space-y-0">
+        <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+            >
+              {/* Badge */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="order-2 lg:order-1"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: 'easeOut', delay: 0.2 }}
+                className="inline-block bg-white px-5 py-2 rounded-full mb-6 border-2 border-[#074482]"
+            style={{
+              fontFamily: 'var(--font-poppins)',
+              fontSize: '15px',
+              fontWeight: 500,
+              lineHeight: '24px',
+              color: '#074482'
+            }}
           >
-            {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease: 'easeOut', delay: 0.2 }}
-              className="inline-block bg-white px-5 py-2 rounded-full mb-6 border-2 border-[#074482]"
-              style={{
+            Outil développé à partir d&apos;une base de 200 top profils LinkedIn
+          </motion.div>
+
+              {/* Titre */}
+              <h1 className="text-4xl md:text-5xl mb-6" style={{
                 fontFamily: 'var(--font-poppins)',
-                fontSize: '15px',
-                fontWeight: 500,
-                lineHeight: '24px',
-                color: '#074482'
-              }}
-            >
-              Outil développé à partir d&apos;une base de 200 top profils LinkedIn
-            </motion.div>
+                fontWeight: 600,
+                lineHeight: '1.2',
+                letterSpacing: '-0.02em',
+                color: '#191919'
+              }}>
+                Optimise ton profil <span style={{ color: '#074482' }}>LinkedIn</span>
+              </h1>
 
-            {/* Titre */}
-            <h1 className="text-4xl md:text-5xl mb-6" style={{
-              fontFamily: 'var(--font-poppins)',
-              fontWeight: 600,
-              lineHeight: '1.2',
-              letterSpacing: '-0.02em',
-              color: '#191919'
-            }}>
-              Optimise ton profil <span style={{ color: '#074482' }}>LinkedIn</span>
-            </h1>
+              {/* Description */}
+              <p className="text-base md:text-lg mb-8" style={{
+                fontFamily: 'var(--font-poppins)',
+                fontWeight: 400,
+                lineHeight: '1.6',
+                letterSpacing: '-0.01em',
+                color: '#191919'
+              }}>
+                Le premier outil qui analyse ton profil LinkedIn en 5 minutes et te donne les axes d&apos;amélioration pour transformer tes 10 likes en 3 clients.
+              </p>
 
-            {/* Description */}
-            <p className="text-base md:text-lg mb-8" style={{
-              fontFamily: 'var(--font-poppins)',
-              fontWeight: 400,
-              lineHeight: '1.6',
-              letterSpacing: '-0.01em',
-              color: '#191919'
-            }}>
-              Le premier outil qui analyse ton profil LinkedIn en 5 minutes et te donne les axes d&apos;amélioration pour transformer tes 10 likes en 3 clients.
-            </p>
-
-            {/* Formulaire */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: 'easeOut', delay: 0.4 }}
-              className="bg-white rounded-2xl shadow-lg p-6 border-2 border-[#074482]/30"
-            >
-              <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Formulaire */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.4 }}
+                className="bg-white rounded-2xl shadow-lg p-6 border-2 border-[#074482]/30"
+              >
+                <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Champ lien LinkedIn */}
                 <div>
                   <label htmlFor="profileLink" className="block mb-2" style={{
@@ -193,26 +193,26 @@ export default function Home() {
                 </div>
 
                 {/* Champ email */}
-                <div>
+                  <div>
                   <label htmlFor="email" className="block mb-2" style={{
-                    fontFamily: 'var(--font-poppins)',
-                    fontSize: '14px',
-                    fontWeight: 500,
-                    color: '#374151'
-                  }}>
+                      fontFamily: 'var(--font-poppins)',
+                      fontSize: '14px',
+                      fontWeight: 500,
+                      color: '#374151'
+                    }}>
                     Adresse email
-                  </label>
-                  <input
-                    type="email"
+                    </label>
+                    <input
+                      type="email"
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    required
+                      required
                     className="w-full px-4 py-3 border-2 border-[#074482]/30 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-[#074482] text-sm"
                     style={{ fontFamily: 'var(--font-poppins)' }}
                     placeholder="ton.email@example.com"
-                  />
-                </div>
+                    />
+                  </div>
 
                 {/* Case à cocher */}
                 <div className="flex items-start gap-3">
@@ -230,17 +230,17 @@ export default function Home() {
                 </div>
 
                 {/* Bouton */}
-                <button
-                  type="submit"
+                  <button
+                    type="submit"
                   disabled={!profileLink || !email || !isChecked || isSubmitting}
                   className="w-full bg-[#074482] text-white px-6 py-3.5 rounded-full font-semibold hover:bg-[#053a6b] disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
-                  style={{ 
-                    fontFamily: 'var(--font-poppins)',
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    fontWeight: 600
-                  }}
-                >
+                    style={{
+                      fontFamily: 'var(--font-poppins)',
+                      fontSize: '16px',
+                      lineHeight: '24px',
+                      fontWeight: 600
+                    }}
+                  >
                   {isSubmitting ? 'Envoi en cours...' : 'Évaluer mon profil'}
                   {!isSubmitting && (
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -249,27 +249,41 @@ export default function Home() {
                   )}
                 </button>
               </form>
+              </motion.div>
             </motion.div>
 
-            {/* Message d'information sur les spams */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: 'easeOut', delay: 0.6 }}
-              className="mt-4 bg-blue-50 border-2 border-blue-200 rounded-xl p-4 flex items-start gap-3"
-            >
-              <svg className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <p className="text-sm text-blue-800" style={{
-                fontFamily: 'var(--font-poppins)',
-                fontWeight: 400,
-                lineHeight: '1.5'
-              }}>
-                Pense à vérifier tes <span className="font-semibold">spams</span> si tu ne reçois pas l&apos;analyse dans les 5 minutes.
-              </p>
-            </motion.div>
-          </motion.div>
+            {/* Notifications en dessous du formulaire */}
+            <div className="mt-4 space-y-2">
+              {notifications.map((notification) => (
+                <motion.div
+                  key={notification.id}
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
+                  className={`px-6 py-4 rounded-xl shadow-lg ${
+                    notification.type === 'success'
+                      ? 'bg-blue-500 text-white'
+                      : notification.type === 'error'
+                      ? 'bg-red-500 text-white'
+                      : 'bg-gray-800 text-white'
+                  }`}
+                  style={{ fontFamily: 'var(--font-poppins)' }}
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <p className="text-sm font-medium">{notification.message}</p>
+                    <button
+                      onClick={() => removeNotification(notification.id)}
+                      className="text-white hover:text-gray-200 transition-colors"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
 
           {/* COLONNE DROITE - Preview des scores */}
           <motion.div
@@ -286,38 +300,6 @@ export default function Home() {
 
         </div>
       </main>
-
-      {/* Notifications */}
-      <div className="fixed bottom-4 right-4 z-50 space-y-2">
-        {notifications.map((notification) => (
-          <motion.div
-            key={notification.id}
-            initial={{ opacity: 0, y: 50, scale: 0.3 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
-            className={`px-6 py-4 rounded-lg shadow-lg max-w-md ${
-              notification.type === 'success'
-                ? 'bg-blue-500 text-white'
-                : notification.type === 'error'
-                ? 'bg-red-500 text-white'
-                : 'bg-gray-800 text-white'
-            }`}
-            style={{ fontFamily: 'var(--font-poppins)' }}
-          >
-            <div className="flex items-center justify-between gap-4">
-              <p className="text-sm font-medium">{notification.message}</p>
-              <button
-                onClick={() => removeNotification(notification.id)}
-                className="text-white hover:text-gray-200 transition-colors"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-            </div>
-          </motion.div>
-        ))}
-      </div>
     </div>
   )
 }
