@@ -142,28 +142,6 @@ export default function SectionScores({ sections, onComplete }: SectionScoresPro
             </motion.div>
           ))}
         </div>
-        
-        {/* Score total détaché dans un encadré bleu avec bulle colorée */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, ease: 'easeOut', delay: 0.4 }}
-          className="mt-3 mb-4 flex justify-center"
-        >
-          <div className="bg-[#074482] text-white font-bold py-2 sm:py-3 px-8 sm:px-16 border-2 border-[#074482] rounded-2xl flex items-center gap-3 sm:gap-6 shadow-lg"
-               style={{ 
-                 fontFamily: 'var(--font-poppins)',
-                 fontSize: '14px'
-               }}>
-            <span>Score total</span>
-            <div className="px-4 sm:px-6 py-1 sm:py-2 rounded-full bg-blue-50 text-blue-700 border-blue-200">
-              <span className="font-bold">
-                {(sortedSections.reduce((sum, section) => sum + (section.score || 0), 0))}/
-                {(sortedSections.reduce((sum, section) => sum + (section.maxScore || 0), 0))}
-              </span>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </motion.div>
   )

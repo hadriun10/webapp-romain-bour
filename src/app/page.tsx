@@ -114,7 +114,7 @@ export default function Home() {
 
       {/* Main Content - Layout 2 colonnes */}
       <main className="max-w-7xl mx-auto px-6 py-12 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end">
           
           {/* COLONNE GAUCHE - Formulaire */}
           <motion.div
@@ -249,13 +249,24 @@ export default function Home() {
                   )}
                 </button>
               </form>
+            </motion.div>
 
-              {/* Texte "100% free" */}
-              <p className="text-sm text-center text-gray-600 mt-4" style={{
+            {/* Message d'information sur les spams */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut', delay: 0.6 }}
+              className="mt-4 bg-blue-50 border-2 border-blue-200 rounded-xl p-4 flex items-start gap-3"
+            >
+              <svg className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p className="text-sm text-blue-800" style={{
                 fontFamily: 'var(--font-poppins)',
-                fontWeight: 400
+                fontWeight: 400,
+                lineHeight: '1.5'
               }}>
-                (100% gratuit - Résultats par mail en 5 minutes)
+                Pense à vérifier tes <span className="font-semibold">spams</span> si tu ne reçois pas l&apos;analyse dans les 5 minutes.
               </p>
             </motion.div>
           </motion.div>
