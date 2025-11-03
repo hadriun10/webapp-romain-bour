@@ -49,6 +49,10 @@ export interface LinkedInData {
   cred_total_maximum: number;
   cred_total_categories: number;
   
+  selection_total_points: number;
+  selection_total_maximum: number;
+  selection_total_categories: number;
+  
   // Critères Banner
   banner_critere_1_titre: string;
   banner_critere_1_points_obtenus: number;
@@ -162,6 +166,12 @@ export interface LinkedInData {
   cred_critere_3_points_obtenus: number;
   cred_critere_3_points_maximum: number;
   cred_critere_3_explication: string | null;
+  
+  // Critères Sélection
+  selection_critere_1_titre: string;
+  selection_critere_1_points_obtenus: number;
+  selection_critere_1_points_maximum: number;
+  selection_critere_1_explication: string | null;
 }
 
 export interface AdminUser {

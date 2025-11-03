@@ -36,8 +36,13 @@ export const LINKEDIN_CRITERIA = {
   ],
   "Crédibilité & Confiance": [
     "Compétences",
-    "Services",
-    "Recommandations"
+    "Recommandations",
+    "Services"
+  ],
+  "Espace Sélection": [
+    "Présence et call to action",
+    "Diversité et pertinence des ressources",
+    "Structuration et mise en avant"
   ]
 }
 
@@ -78,9 +83,14 @@ export const CRITERIA_EXPECTATIONS = {
     "Présence de preuves ou de réalisations": "Résultats, chiffres, projets, clients ou faits concrets, mention d'évolutions ou d'impacts tangibles."
   },
   "Crédibilité & Confiance": {
-    "Compétences": "Au moins 20 compétences renseignées, cohérence avec le positionnement, compétences stratégiques dans les 3 premières, validations par d'autres utilisateurs.",
-    "Services": "Section Services présente pour entrepreneurs, clarté des offres, alignement entre services et profil, langage professionnel.",
-    "Recommandations": "Au moins une recommandation reçue, diversité des sources, contenu complet et aligné avec le profil."
+    "Compétences": "Au moins 50 compétences renseignées, cohérence avec le positionnement, compétences stratégiques dans les 3 premières, validations par d'autres utilisateurs.",
+    "Recommandations": "Au moins une recommandation reçue, diversité des sources, contenu complet et aligné avec le profil.",
+    "Services": "Section Services présente pour entrepreneurs, clarté des offres, alignement entre services et profil, langage professionnel."
+  },
+  "Espace Sélection": {
+    "Présence et call to action": "Présence d'un lien ou call to action dans la section sélection, invitation claire à l'action (réserver, télécharger, s'inscrire), alignement avec le positionnement global.",
+    "Diversité et pertinence des ressources": "Variété des contenus sélectionnés (articles, posts, médias), pertinence avec l'expertise affichée, mise à jour régulière de la sélection.",
+    "Structuration et mise en avant": "Organisation claire et logique des éléments, titres et descriptions engageants, valorisation des meilleurs contenus en priorité."
   }
 }
 
@@ -92,7 +102,8 @@ export const SECTION_MAPPING = {
   'about': 'Section À propos',
   'contenu': 'Présence de contenu public',
   'experiences': 'Expériences professionnelles',
-  'cred': 'Crédibilité & Confiance'
+  'cred': 'Crédibilité & Confiance',
+  'selection': 'Espace Sélection'
 }
 
 // Fonction pour obtenir l'explication attendue d'un critère
@@ -100,9 +111,12 @@ export function getCriteriaExpectation(section: string, criteria: string): strin
   const mappedSection = SECTION_MAPPING[section as keyof typeof SECTION_MAPPING] || section
   const sectionExpectations = CRITERIA_EXPECTATIONS[mappedSection as keyof typeof CRITERIA_EXPECTATIONS]
   
+  // Nettoyer le titre du critère en retirant le score entre parenthèses (ex: "Compétences (4)" → "Compétences")
+  const cleanCriteria = criteria.replace(/ \(\d+\)$/, '')
+  
   if (sectionExpectations && typeof sectionExpectations === 'object') {
     const criteriaExpectations = sectionExpectations as Record<string, string>
-    return criteriaExpectations[criteria] || "Critère non défini"
+    return criteriaExpectations[cleanCriteria] || "Critère non défini"
   }
   
   return "Critère non défini"

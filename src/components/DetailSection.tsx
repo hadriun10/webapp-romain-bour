@@ -12,6 +12,7 @@ interface Criterion {
   feedback?: string
   expectation?: string
   isMaxScore?: boolean
+  shouldBlur?: boolean
 }
 
 interface DetailSectionProps {
@@ -20,6 +21,8 @@ interface DetailSectionProps {
   totalScore: number
   maxScore: number
   delay?: number
+  blurLastN?: number
+  disableSort?: boolean
 }
 
 export default function DetailSection({ 
@@ -27,7 +30,9 @@ export default function DetailSection({
   criteria, 
   totalScore, 
   maxScore,
-  delay = 0
+  delay = 0,
+  blurLastN = 0,
+  disableSort = false
 }: DetailSectionProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
@@ -36,12 +41,41 @@ export default function DetailSection({
   const safeMaxScore = maxScore || 0
   const percentage = safeMaxScore > 0 ? (safeTotalScore / safeMaxScore) * 100 : 0
   
-  // Trier les critères par performance (du meilleur au pire score)
-  const sortedCriteria = [...criteria].sort((a, b) => {
-    const scoreA = (a.score / a.maxScore) * 100
-    const scoreB = (b.score / b.maxScore) * 100
-    return scoreB - scoreA // Du plus haut au plus bas
+  // Trier les critères par performance (du meilleur au pire score) OU garder l'ordre original
+  const sortedCriteria = disableSort 
+    ? [...criteria]
+    : [...criteria].sort((a, b) => {
+        const scoreA = (a.score / a.maxScore) * 100
+        const scoreB = (b.score / b.maxScore) * 100
+        return scoreB - scoreA // Du plus haut au plus bas
+      })
+  
+  // Appliquer le floutage APRÈS le tri (ou non-tri)
+  const criteriaWithBlur = sortedCriteria.map((criterion, index, array) => {
+    // Garder le floutage existant OU flouter les N derniers critères APRÈS le tri
+    if (criterion.shouldBlur || (blurLastN > 0 && index >= array.length - blurLastN)) {
+      return { ...criterion, shouldBlur: true }
+    }
+    return criterion
   })
+  
+  // Déterminer les critères floutés et leur position
+  const blurredIndices = criteriaWithBlur
+    .map((criterion, index) => criterion.shouldBlur ? index : -1)
+    .filter(index => index !== -1)
+  
+  const hasBlurredContent = blurredIndices.length > 0
+  
+  // Calculer la position centrale des blocs floutés (en pourcentage)
+  // Chaque critère occupe environ (100 / n)% de l'espace
+  // Le centre du critère i est à (i + 0.5) * (100 / n)%
+  // On applique un facteur de correction pour tenir compte des paddings/marges
+  const avgBlurredIndex = blurredIndices.reduce((sum, idx) => sum + idx, 0) / blurredIndices.length
+  // Position centrée sur le(s) critère(s) flouté(s) avec facteur de correction
+  const rawPosition = ((avgBlurredIndex + 0.5) / criteriaWithBlur.length) * 100
+  const blurredCenterPosition = hasBlurredContent
+    ? rawPosition * 0.85 // Facteur de correction pour les marges
+    : 0
   
   const getTotalBadgeStyle = () => {
     if (percentage < 30) {
@@ -100,8 +134,8 @@ export default function DetailSection({
         </div>
         
         {/* Lignes du tableau - plus compactes */}
-        <div className="border-2 border-[#074482]/30 border-t-0">
-          {sortedCriteria.map((criterion, index) => (
+        <div className="border-2 border-[#074482]/30 border-t-0 relative">
+          {criteriaWithBlur.map((criterion, index) => (
             <motion.div
               key={criterion.name}
               initial={{ opacity: 0, y: 20 }}
@@ -113,7 +147,7 @@ export default function DetailSection({
               }}
               className={`grid grid-cols-12 gap-2 sm:gap-4 py-2 sm:py-3 px-2 sm:px-4 border-b border-gray-100 last:border-b-0 ${
                 index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
-              }`}
+              } ${criterion.shouldBlur ? 'blur-sm select-none pointer-events-none' : ''}`}
               style={{
                 fontFamily: 'var(--font-poppins)',
                 fontSize: '14px'
@@ -146,6 +180,38 @@ export default function DetailSection({
               </div>
             </motion.div>
           ))}
+          
+          {/* Encart "Réservé aux membres du bootcamp" par-dessus le contenu flouté */}
+          {hasBlurredContent && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.4, ease: 'easeOut', delay: 0.5 }}
+              className="absolute left-1/2 -translate-x-1/2 z-10 pointer-events-none"
+              style={{
+                top: `${blurredCenterPosition}%`,
+                transform: 'translate(-50%, -50%)'
+              }}
+            >
+              <a
+                href="https://romainbour.framer.website/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#074482] text-white px-4 sm:px-6 py-3 sm:py-4 rounded-full shadow-2xl flex flex-col items-center gap-1 pointer-events-auto hover:bg-[#053a6b] transition-colors duration-200 cursor-pointer"
+                style={{ fontFamily: 'var(--font-poppins)' }}
+              >
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <span className="text-lg sm:text-xl">🔒</span>
+                  <span className="font-semibold text-xs sm:text-base whitespace-nowrap">
+                    Réservé aux membres du bootcamp
+                  </span>
+                </div>
+                <span className="text-[10px] sm:text-xs text-white/80 font-normal">
+                  Cliquer pour en savoir plus
+                </span>
+              </a>
+            </motion.div>
+          )}
         </div>
         
         {/* Score détaché dans un encadré bleu avec bulle colorée */}

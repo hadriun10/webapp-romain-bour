@@ -145,6 +145,13 @@ export default function ResultsPage() {
     )
   }
 
+  // Calculer le score de la sélection avant les sections
+  const selectionTotalScore = linkedinData.selection_critere_1_points_obtenus + 1 + 1
+  const selectionTotalMax = 15
+  
+  // Calculer le score de crédibilité (Services forcé à 1)
+  const credTotalScore = linkedinData.cred_critere_1_points_obtenus + (linkedinData.cred_critere_3_points_obtenus || 0) + 1
+  
   // Préparer les données pour les sections LinkedIn
   const sections = [
     {
@@ -168,6 +175,11 @@ export default function ResultsPage() {
       maxScore: linkedinData.about_total_maximum
     },
     {
+      name: 'Espace Sélection',
+      score: selectionTotalScore,
+      maxScore: selectionTotalMax
+    },
+    {
       name: 'Contenu',
       score: linkedinData.contenu_total_points,
       maxScore: linkedinData.contenu_total_maximum
@@ -179,7 +191,7 @@ export default function ResultsPage() {
     },
     {
       name: 'Crédibilité et preuves sociales',
-      score: linkedinData.cred_total_points,
+      score: credTotalScore,
       maxScore: linkedinData.cred_total_maximum
     }
   ]
@@ -214,9 +226,86 @@ export default function ResultsPage() {
   const photoCriteria = createCriteria('photo', linkedinData.photo_total_categories)
   const headlineCriteria = createCriteria('headline', linkedinData.headline_total_categories)
   const aboutCriteria = createCriteria('about', linkedinData.about_total_categories)
+  
+  // Créer les critères pour Espace Sélection (1 réel + 2 factices)
+  // Total : 15 points (5+5+5)
+  // IMPORTANT : Critères 2 et 3 sont TOUJOURS floutés (indépendamment du score)
+  const selectionCriteria = [
+    // Critère 1 : vient de la database - TOUJOURS VISIBLE
+    {
+      name: getCriteriaTitle(linkedinData.selection_critere_1_titre),
+      description: linkedinData.selection_critere_1_titre,
+      score: linkedinData.selection_critere_1_points_obtenus,
+      maxScore: 5,
+      feedback: linkedinData.selection_critere_1_explication || undefined,
+      expectation: getCriteriaExpectation('selection', linkedinData.selection_critere_1_titre),
+      isMaxScore: linkedinData.selection_critere_1_points_obtenus === 5,
+      shouldBlur: false
+    },
+    // Critère 2 : factice - TOUJOURS FLOUTÉ
+    {
+      name: 'Diversité et pertinence des ressources',
+      description: 'Diversité et pertinence des ressources',
+      score: 1,
+      maxScore: 5,
+      feedback: 'Les ressources sélectionnées montrent une certaine diversité, mais pourraient être plus variées et actualisées régulièrement pour maximiser l\'impact et la pertinence auprès de votre audience cible.',
+      expectation: getCriteriaExpectation('selection', 'Diversité et pertinence des ressources'),
+      isMaxScore: false,
+      shouldBlur: true
+    },
+    // Critère 3 : factice - TOUJOURS FLOUTÉ
+    {
+      name: 'Structuration et mise en avant',
+      description: 'Structuration et mise en avant',
+      score: 1,
+      maxScore: 5,
+      feedback: 'La structuration de votre sélection est présente mais pourrait être améliorée avec des titres plus engageants et une hiérarchisation plus claire pour mettre en avant vos meilleurs contenus en priorité.',
+      expectation: getCriteriaExpectation('selection', 'Structuration et mise en avant'),
+      isMaxScore: false,
+      shouldBlur: true
+    }
+  ]
+  
   const contenuCriteria = createCriteria('contenu', linkedinData.contenu_total_categories)
   const experiencesCriteria = createCriteria('experiences', linkedinData.experiences_total_categories)
-  const credCriteria = createCriteria('cred', linkedinData.cred_total_categories)
+  
+  // Créer les critères de crédibilité dans le bon ordre : Compétences → Recommandations → Services
+  // IMPORTANT : Services est TOUJOURS flouté (indépendamment du score)
+  const credCriteria = [
+    // Critère 1 : Compétences (de la DB) - VISIBLE
+    {
+      name: getCriteriaTitle(linkedinData.cred_critere_1_titre),
+      description: linkedinData.cred_critere_1_titre,
+      score: linkedinData.cred_critere_1_points_obtenus,
+      maxScore: linkedinData.cred_critere_1_points_maximum,
+      feedback: linkedinData.cred_critere_1_explication || undefined,
+      expectation: getCriteriaExpectation('cred', linkedinData.cred_critere_1_titre),
+      isMaxScore: linkedinData.cred_critere_1_points_obtenus === linkedinData.cred_critere_1_points_maximum,
+      shouldBlur: false
+    },
+    // Critère 2 : Recommandations (de la DB - anciennement critère 3) - VISIBLE
+    {
+      name: getCriteriaTitle(linkedinData.cred_critere_3_titre),
+      description: linkedinData.cred_critere_3_titre,
+      score: linkedinData.cred_critere_3_points_obtenus,
+      maxScore: linkedinData.cred_critere_3_points_maximum,
+      feedback: linkedinData.cred_critere_3_explication || undefined,
+      expectation: getCriteriaExpectation('cred', linkedinData.cred_critere_3_titre),
+      isMaxScore: linkedinData.cred_critere_3_points_obtenus === linkedinData.cred_critere_3_points_maximum,
+      shouldBlur: false
+    },
+    // Critère 3 : Services (de la DB - anciennement critère 2, forcé à 1) - TOUJOURS FLOUTÉ
+    {
+      name: getCriteriaTitle(linkedinData.cred_critere_2_titre),
+      description: linkedinData.cred_critere_2_titre,
+      score: 1,
+      maxScore: linkedinData.cred_critere_2_points_maximum,
+      feedback: linkedinData.cred_critere_2_explication || undefined,
+      expectation: getCriteriaExpectation('cred', linkedinData.cred_critere_2_titre),
+      isMaxScore: false,
+      shouldBlur: true
+    }
+  ]
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
@@ -289,8 +378,8 @@ export default function ResultsPage() {
 
         {/* Global Score */}
         <GlobalScore
-          score={linkedinData.global_total_points}
-          maxScore={linkedinData.global_total_maximum}
+          score={linkedinData.global_total_points - linkedinData.selection_critere_1_points_obtenus + selectionTotalScore - linkedinData.cred_critere_2_points_obtenus + 1}
+          maxScore={linkedinData.global_total_maximum - linkedinData.selection_total_maximum + selectionTotalMax}
           onComplete={handleGlobalScoreComplete}
         />
 
@@ -351,6 +440,7 @@ export default function ResultsPage() {
               totalScore={linkedinData.banner_total_points}
               maxScore={linkedinData.banner_total_maximum}
               delay={0.75}
+              blurLastN={2}
             />
             
             <DetailSection
@@ -370,11 +460,52 @@ export default function ResultsPage() {
             />
             
             <DetailSection
+              title="Espace Sélection"
+              criteria={selectionCriteria}
+              totalScore={selectionTotalScore}
+              maxScore={selectionTotalMax}
+              delay={1.2}
+              disableSort={true}
+            />
+            
+            <div className="mt-10">
+              <div className="bg-[#074482] text-white border-2 border-[#074482] rounded-3xl shadow-lg px-6 sm:px-10 py-6 sm:py-8 text-center">
+                <h3
+                  className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4"
+                  style={{ fontFamily: 'var(--font-poppins)', letterSpacing: '-0.01em' }}
+                >
+                  Savoir ce qui va pas c&apos;est bien, l&apos;améliorer c&apos;est mieux
+                </h3>
+                <p
+                  className="text-base sm:text-lg leading-relaxed mb-4"
+                  style={{ fontFamily: 'var(--font-poppins)' }}
+                >
+                  Salut, moi c&apos;est Romain Bour. J&apos;organise un bootcamp intensif où l&apos;on voit de A à Z comment refaire son profil LinkedIn, mais pas que : on aborde aussi la stratégie de contenu simple et efficace, comment engager son audience, et bien plus encore. Je te laisse le lien juste en dessous pour réserver ta place et profiter d&apos;un accompagnement sur-mesure.
+                </p>
+                <p
+                  className="text-sm sm:text-base font-medium uppercase tracking-wide text-white/80"
+                  style={{ fontFamily: 'var(--font-poppins)' }}
+                >
+                  Prochain bootcamp : du 18 au 22 novembre 2025
+                </p>
+                <div className="mt-5 flex justify-center">
+                  <Link
+                    href="https://romainbour.framer.website/"
+                    className="inline-flex items-center gap-2 bg-white text-[#074482] font-semibold px-6 sm:px-8 py-3 rounded-2xl border-2 border-white shadow-md transition-transform duration-200 hover:-translate-y-0.5"
+                    style={{ fontFamily: 'var(--font-poppins)' }}
+                  >
+                    Découvrez les bootcamps
+                  </Link>
+                </div>
+              </div>
+            </div>
+            
+            <DetailSection
               title="Contenu"
               criteria={contenuCriteria}
               totalScore={linkedinData.contenu_total_points}
               maxScore={linkedinData.contenu_total_maximum}
-              delay={1.2}
+              delay={1.35}
             />
             
             <DetailSection
@@ -382,15 +513,16 @@ export default function ResultsPage() {
               criteria={experiencesCriteria}
               totalScore={linkedinData.experiences_total_points}
               maxScore={linkedinData.experiences_total_maximum}
-              delay={1.35}
+              delay={1.5}
             />
             
             <DetailSection
               title="Crédibilité et preuves sociales"
               criteria={credCriteria}
-              totalScore={linkedinData.cred_total_points}
+              totalScore={credTotalScore}
               maxScore={linkedinData.cred_total_maximum}
-              delay={1.5}
+              delay={1.65}
+              disableSort={true}
             />
           </div>
         )}
