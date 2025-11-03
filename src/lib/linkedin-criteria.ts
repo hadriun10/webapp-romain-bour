@@ -108,6 +108,8 @@ export const SECTION_MAPPING = {
 
 // Fonction pour obtenir l'explication attendue d'un critère
 export function getCriteriaExpectation(section: string, criteria: string): string {
+  if (!criteria) return "Critère non défini"
+  
   const mappedSection = SECTION_MAPPING[section as keyof typeof SECTION_MAPPING] || section
   const sectionExpectations = CRITERIA_EXPECTATIONS[mappedSection as keyof typeof CRITERIA_EXPECTATIONS]
   
@@ -124,5 +126,6 @@ export function getCriteriaExpectation(section: string, criteria: string): strin
 
 // Fonction pour obtenir le titre d'un critère sans le score
 export function getCriteriaTitle(criteria: string): string {
+  if (!criteria) return ""
   return criteria.replace(/ \(\d+\)$/, ':')
 }
