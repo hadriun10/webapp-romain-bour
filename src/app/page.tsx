@@ -114,31 +114,31 @@ export default function Home() {
 
       {/* Main Content - Layout 2 colonnes */}
       <main className="max-w-7xl mx-auto px-6 py-12 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           
-          {/* COLONNE GAUCHE - Formulaire */}
-          <div className="order-2 lg:order-1 space-y-0">
-        <motion.div
+          {/* COLONNE GAUCHE - Badge, Titre, Description et Formulaire */}
+          <div className="order-1 lg:order-1">
+            <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, ease: 'easeOut' }}
             >
               {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, ease: 'easeOut', delay: 0.2 }}
                 className="inline-block bg-white px-5 py-2 rounded-full mb-6 border-2 border-[#074482]"
-            style={{
-              fontFamily: 'var(--font-poppins)',
-              fontSize: '15px',
-              fontWeight: 500,
-              lineHeight: '24px',
-              color: '#074482'
-            }}
-          >
-            Outil développé à partir d&apos;une base de 200 top profils LinkedIn
-          </motion.div>
+                style={{
+                  fontFamily: 'var(--font-poppins)',
+                  fontSize: '15px',
+                  fontWeight: 500,
+                  lineHeight: '24px',
+                  color: '#074482'
+                }}
+              >
+                Outil développé à partir d&apos;une base de 200 top profils LinkedIn
+              </motion.div>
 
               {/* Titre */}
               <h1 className="text-4xl md:text-5xl mb-6" style={{
@@ -161,14 +161,29 @@ export default function Home() {
               }}>
                 Le premier outil qui analyse ton profil LinkedIn en 5 minutes et te donne les axes d&apos;amélioration pour transformer tes 10 likes en 3 clients.
               </p>
+            </motion.div>
 
-              {/* Formulaire */}
+            {/* Bloc Scores - Affiché ici sur mobile uniquement */}
+            <div className="lg:hidden mb-8">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.4 }}
-                className="bg-white rounded-2xl shadow-lg p-6 border-2 border-[#074482]/30"
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
               >
+                <SectionScores
+                  sections={demoSections}
+                  onComplete={handleSectionScoresComplete}
+                />
+              </motion.div>
+            </div>
+
+            {/* Formulaire */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut', delay: 0.4 }}
+              className="bg-white rounded-2xl shadow-lg p-6 border-2 border-[#074482]/30"
+            >
                 <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Champ lien LinkedIn */}
                 <div>
@@ -249,7 +264,6 @@ export default function Home() {
                   )}
                 </button>
               </form>
-              </motion.div>
             </motion.div>
 
             {/* Notifications en dessous du formulaire */}
@@ -285,12 +299,12 @@ export default function Home() {
             </div>
           </div>
 
-          {/* COLONNE DROITE - Preview des scores */}
+          {/* COLONNE DROITE - Preview des scores (Desktop uniquement) */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
-            className="order-1 lg:order-2"
+            className="hidden lg:flex lg:items-end order-2"
           >
             <SectionScores
               sections={demoSections}
