@@ -295,6 +295,7 @@ export default function Home() {
               <SectionScores
                 sections={demoSections}
                 onComplete={handleSectionScoresComplete}
+                noBottomMargin={true}
               />
             </motion.div>
           </div>
