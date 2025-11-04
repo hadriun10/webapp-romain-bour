@@ -482,6 +482,7 @@ export default function ResultsPage() {
               maxScore={linkedinData.banner_total_maximum}
               delay={0.75}
               blurLastN={2}
+              bannerImage={linkedinData.cover_url}
             />
             
             <DetailSection
