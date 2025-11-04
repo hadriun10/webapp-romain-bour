@@ -23,7 +23,8 @@ interface DetailSectionProps {
   delay?: number
   blurLastN?: number
   disableSort?: boolean
-  bannerImage?: string | null
+  image?: string | null
+  imageAspectRatio?: string
 }
 
 export default function DetailSection({ 
@@ -34,7 +35,8 @@ export default function DetailSection({
   delay = 0,
   blurLastN = 0,
   disableSort = false,
-  bannerImage = null
+  image = null,
+  imageAspectRatio = '1584 / 396'
 }: DetailSectionProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
@@ -118,18 +120,18 @@ export default function DetailSection({
         </h3>
       </motion.div>
       
-      {/* Image de bannière si fournie */}
-      {bannerImage && (
+      {/* Image si fournie */}
+      {image && (
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.5, ease: 'easeOut', delay: delay + 0.05 }}
           className="bg-white rounded-2xl shadow-lg overflow-hidden mx-2 sm:mx-0 border-2 border-[#074482]/30 mb-6"
         >
-          <div className="relative w-full" style={{ aspectRatio: '1584 / 396' }}>
+          <div className="relative w-full flex items-center justify-center" style={{ aspectRatio: imageAspectRatio }}>
             <img
-              src={bannerImage}
-              alt="Bannière LinkedIn"
+              src={image}
+              alt={title}
               className="w-full h-full object-cover"
             />
           </div>

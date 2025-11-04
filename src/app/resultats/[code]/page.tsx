@@ -441,6 +441,8 @@ export default function ResultsPage() {
               totalScore={linkedinData.photo_total_points}
               maxScore={linkedinData.photo_total_maximum}
               delay={0.6}
+              image={linkedinData.photo_url}
+              imageAspectRatio="1 / 1"
             />
             
             <div className="mt-10">
@@ -482,7 +484,8 @@ export default function ResultsPage() {
               maxScore={linkedinData.banner_total_maximum}
               delay={0.75}
               blurLastN={2}
-              bannerImage={linkedinData.cover_url}
+              image={linkedinData.cover_url}
+              imageAspectRatio="1584 / 396"
             />
             
             <DetailSection
