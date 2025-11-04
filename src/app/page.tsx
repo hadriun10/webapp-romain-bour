@@ -114,10 +114,10 @@ export default function Home() {
 
       {/* Main Content - Layout 2 colonnes */}
       <main className="max-w-7xl mx-auto px-6 py-12 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end">
           
           {/* COLONNE GAUCHE - Badge, Titre, Description, Formulaire */}
-          <div className="order-1 lg:flex lg:flex-col lg:justify-end">
+          <div className="order-1">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -162,20 +162,6 @@ export default function Home() {
                 Le premier outil qui analyse ton profil LinkedIn en 5 minutes et te donne les axes d&apos;amélioration pour transformer tes 10 likes en 3 clients.
               </p>
             </motion.div>
-
-            {/* Bloc Scores - Affiché ici sur mobile uniquement */}
-            <div className="lg:hidden mb-8">
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
-              >
-                <SectionScores
-                  sections={demoSections}
-                  onComplete={handleSectionScoresComplete}
-                />
-              </motion.div>
-            </div>
 
             {/* Formulaire */}
             <motion.div
@@ -267,7 +253,7 @@ export default function Home() {
             </motion.div>
 
             {/* Notifications en dessous du formulaire */}
-            <div className="mt-4 space-y-2">
+            <div className="space-y-2">
               {notifications.map((notification) => (
                 <motion.div
                   key={notification.id}
@@ -299,8 +285,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* COLONNE DROITE - Preview des scores (Desktop uniquement) */}
-          <div className="hidden lg:flex lg:items-end order-2">
+          {/* COLONNE DROITE - Preview des scores */}
+          <div className="order-2">
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}

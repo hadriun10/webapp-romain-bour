@@ -55,7 +55,7 @@ export default function SectionScores({ sections, onComplete }: SectionScoresPro
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut', delay: 0.2 }}
-      className="w-full bg-white rounded-2xl shadow-lg mb-8 overflow-hidden mx-2 sm:mx-0 border-2 border-[#074482]/30"
+      className="w-full bg-white rounded-2xl shadow-lg overflow-hidden mx-2 sm:mx-0 border-2 border-[#074482]/30"
     >
       <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8 p-4 sm:p-8 pb-0 text-center relative"
           style={{
