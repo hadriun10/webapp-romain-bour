@@ -161,7 +161,7 @@ export default function Home() {
                   color: '#074482'
                 }}
               >
-                Outil développé à partir d&apos;une base de 200 top profils LinkedIn
+                Un outil conçu à partir de l&apos;analyse de plus de 200 profils LinkedIn
               </motion.div>
 
               {/* Titre */}
@@ -183,7 +183,7 @@ export default function Home() {
                 letterSpacing: '-0.01em',
                 color: '#191919'
               }}>
-                Le premier outil qui analyse ton profil LinkedIn en 5 minutes et te donne les axes d&apos;amélioration pour transformer tes 10 likes en 3 clients.
+                Le premier outil qui analyse ton profil LinkedIn en 5 minutes et t&apos;indique ce qu&apos;il faut améliorer pour qu&apos;on comprenne enfin pourquoi on devrait te choisir.
               </p>
             </motion.div>
 

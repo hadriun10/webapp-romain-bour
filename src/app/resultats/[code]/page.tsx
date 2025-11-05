@@ -198,7 +198,7 @@ export default function ResultsPage() {
 
     // Envoyer au webhook N8n pour tous les CTAs bootcamp
     // N8n pourra récupérer l'email via le code depuis sa base de données
-    const ctaNamesToTrack = ['Découvrez les bootcamps', '🔒 Réservé aux membres du bootcamp']
+    const ctaNamesToTrack = ['Découvrez les bootcamps', 'Découvre le programme et réserve ta place ici', 'Découvrir le programme', '🔒 Réservé aux membres du bootcamp']
     if (ctaNamesToTrack.includes(ctaName)) {
       const webhookData = {
         email: userEmail || null, // Email si disponible, sinon null
@@ -621,28 +621,45 @@ export default function ResultsPage() {
                   className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4"
                   style={{ fontFamily: 'var(--font-poppins)', letterSpacing: '-0.01em' }}
                 >
-                  Savoir ce qui ne va pas c&apos;est bien, l&apos;améliorer c&apos;est mieux !
+                  Tu sais maintenant ce qui freine ton profil LinkedIn
                 </h3>
                 <p
                   className="text-base sm:text-lg leading-relaxed mb-4"
                   style={{ fontFamily: 'var(--font-poppins)' }}
                 >
-                  Ce mois ci, j&apos;organise un bootcamp intensif où l&apos;on voit de A à Z comment refaire son profil LinkedIn, mais pas que : on aborde aussi la stratégie de contenu simple et efficace, comment engager son audience, et bien plus encore. Je te laisse le lien juste en dessous pour réserver ta place et profiter d&apos;un accompagnement sur-mesure.
+                  et comment l&apos;améliorer.
                 </p>
                 <p
-                  className="text-sm sm:text-base font-medium uppercase tracking-wide text-white/80"
+                  className="text-base sm:text-lg font-semibold mb-4"
                   style={{ fontFamily: 'var(--font-poppins)' }}
                 >
-                  Prochain bootcamp : du 18 au 22 novembre 2025
+                  La vraie question, c&apos;est : tu passes à l&apos;action, ou tu restes bloqué au diagnostic ?
+                </p>
+                <p
+                  className="text-base sm:text-lg leading-relaxed mb-4"
+                  style={{ fontFamily: 'var(--font-poppins)' }}
+                >
+                  Le Bootcamp d&apos;Invisible à Incontournable, c&apos;est 30 jours pour :
+                </p>
+                <ul className="text-base sm:text-lg leading-relaxed mb-4 text-left max-w-2xl mx-auto" style={{ fontFamily: 'var(--font-poppins)' }}>
+                  <li className="mb-2">– clarifier ton positionnement,</li>
+                  <li className="mb-2">– refaire ton profil en profondeur,</li>
+                  <li className="mb-2">– construire une présence LinkedIn crédible, cohérente et engageante.</li>
+                </ul>
+                <p
+                  className="text-sm sm:text-base font-medium uppercase tracking-wide text-white/80 mb-4"
+                  style={{ fontFamily: 'var(--font-poppins)' }}
+                >
+                  Prochaine session : du 18 novembre au 17 décembre 2025.
                 </p>
                 <div className="mt-5 flex justify-center">
                   <Link
                     href="https://romainbour.framer.website/"
                     className="inline-flex items-center gap-2 bg-white text-[#074482] font-semibold px-6 sm:px-8 py-3 rounded-2xl border-2 border-white shadow-md transition-transform duration-200 hover:-translate-y-0.5"
                     style={{ fontFamily: 'var(--font-poppins)' }}
-                    onClick={(e) => handleCTAClick(e, 'Découvrez les bootcamps', 'https://romainbour.framer.website/')}
+                    onClick={(e) => handleCTAClick(e, 'Découvre le programme et réserve ta place ici', 'https://romainbour.framer.website/')}
                   >
-                    Découvrez les bootcamps
+                    → Découvre le programme et réserve ta place ici
                   </Link>
                 </div>
               </div>
@@ -682,28 +699,34 @@ export default function ResultsPage() {
                   className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4"
                   style={{ fontFamily: 'var(--font-poppins)', letterSpacing: '-0.01em' }}
                 >
-                  Savoir ce qui ne va pas c&apos;est bien, l&apos;améliorer c&apos;est mieux !
+                  Tu as maintenant une vision claire de ton profil.
                 </h3>
+                <p
+                  className="text-base sm:text-lg font-semibold mb-4"
+                  style={{ fontFamily: 'var(--font-poppins)' }}
+                >
+                  Prochaine étape : passer à l&apos;action.
+                </p>
                 <p
                   className="text-base sm:text-lg leading-relaxed mb-4"
                   style={{ fontFamily: 'var(--font-poppins)' }}
                 >
-                  Ce mois ci, j&apos;organise un bootcamp intensif où l&apos;on voit de A à Z comment refaire son profil LinkedIn, mais pas que : on aborde aussi la stratégie de contenu simple et efficace, comment engager son audience, et bien plus encore. Je te laisse le lien juste en dessous pour réserver ta place et profiter d&apos;un accompagnement sur-mesure.
+                  Rejoins le Bootcamp d&apos;Invisible à Incontournable
                 </p>
                 <p
-                  className="text-sm sm:text-base font-medium uppercase tracking-wide text-white/80"
+                  className="text-base sm:text-lg leading-relaxed mb-4"
                   style={{ fontFamily: 'var(--font-poppins)' }}
                 >
-                  Prochain bootcamp : du 18 au 22 novembre 2025
+                  et transforme ton profil en vrai levier d&apos;opportunités.
                 </p>
                 <div className="mt-5 flex justify-center">
                   <Link
                     href="https://romainbour.framer.website/"
                     className="inline-flex items-center gap-2 bg-white text-[#074482] font-semibold px-6 sm:px-8 py-3 rounded-2xl border-2 border-white shadow-md transition-transform duration-200 hover:-translate-y-0.5"
                     style={{ fontFamily: 'var(--font-poppins)' }}
-                    onClick={(e) => handleCTAClick(e, 'Découvrez les bootcamps', 'https://romainbour.framer.website/')}
+                    onClick={(e) => handleCTAClick(e, 'Découvrir le programme', 'https://romainbour.framer.website/')}
                   >
-                    Découvrez les bootcamps
+                    → Découvrir le programme
                   </Link>
                 </div>
               </div>
@@ -714,3 +737,4 @@ export default function ResultsPage() {
     </div>
   )
 }
+

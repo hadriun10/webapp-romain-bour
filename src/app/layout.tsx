@@ -66,7 +66,7 @@ const poppins = localFont({
 
 export const metadata: Metadata = {
   title: "Analyse LinkedIn by Romain Bour | Nexus Generation",
-  description: "Optimise ton profil LinkedIn en 5 minutes. Analyse complète de ton profil et axes d'amélioration pour transformer tes likes en clients. Outil développé par Romain Bour à partir de 200 top profils LinkedIn.",
+  description: "Optimise ton profil LinkedIn en 5 minutes. Analyse complète de ton profil et axes d'amélioration pour transformer tes likes en clients. Un outil conçu à partir de l'analyse de plus de 200 profils LinkedIn.",
   icons: {
     icon: '/nexusgeneration_logo.jpeg',
     shortcut: '/nexusgeneration_logo.jpeg',
