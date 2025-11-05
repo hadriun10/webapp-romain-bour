@@ -25,6 +25,7 @@ interface DetailSectionProps {
   disableSort?: boolean
   image?: string | null
   imageAspectRatio?: string
+  onCTAClick?: (ctaName: string, url: string) => void
 }
 
 export default function DetailSection({ 
@@ -36,7 +37,8 @@ export default function DetailSection({
   blurLastN = 0,
   disableSort = false,
   image = null,
-  imageAspectRatio = '1584 / 396'
+  imageAspectRatio = '1584 / 396',
+  onCTAClick
 }: DetailSectionProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
@@ -223,6 +225,11 @@ export default function DetailSection({
                 rel="noopener noreferrer"
                 className="bg-[#074482] text-white px-4 sm:px-6 py-3 sm:py-4 rounded-full shadow-2xl flex flex-col items-center gap-1 pointer-events-auto hover:bg-[#053a6b] transition-colors duration-200 cursor-pointer"
                 style={{ fontFamily: 'var(--font-poppins)' }}
+                onClick={(e) => {
+                  if (onCTAClick) {
+                    onCTAClick('🔒 Réservé aux membres du bootcamp', 'https://romainbour.framer.website/')
+                  }
+                }}
               >
                 <div className="flex items-center gap-2 sm:gap-3">
                   <span className="text-lg sm:text-xl">🔒</span>

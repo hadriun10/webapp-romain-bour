@@ -12,48 +12,11 @@ export default function Home() {
   const [isChecked, setIsChecked] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { notifications, success, error, removeNotification } = useNotification()
-  const [startTime] = useState(() => Date.now())
 
   // Track page view
   useEffect(() => {
     captureEvent('page_viewed', { page: 'home' })
   }, [])
-
-  // Tracking du temps passé sur la page d'accueil
-  useEffect(() => {
-    const sendTimeTracking = () => {
-      const timeSpent = Math.floor((Date.now() - startTime) / 1000) // temps en secondes
-      
-      // Track time spent in PostHog
-      if (timeSpent > 0) {
-        captureEvent('time_spent_on_home', {
-          timeSpent: timeSpent,
-          email: email || null
-        })
-      }
-    }
-
-    // Détecter quand l'utilisateur quitte la page
-    const handleBeforeUnload = () => {
-      sendTimeTracking()
-    }
-
-    // Détecter quand l'onglet est caché (changement d'onglet)
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        sendTimeTracking()
-      }
-    }
-
-    window.addEventListener('beforeunload', handleBeforeUnload)
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
-      sendTimeTracking() // Envoyer aussi au démontage du composant
-    }
-  }, [startTime, email])
 
   // Scores fictifs pour la démo
   const demoSections = [

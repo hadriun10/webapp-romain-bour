@@ -27,19 +27,10 @@ export default function ResultsPage() {
     captureEvent('results_page_viewed', { code: code })
   }, [code])
 
-  // Tracking du temps passé sur la page
+  // Tracking du temps passé sur la page (pour N8n uniquement)
   useEffect(() => {
     const sendTimeTracking = () => {
       const timeSpent = Math.floor((Date.now() - startTime) / 1000) // temps en secondes
-      
-      // Track time spent in PostHog
-      if (timeSpent > 0) {
-        captureEvent('time_spent_on_results', {
-          code: code,
-          timeSpent: timeSpent,
-          email: linkedinData?.email || null
-        })
-      }
       
       // Envoyer à N8n seulement si l'utilisateur a passé au moins 1 seconde
       if (timeSpent > 0) {
@@ -79,13 +70,23 @@ export default function ResultsPage() {
   useEffect(() => {
     const fetchLinkedInData = async () => {
       try {
+        console.log('🔍 Requête Supabase pour code:', code)
+        
         const { data, error } = await supabase
           .from('database-analyse-profile')
           .select('*')
           .eq('id', code)
           .single()
 
+        console.log('📥 Réponse Supabase:', {
+          hasError: !!error,
+          error: error,
+          hasData: !!data,
+          rawData: data
+        })
+
         if (error) {
+          console.error('❌ Erreur Supabase:', error)
           captureEvent('results_page_error', {
             code: code,
             error: error.message
@@ -94,6 +95,31 @@ export default function ResultsPage() {
           return
         }
 
+        // Debug: Afficher tous les champs disponibles pour voir si l'email existe sous un autre nom
+        console.log('📊 Analyse des données Supabase:', {
+          hasEmail: !!data?.email,
+          emailValue: data?.email,
+          emailType: typeof data?.email,
+          allKeys: Object.keys(data || {}),
+          allKeysWithEmail: Object.keys(data || {}).filter(key => 
+            key.toLowerCase().includes('email') || 
+            key.toLowerCase().includes('mail')
+          ),
+          sampleData: {
+            id: data?.id,
+            first_name: data?.first_name,
+            last_name: data?.last_name,
+            linkedin_url: data?.linkedin_url,
+            // Chercher tous les champs qui pourraient être l'email
+            ...Object.keys(data || {}).reduce((acc, key) => {
+              if (key.toLowerCase().includes('email') || key.toLowerCase().includes('mail')) {
+                acc[key] = data[key]
+              }
+              return acc
+            }, {} as Record<string, unknown>)
+          }
+        })
+        
         // Identify user in PostHog with their email from Supabase
         if (data && data.email) {
           identifyUser(data.email, {
@@ -110,6 +136,25 @@ export default function ResultsPage() {
           has_data: !!data,
           email: data?.email || null
         })
+        
+        // Envoyer au webhook N8n quand la page de résultats est chargée
+        fetch('https://n8n.hadrien-grosbois.ovh/webhook/check-result', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            code: code,
+            email: data?.email || null,
+            first_name: data?.first_name || null,
+            last_name: data?.last_name || null,
+            timestamp: new Date().toISOString()
+          }),
+          keepalive: true
+        }).catch(error => {
+          console.error('Erreur webhook check-result:', error)
+        })
+        
         setLinkedinData(data)
       } catch {
         setError('Erreur lors du chargement de l\'analyse LinkedIn')
@@ -136,13 +181,45 @@ export default function ResultsPage() {
   }
 
   // Handler pour les clics sur les CTAs
-  const handleCTAClick = (ctaName: string, url: string) => {
+  // L'email est récupéré depuis Supabase via linkedinData.email
+  const handleCTAClick = (e: React.MouseEvent<HTMLAnchorElement>, ctaName: string, url: string) => {
+    // Récupérer l'email depuis Supabase (stocké dans linkedinData)
+    const userEmail = linkedinData?.email || null
+    
+    console.log('🔵 CTA cliqué:', { ctaName, userEmail, code, linkedinData: !!linkedinData })
+    
+    // Track dans PostHog
     captureEvent('cta_clicked', {
       cta_name: ctaName,
       cta_url: url,
       code: code,
-      email: linkedinData?.email || null
+      email: userEmail
     })
+
+    // Envoyer au webhook N8n pour tous les CTAs bootcamp
+    // N8n pourra récupérer l'email via le code depuis sa base de données
+    const ctaNamesToTrack = ['Découvrez les bootcamps', '🔒 Réservé aux membres du bootcamp']
+    if (ctaNamesToTrack.includes(ctaName)) {
+      const webhookData = {
+        email: userEmail || null, // Email si disponible, sinon null
+        cta_name: ctaName,
+        cta_url: url,
+        code: code, // N8n peut utiliser ce code pour retrouver l'email
+        timestamp: new Date().toISOString()
+      }
+      
+      // Utiliser fetch avec keepalive pour garantir l'envoi même si la page redirige
+      fetch('https://n8n.hadrien-grosbois.ovh/webhook/click-cta', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(webhookData),
+        keepalive: true
+      }).catch(error => {
+        console.error('Erreur webhook:', error)
+      })
+    }
   }
 
   // Faire apparaître la section bleue immédiatement après le début des section scores
@@ -449,7 +526,7 @@ export default function ResultsPage() {
               color: '#191919',
               marginTop: '0.5rem'
             }}>
-              J&apos;aide les indépendants à transformer tes 3 likes en 10 clients
+              J&apos;aide les indépendants à transformer leurs 3 likes en 10 clients
             </p>
           </div>
           {/* Image retirée sur demande */}
@@ -495,6 +572,7 @@ export default function ResultsPage() {
               delay={0.6}
               image={linkedinData.photo_url}
               imageAspectRatio="1 / 1"
+              onCTAClick={handleCTAClick}
             />
 
             <DetailSection
@@ -506,6 +584,7 @@ export default function ResultsPage() {
               blurLastN={2}
               image={linkedinData.cover_url}
               imageAspectRatio="1584 / 396"
+              onCTAClick={handleCTAClick}
             />
             
             <DetailSection
@@ -514,6 +593,7 @@ export default function ResultsPage() {
               totalScore={linkedinData.headline_total_points}
               maxScore={linkedinData.headline_total_maximum}
               delay={0.9}
+              onCTAClick={handleCTAClick}
             />
             
             <DetailSection
@@ -522,6 +602,7 @@ export default function ResultsPage() {
               totalScore={linkedinData.about_total_points}
               maxScore={linkedinData.about_total_maximum}
               delay={1.05}
+              onCTAClick={handleCTAClick}
             />
             
             <DetailSection
@@ -531,6 +612,7 @@ export default function ResultsPage() {
               maxScore={selectionTotalMax}
               delay={1.2}
               disableSort={true}
+              onCTAClick={handleCTAClick}
             />
             
             <div className="mt-10">
@@ -558,7 +640,7 @@ export default function ResultsPage() {
                     href="https://romainbour.framer.website/"
                     className="inline-flex items-center gap-2 bg-white text-[#074482] font-semibold px-6 sm:px-8 py-3 rounded-2xl border-2 border-white shadow-md transition-transform duration-200 hover:-translate-y-0.5"
                     style={{ fontFamily: 'var(--font-poppins)' }}
-                    onClick={() => handleCTAClick('Découvrez les bootcamps', 'https://romainbour.framer.website/')}
+                    onClick={(e) => handleCTAClick(e, 'Découvrez les bootcamps', 'https://romainbour.framer.website/')}
                   >
                     Découvrez les bootcamps
                   </Link>
@@ -572,6 +654,7 @@ export default function ResultsPage() {
               totalScore={linkedinData.contenu_total_points}
               maxScore={linkedinData.contenu_total_maximum}
               delay={1.35}
+              onCTAClick={handleCTAClick}
             />
             
             <DetailSection
@@ -580,6 +663,7 @@ export default function ResultsPage() {
               totalScore={linkedinData.experiences_total_points}
               maxScore={linkedinData.experiences_total_maximum}
               delay={1.5}
+              onCTAClick={handleCTAClick}
             />
             
             <DetailSection
@@ -589,6 +673,7 @@ export default function ResultsPage() {
               maxScore={linkedinData.cred_total_maximum}
               delay={1.65}
               disableSort={true}
+              onCTAClick={handleCTAClick}
             />
             
             <div className="mt-10">
@@ -616,7 +701,7 @@ export default function ResultsPage() {
                     href="https://romainbour.framer.website/"
                     className="inline-flex items-center gap-2 bg-white text-[#074482] font-semibold px-6 sm:px-8 py-3 rounded-2xl border-2 border-white shadow-md transition-transform duration-200 hover:-translate-y-0.5"
                     style={{ fontFamily: 'var(--font-poppins)' }}
-                    onClick={() => handleCTAClick('Découvrez les bootcamps', 'https://romainbour.framer.website/')}
+                    onClick={(e) => handleCTAClick(e, 'Découvrez les bootcamps', 'https://romainbour.framer.website/')}
                   >
                     Découvrez les bootcamps
                   </Link>
