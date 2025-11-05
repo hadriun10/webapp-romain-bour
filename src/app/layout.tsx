@@ -65,12 +65,12 @@ const poppins = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Mimprep - CV Analyzer",
-  description: "Analyze and optimize your CV with our intelligent analysis tool",
+  title: "Analyse LinkedIn by Romain Bour | Nexus Generation",
+  description: "Optimise ton profil LinkedIn en 5 minutes. Analyse complète de ton profil et axes d'amélioration pour transformer tes likes en clients. Outil développé par Romain Bour à partir de 200 top profils LinkedIn.",
   icons: {
-    icon: '/mimprep-logo.png',
-    shortcut: '/mimprep-logo.png',
-    apple: '/mimprep-logo.png',
+    icon: '/nexusgeneration_logo.jpeg',
+    shortcut: '/nexusgeneration_logo.jpeg',
+    apple: '/nexusgeneration_logo.jpeg',
   },
 };
 
