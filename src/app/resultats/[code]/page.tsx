@@ -621,14 +621,8 @@ export default function ResultsPage() {
                   className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4"
                   style={{ fontFamily: 'var(--font-poppins)', letterSpacing: '-0.01em' }}
                 >
-                  Tu sais maintenant ce qui freine ton profil LinkedIn
+                  Tu sais maintenant ce qui freine ton profil LinkedIn et comment l&apos;améliorer.
                 </h3>
-                <p
-                  className="text-base sm:text-lg leading-relaxed mb-4"
-                  style={{ fontFamily: 'var(--font-poppins)' }}
-                >
-                  et comment l&apos;améliorer.
-                </p>
                 <p
                   className="text-base sm:text-lg font-semibold mb-4"
                   style={{ fontFamily: 'var(--font-poppins)' }}
@@ -639,13 +633,8 @@ export default function ResultsPage() {
                   className="text-base sm:text-lg leading-relaxed mb-4"
                   style={{ fontFamily: 'var(--font-poppins)' }}
                 >
-                  Le Bootcamp d&apos;Invisible à Incontournable, c&apos;est 30 jours pour :
+                  Le Bootcamp d&apos;Invisible à Incontournable, c&apos;est 30 jours pour : clarifier ton positionnement, refaire ton profil en profondeur, construire une présence LinkedIn crédible, cohérente et engageante.
                 </p>
-                <ul className="text-base sm:text-lg leading-relaxed mb-4 text-left max-w-2xl mx-auto" style={{ fontFamily: 'var(--font-poppins)' }}>
-                  <li className="mb-2">– clarifier ton positionnement,</li>
-                  <li className="mb-2">– refaire ton profil en profondeur,</li>
-                  <li className="mb-2">– construire une présence LinkedIn crédible, cohérente et engageante.</li>
-                </ul>
                 <p
                   className="text-sm sm:text-base font-medium uppercase tracking-wide text-white/80 mb-4"
                   style={{ fontFamily: 'var(--font-poppins)' }}
@@ -699,25 +688,13 @@ export default function ResultsPage() {
                   className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4"
                   style={{ fontFamily: 'var(--font-poppins)', letterSpacing: '-0.01em' }}
                 >
-                  Tu as maintenant une vision claire de ton profil.
+                  Tu as maintenant une vision claire de ton profil. Prochaine étape : passer à l&apos;action.
                 </h3>
                 <p
-                  className="text-base sm:text-lg font-semibold mb-4"
-                  style={{ fontFamily: 'var(--font-poppins)' }}
-                >
-                  Prochaine étape : passer à l&apos;action.
-                </p>
-                <p
                   className="text-base sm:text-lg leading-relaxed mb-4"
                   style={{ fontFamily: 'var(--font-poppins)' }}
                 >
-                  Rejoins le Bootcamp d&apos;Invisible à Incontournable
-                </p>
-                <p
-                  className="text-base sm:text-lg leading-relaxed mb-4"
-                  style={{ fontFamily: 'var(--font-poppins)' }}
-                >
-                  et transforme ton profil en vrai levier d&apos;opportunités.
+                  Rejoins le Bootcamp d&apos;Invisible à Incontournable et transforme ton profil en vrai levier d&apos;opportunités.
                 </p>
                 <div className="mt-5 flex justify-center">
                   <Link
