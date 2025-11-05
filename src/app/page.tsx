@@ -226,7 +226,7 @@ export default function Home() {
                     className="mt-1 w-4 h-4 border-2 border-[#074482]/30 rounded focus:ring-2 focus:ring-blue-500"
                   />
                   <label htmlFor="terms" className="text-sm text-gray-700" style={{ fontFamily: 'var(--font-poppins)' }}>
-                    J&apos;accepte de recevoir mon analyse LinkedIn par email
+                    J&apos;accepte de recevoir par mail mon analyse et d&apos;autres communications pour me développer sur la plateforme.
                   </label>
                 </div>
 
