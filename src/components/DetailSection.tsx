@@ -93,7 +93,7 @@ export default function DetailSection({
 
   return (
     <div ref={ref} className="w-full mt-16 first:mt-0">
-      {/* Titre avec animation de soulignement bleu */}
+      {/* Titre centré */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
@@ -120,13 +120,15 @@ export default function DetailSection({
         </h3>
       </motion.div>
       
-      {/* Image si fournie */}
+      {/* Image (bannière pleine largeur ou photo de profil centrée) */}
       {image && (
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.5, ease: 'easeOut', delay: delay + 0.05 }}
-          className="bg-white rounded-2xl shadow-lg overflow-hidden mx-2 sm:mx-0 border-2 border-[#074482]/30 mb-6"
+          className={`bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-[#074482]/30 mb-6 ${
+            imageAspectRatio === '1 / 1' ? 'mx-auto w-[220px]' : 'mx-2 sm:mx-0'
+          }`}
         >
           <div className="relative w-full flex items-center justify-center" style={{ aspectRatio: imageAspectRatio }}>
             <img

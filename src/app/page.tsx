@@ -36,7 +36,7 @@ export default function Home() {
       name: 'Section À propos',
       score: 11,
       maxScore: 15,
-      shouldBlur: false
+      shouldBlur: true
     },
     {
       name: 'Espace Sélection',

@@ -372,7 +372,7 @@ export default function ResultsPage() {
         </svg>
       </div>
 
-      {/* Header avec texte Romain Bour */}
+      {/* Header avec texte Laurie Fraise */}
       <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -388,7 +388,7 @@ export default function ResultsPage() {
               color: '#191919',
               letterSpacing: '-0.02em'
             }}>
-              Romain Bour
+              Laurie Fraise🍓
             </h1>
             <p style={{
               fontFamily: 'var(--font-poppins)',
@@ -397,7 +397,7 @@ export default function ResultsPage() {
               color: '#191919',
               marginTop: '0.5rem'
             }}>
-              J&apos;aide les indépendants à trouver des clients grâce à LinkedIn
+              J&apos;accompagne les entrepreneurs à impact qui veulent des résultats sur LinkedIn sans vendre leur âme au diable
             </p>
           </div>
           {/* Image retirée sur demande */}
@@ -444,38 +444,6 @@ export default function ResultsPage() {
               image={linkedinData.photo_url}
               imageAspectRatio="1 / 1"
             />
-            
-            <div className="mt-10">
-              <div className="bg-[#074482] text-white border-2 border-[#074482] rounded-3xl shadow-lg px-6 sm:px-10 py-6 sm:py-8 text-center">
-                <h3
-                  className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4"
-                  style={{ fontFamily: 'var(--font-poppins)', letterSpacing: '-0.01em' }}
-                >
-                  C&apos;est sûrement l&apos;heure d&apos;aller plus loin
-                </h3>
-                <p
-                  className="text-base sm:text-lg leading-relaxed mb-4"
-                  style={{ fontFamily: 'var(--font-poppins)' }}
-                >
-                  Salut, moi c&apos;est Romain Bour. J&apos;organise un bootcamp intensif pour t&apos;aider à booster ton profil LinkedIn et décrocher plus de clients. Je te laisse le lien juste en dessous pour réserver ta place et profiter d&apos;un accompagnement sur-mesure.
-                </p>
-                <p
-                  className="text-sm sm:text-base font-medium uppercase tracking-wide text-white/80"
-                  style={{ fontFamily: 'var(--font-poppins)' }}
-                >
-                  Prochain bootcamp : du 18 au 22 novembre 2025
-                </p>
-                <div className="mt-5 flex justify-center">
-                  <Link
-                    href="https://romainbour.fr/bootcamp"
-                    className="inline-flex items-center gap-2 bg-white text-[#074482] font-semibold px-6 sm:px-8 py-3 rounded-2xl border-2 border-white shadow-md transition-transform duration-200 hover:-translate-y-0.5"
-                    style={{ fontFamily: 'var(--font-poppins)' }}
-                  >
-                    Découvrez les bootcamps
-                  </Link>
-                </div>
-              </div>
-            </div>
 
             <DetailSection
               title="Bannière"
@@ -519,13 +487,13 @@ export default function ResultsPage() {
                   className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4"
                   style={{ fontFamily: 'var(--font-poppins)', letterSpacing: '-0.01em' }}
                 >
-                  Savoir ce qui va pas c&apos;est bien, l&apos;améliorer c&apos;est mieux
+                  Savoir ce qui ne va pas c&apos;est bien, l&apos;améliorer c&apos;est mieux !
                 </h3>
                 <p
                   className="text-base sm:text-lg leading-relaxed mb-4"
                   style={{ fontFamily: 'var(--font-poppins)' }}
                 >
-                  Salut, moi c&apos;est Romain Bour. J&apos;organise un bootcamp intensif où l&apos;on voit de A à Z comment refaire son profil LinkedIn, mais pas que : on aborde aussi la stratégie de contenu simple et efficace, comment engager son audience, et bien plus encore. Je te laisse le lien juste en dessous pour réserver ta place et profiter d&apos;un accompagnement sur-mesure.
+                  Ce mois ci, j&apos;organise un bootcamp intensif où l&apos;on voit de A à Z comment refaire son profil LinkedIn, mais pas que : on aborde aussi la stratégie de contenu simple et efficace, comment engager son audience, et bien plus encore. Je te laisse le lien juste en dessous pour réserver ta place et profiter d&apos;un accompagnement sur-mesure.
                 </p>
                 <p
                   className="text-sm sm:text-base font-medium uppercase tracking-wide text-white/80"
@@ -569,6 +537,38 @@ export default function ResultsPage() {
               delay={1.65}
               disableSort={true}
             />
+            
+            <div className="mt-10">
+              <div className="bg-[#074482] text-white border-2 border-[#074482] rounded-3xl shadow-lg px-6 sm:px-10 py-6 sm:py-8 text-center">
+                <h3
+                  className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4"
+                  style={{ fontFamily: 'var(--font-poppins)', letterSpacing: '-0.01em' }}
+                >
+                  Savoir ce qui ne va pas c&apos;est bien, l&apos;améliorer c&apos;est mieux !
+                </h3>
+                <p
+                  className="text-base sm:text-lg leading-relaxed mb-4"
+                  style={{ fontFamily: 'var(--font-poppins)' }}
+                >
+                  Ce mois ci, j&apos;organise un bootcamp intensif où l&apos;on voit de A à Z comment refaire son profil LinkedIn, mais pas que : on aborde aussi la stratégie de contenu simple et efficace, comment engager son audience, et bien plus encore. Je te laisse le lien juste en dessous pour réserver ta place et profiter d&apos;un accompagnement sur-mesure.
+                </p>
+                <p
+                  className="text-sm sm:text-base font-medium uppercase tracking-wide text-white/80"
+                  style={{ fontFamily: 'var(--font-poppins)' }}
+                >
+                  Prochain bootcamp : du 18 au 22 novembre 2025
+                </p>
+                <div className="mt-5 flex justify-center">
+                  <Link
+                    href="https://romainbour.framer.website/"
+                    className="inline-flex items-center gap-2 bg-white text-[#074482] font-semibold px-6 sm:px-8 py-3 rounded-2xl border-2 border-white shadow-md transition-transform duration-200 hover:-translate-y-0.5"
+                    style={{ fontFamily: 'var(--font-poppins)' }}
+                  >
+                    Découvrez les bootcamps
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </main>
