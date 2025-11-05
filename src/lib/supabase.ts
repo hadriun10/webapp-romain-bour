@@ -15,6 +15,7 @@ export interface LinkedInData {
   cover_url: string;
   analyzed_at: string;
   source: string;
+  email?: string;
   
   // Scores globaux
   global_total_points: number;

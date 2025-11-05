@@ -9,6 +9,7 @@ import { LINKEDIN_CRITERIA, SECTION_MAPPING, getCriteriaExpectation, getCriteria
 import GlobalScore from '@/components/GlobalScore'
 import SectionScores from '@/components/SectionScores'
 import DetailSection from '@/components/DetailSection'
+import { captureEvent, identifyUser } from '@/lib/posthog'
 
 export default function ResultsPage() {
   const params = useParams()
@@ -21,10 +22,24 @@ export default function ResultsPage() {
   const [showSpacer, setShowSpacer] = useState(true)
   const [startTime] = useState(() => Date.now())
 
+  // Track page view
+  useEffect(() => {
+    captureEvent('results_page_viewed', { code: code })
+  }, [code])
+
   // Tracking du temps passé sur la page
   useEffect(() => {
     const sendTimeTracking = () => {
       const timeSpent = Math.floor((Date.now() - startTime) / 1000) // temps en secondes
+      
+      // Track time spent in PostHog
+      if (timeSpent > 0) {
+        captureEvent('time_spent_on_results', {
+          code: code,
+          timeSpent: timeSpent,
+          email: linkedinData?.email || null
+        })
+      }
       
       // Envoyer à N8n seulement si l'utilisateur a passé au moins 1 seconde
       if (timeSpent > 0) {
@@ -71,10 +86,30 @@ export default function ResultsPage() {
           .single()
 
         if (error) {
+          captureEvent('results_page_error', {
+            code: code,
+            error: error.message
+          })
           setError('Analyse LinkedIn non trouvée')
           return
         }
 
+        // Identify user in PostHog with their email from Supabase
+        if (data && data.email) {
+          identifyUser(data.email, {
+            email: data.email,
+            first_name: data.first_name,
+            last_name: data.last_name,
+            code: code
+          })
+        }
+        
+        // Track successful results load
+        captureEvent('results_loaded', {
+          code: code,
+          has_data: !!data,
+          email: data?.email || null
+        })
         setLinkedinData(data)
       } catch {
         setError('Erreur lors du chargement de l\'analyse LinkedIn')
@@ -98,6 +133,16 @@ export default function ResultsPage() {
 
   const handleSectionScoresComplete = () => {
     setAnimationPhase(2)
+  }
+
+  // Handler pour les clics sur les CTAs
+  const handleCTAClick = (ctaName: string, url: string) => {
+    captureEvent('cta_clicked', {
+      cta_name: ctaName,
+      cta_url: url,
+      code: code,
+      email: linkedinData?.email || null
+    })
   }
 
   // Faire apparaître la section bleue immédiatement après le début des section scores
@@ -176,6 +221,13 @@ export default function ResultsPage() {
               className="bg-[#2C2C2C] text-white px-6 py-3 rounded-lg hover:bg-[#3C3C3C] transition-colors text-sm border border-[#555555] shadow-sm"
               style={{ 
                 boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
+              }}
+              onClick={() => {
+                captureEvent('cta_clicked', {
+                  cta_name: 'Retour à l\'accueil',
+                  cta_url: '/',
+                  code: code
+                })
               }}
             >
               Retour à l&apos;accueil
@@ -372,7 +424,7 @@ export default function ResultsPage() {
         </svg>
       </div>
 
-      {/* Header avec texte Laurie Fraise */}
+      {/* Header avec texte Romain Bour */}
       <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -388,7 +440,7 @@ export default function ResultsPage() {
               color: '#191919',
               letterSpacing: '-0.02em'
             }}>
-              Laurie Fraise🍓
+              Romain Bour
             </h1>
             <p style={{
               fontFamily: 'var(--font-poppins)',
@@ -397,7 +449,7 @@ export default function ResultsPage() {
               color: '#191919',
               marginTop: '0.5rem'
             }}>
-              J&apos;accompagne les entrepreneurs à impact qui veulent des résultats sur LinkedIn sans vendre leur âme au diable
+              J&apos;aide les indépendants à transformer tes 3 likes en 10 clients
             </p>
           </div>
           {/* Image retirée sur demande */}
@@ -506,6 +558,7 @@ export default function ResultsPage() {
                     href="https://romainbour.framer.website/"
                     className="inline-flex items-center gap-2 bg-white text-[#074482] font-semibold px-6 sm:px-8 py-3 rounded-2xl border-2 border-white shadow-md transition-transform duration-200 hover:-translate-y-0.5"
                     style={{ fontFamily: 'var(--font-poppins)' }}
+                    onClick={() => handleCTAClick('Découvrez les bootcamps', 'https://romainbour.framer.website/')}
                   >
                     Découvrez les bootcamps
                   </Link>
@@ -563,6 +616,7 @@ export default function ResultsPage() {
                     href="https://romainbour.framer.website/"
                     className="inline-flex items-center gap-2 bg-white text-[#074482] font-semibold px-6 sm:px-8 py-3 rounded-2xl border-2 border-white shadow-md transition-transform duration-200 hover:-translate-y-0.5"
                     style={{ fontFamily: 'var(--font-poppins)' }}
+                    onClick={() => handleCTAClick('Découvrez les bootcamps', 'https://romainbour.framer.website/')}
                   >
                     Découvrez les bootcamps
                   </Link>

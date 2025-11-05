@@ -1,9 +1,10 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import SectionScores from '@/components/SectionScores'
 import { useNotification } from '@/hooks/useNotification'
+import { captureEvent, identifyUser } from '@/lib/posthog'
 
 export default function Home() {
   const [profileLink, setProfileLink] = useState('')
@@ -11,6 +12,48 @@ export default function Home() {
   const [isChecked, setIsChecked] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { notifications, success, error, removeNotification } = useNotification()
+  const [startTime] = useState(() => Date.now())
+
+  // Track page view
+  useEffect(() => {
+    captureEvent('page_viewed', { page: 'home' })
+  }, [])
+
+  // Tracking du temps passé sur la page d'accueil
+  useEffect(() => {
+    const sendTimeTracking = () => {
+      const timeSpent = Math.floor((Date.now() - startTime) / 1000) // temps en secondes
+      
+      // Track time spent in PostHog
+      if (timeSpent > 0) {
+        captureEvent('time_spent_on_home', {
+          timeSpent: timeSpent,
+          email: email || null
+        })
+      }
+    }
+
+    // Détecter quand l'utilisateur quitte la page
+    const handleBeforeUnload = () => {
+      sendTimeTracking()
+    }
+
+    // Détecter quand l'onglet est caché (changement d'onglet)
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        sendTimeTracking()
+      }
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      sendTimeTracking() // Envoyer aussi au démontage du composant
+    }
+  }, [startTime, email])
 
   // Scores fictifs pour la démo
   const demoSections = [
@@ -83,6 +126,20 @@ export default function Home() {
         })
 
         if (response.ok) {
+        // Identify user in PostHog with their email
+        if (email) {
+          identifyUser(email, {
+            email: email,
+            has_profile_link: !!profileLink
+          })
+        }
+        
+        // Track successful form submission
+        captureEvent('form_submitted', {
+          email: email,
+          has_profile_link: !!profileLink,
+          timestamp: new Date().toISOString()
+        })
         success('✅ Parfait ! Vérifie ta boîte mail (et tes spams), ton analyse arrive dans quelques minutes.')
         // Réinitialiser le formulaire
         setProfileLink('')
@@ -92,6 +149,10 @@ export default function Home() {
         throw new Error('Erreur lors de l\'envoi')
       }
     } catch (err) {
+      // Track form submission error
+      captureEvent('form_submission_error', {
+        error: err instanceof Error ? err.message : 'Unknown error'
+      })
       error('❌ Une erreur est survenue. Réessaie dans quelques instants.')
       console.error('Erreur:', err)
     } finally {
