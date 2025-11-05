@@ -25,7 +25,7 @@ interface DetailSectionProps {
   disableSort?: boolean
   image?: string | null
   imageAspectRatio?: string
-  onCTAClick?: (ctaName: string, url: string) => void
+  onCTAClick?: (e: React.MouseEvent<HTMLAnchorElement>, ctaName: string, url: string) => void
 }
 
 export default function DetailSection({ 
@@ -227,7 +227,7 @@ export default function DetailSection({
                 style={{ fontFamily: 'var(--font-poppins)' }}
                 onClick={(e) => {
                   if (onCTAClick) {
-                    onCTAClick('🔒 Réservé aux membres du bootcamp', 'https://romainbour.framer.website/')
+                    onCTAClick(e, '🔒 Réservé aux membres du bootcamp', 'https://romainbour.framer.website/')
                   }
                 }}
               >
