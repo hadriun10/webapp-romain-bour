@@ -633,7 +633,7 @@ export default function ResultsPage() {
                   className="text-base sm:text-lg leading-relaxed mb-4"
                   style={{ fontFamily: 'var(--font-poppins)' }}
                 >
-                  Le Bootcamp d&apos;Invisible à Incontournable, c&apos;est 30 jours pour : clarifier ton positionnement, refaire ton profil en profondeur, construire une présence LinkedIn crédible, cohérente et engageante.
+                  Le Bootcamp d&apos;Invisible à Incontournable, c&apos;est 30 jours pour : clarifier ton positionnement, refaire ton profil en profondeur et construire une présence LinkedIn crédible, cohérente et engageante.
                 </p>
                 <p
                   className="text-sm sm:text-base font-medium uppercase tracking-wide text-white/80 mb-4"
