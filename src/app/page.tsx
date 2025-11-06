@@ -210,7 +210,7 @@ export default function Home() {
                         className="text-[#074482] cursor-pointer"
                         onClick={() => setShowTooltip(!showTooltip)}
                       >
-                        (comment faire ?)
+                        (Où le trouver)
                       </span>
                       {showTooltip && (
                         <span className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-lg z-50" style={{ fontFamily: 'var(--font-poppins)' }}>
