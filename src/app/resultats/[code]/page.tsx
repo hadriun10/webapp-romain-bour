@@ -15,6 +15,23 @@ export default function ResultsPage() {
   const params = useParams()
   const code = params.code as string
   
+  // Fonction pour vérifier si on doit déclencher le webhook
+  const shouldTriggerWebhook = () => {
+    // Vérifier les paramètres d'URL qui indiquent qu'on ne doit pas déclencher le webhook
+    if (typeof window === 'undefined') return true // Côté serveur, on déclenche par défaut
+    
+    const urlParams = new URLSearchParams(window.location.search)
+    const skipParams = ['utm', 'admin', 'preview', 'test']
+    
+    for (const param of skipParams) {
+      if (urlParams.has(param)) {
+        return false
+      }
+    }
+    
+    return true
+  }
+  
   const [linkedinData, setLinkedinData] = useState<LinkedInData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -138,22 +155,27 @@ export default function ResultsPage() {
         })
         
         // Envoyer au webhook N8n quand la page de résultats est chargée
-        fetch('https://n8n.hadrien-grosbois.ovh/webhook/check-result', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            code: code,
-            email: data?.email || null,
-            first_name: data?.first_name || null,
-            last_name: data?.last_name || null,
-            timestamp: new Date().toISOString()
-          }),
-          keepalive: true
-        }).catch(error => {
-          console.error('Erreur webhook check-result:', error)
-        })
+        // Seulement si aucun paramètre d'URL ne bloque le déclenchement
+        if (shouldTriggerWebhook()) {
+          fetch('https://n8n.hadrien-grosbois.ovh/webhook/check-result', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              code: code,
+              email: data?.email || null,
+              first_name: data?.first_name || null,
+              last_name: data?.last_name || null,
+              timestamp: new Date().toISOString()
+            }),
+            keepalive: true
+          }).catch(error => {
+            console.error('Erreur webhook check-result:', error)
+          })
+        } else {
+          console.log('Webhook check-result ignoré à cause des paramètres d\'URL')
+        }
         
         setLinkedinData(data)
       } catch {
