@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import SectionScores from '@/components/SectionScores'
+import Footer from '@/components/Footer'
 import { useNotification } from '@/hooks/useNotification'
 import { captureEvent, identifyUser } from '@/lib/posthog'
 
@@ -347,6 +348,7 @@ export default function Home() {
 
         </div>
       </main>
+      <Footer />
     </div>
   )
 }
