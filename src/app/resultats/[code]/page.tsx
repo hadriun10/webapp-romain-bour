@@ -9,6 +9,7 @@ import { LINKEDIN_CRITERIA, SECTION_MAPPING, getCriteriaExpectation, getCriteria
 import GlobalScore from '@/components/GlobalScore'
 import SectionScores from '@/components/SectionScores'
 import DetailSection from '@/components/DetailSection'
+import Footer from '@/components/Footer'
 import { captureEvent, identifyUser } from '@/lib/posthog'
 
 export default function ResultsPage() {
@@ -624,6 +625,7 @@ export default function ResultsPage() {
               totalScore={linkedinData.about_total_points}
               maxScore={linkedinData.about_total_maximum}
               delay={1.05}
+              blurLastN={2}
               onCTAClick={handleCTAClick}
             />
             
@@ -682,6 +684,7 @@ export default function ResultsPage() {
               totalScore={linkedinData.contenu_total_points}
               maxScore={linkedinData.contenu_total_maximum}
               delay={1.35}
+              blurLastN={1}
               onCTAClick={handleCTAClick}
             />
             
@@ -691,6 +694,7 @@ export default function ResultsPage() {
               totalScore={linkedinData.experiences_total_points}
               maxScore={linkedinData.experiences_total_maximum}
               delay={1.5}
+              blurLastN={2}
               onCTAClick={handleCTAClick}
             />
             
@@ -733,6 +737,7 @@ export default function ResultsPage() {
           </div>
         )}
       </main>
+      <Footer />
     </div>
   )
 }
