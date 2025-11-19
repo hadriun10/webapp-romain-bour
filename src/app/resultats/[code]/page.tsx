@@ -221,7 +221,7 @@ export default function ResultsPage() {
 
     // Envoyer au webhook N8n pour tous les CTAs bootcamp
     // N8n pourra récupérer l'email via le code depuis sa base de données
-    const ctaNamesToTrack = ['Découvrez les bootcamps', 'Découvre le programme et réserve ta place ici', 'Découvrir le programme', '🔒 Réservé aux membres du bootcamp']
+    const ctaNamesToTrack = ['Booker un call', '🔒 Réservé aux membres du bootcamp']
     if (ctaNamesToTrack.includes(ctaName)) {
       const webhookData = {
         email: userEmail || null, // Email si disponible, sinon null
@@ -426,7 +426,7 @@ export default function ResultsPage() {
   const selectionCriteria = [
     // Critère 1 : vient de la database - TOUJOURS VISIBLE
     {
-      name: getCriteriaTitle(linkedinData.selection_critere_1_titre),
+      name: 'CTA sur le premier élément de sélection',
       description: linkedinData.selection_critere_1_titre,
       score: linkedinData.selection_critere_1_points_obtenus,
       maxScore: 5,
@@ -616,6 +616,7 @@ export default function ResultsPage() {
               totalScore={linkedinData.headline_total_points}
               maxScore={linkedinData.headline_total_maximum}
               delay={0.9}
+              blurLastN={2}
               onCTAClick={handleCTAClick}
             />
             
@@ -657,22 +658,18 @@ export default function ResultsPage() {
                   className="text-base sm:text-lg leading-relaxed mb-4"
                   style={{ fontFamily: 'var(--font-poppins)' }}
                 >
-                  Le Bootcamp d&apos;Invisible à Incontournable, c&apos;est 30 jours pour : clarifier ton positionnement, refaire ton profil en profondeur et construire une présence LinkedIn crédible, cohérente et engageante.
-                </p>
-                <p
-                  className="text-sm sm:text-base font-medium uppercase tracking-wide text-white/80 mb-4"
-                  style={{ fontFamily: 'var(--font-poppins)' }}
-                >
-                  Prochaine session : du 18 novembre au 17 décembre 2025.
+                  Pour aller plus loin et transformer ton profil en vrai levier d&apos;opportunités, booke un appel avec moi.
                 </p>
                 <div className="mt-5 flex justify-center">
                   <Link
-                    href="https://romainbour.framer.website/"
+                    href="https://calendly.com/romain-visibility/callmemaybe"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 bg-white text-[#074482] font-semibold px-6 sm:px-8 py-3 rounded-2xl border-2 border-white shadow-md transition-transform duration-200 hover:-translate-y-0.5"
                     style={{ fontFamily: 'var(--font-poppins)' }}
-                    onClick={(e) => handleCTAClick(e, 'Découvre le programme et réserve ta place ici', 'https://romainbour.framer.website/')}
+                    onClick={(e) => handleCTAClick(e, 'Booker un call', 'https://calendly.com/romain-visibility/callmemaybe')}
                   >
-                    → Découvre le programme et réserve ta place ici
+                    → Booker un call
                   </Link>
                 </div>
               </div>
@@ -720,16 +717,18 @@ export default function ResultsPage() {
                   className="text-base sm:text-lg leading-relaxed mb-4"
                   style={{ fontFamily: 'var(--font-poppins)' }}
                 >
-                  Rejoins le Bootcamp d&apos;Invisible à Incontournable et transforme ton profil en vrai levier d&apos;opportunités.
+                  Pour transformer ton profil en vrai levier d&apos;opportunités, booke un appel avec moi.
                 </p>
                 <div className="mt-5 flex justify-center">
                   <Link
-                    href="https://romainbour.framer.website/"
+                    href="https://calendly.com/romain-visibility/callmemaybe"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 bg-white text-[#074482] font-semibold px-6 sm:px-8 py-3 rounded-2xl border-2 border-white shadow-md transition-transform duration-200 hover:-translate-y-0.5"
                     style={{ fontFamily: 'var(--font-poppins)' }}
-                    onClick={(e) => handleCTAClick(e, 'Découvrir le programme', 'https://romainbour.framer.website/')}
+                    onClick={(e) => handleCTAClick(e, 'Booker un call', 'https://calendly.com/romain-visibility/callmemaybe')}
                   >
-                    → Découvrir le programme
+                    → Booker un call
                   </Link>
                 </div>
               </div>

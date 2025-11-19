@@ -22,7 +22,7 @@ export default function Footer() {
                   </p>
                   <div className="mt-4">
                     <Link
-                      href="https://www.linkedin.com/in/romain-bour/"
+                      href="https://www.linkedin.com/in/romainbour/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-[#074482] font-medium hover:underline"
