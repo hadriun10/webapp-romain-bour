@@ -207,7 +207,7 @@ export default function DetailSection({
             </motion.div>
           ))}
           
-          {/* Encart "Réservé aux membres du bootcamp" par-dessus le contenu flouté */}
+          {/* Encart "Réservé aux personnes que j'accompagne" par-dessus le contenu flouté */}
           {hasBlurredContent && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
@@ -227,14 +227,14 @@ export default function DetailSection({
                 style={{ fontFamily: 'var(--font-poppins)' }}
                 onClick={(e) => {
                   if (onCTAClick) {
-                    onCTAClick(e, '🔒 Réservé aux membres du bootcamp', 'https://romainbour.framer.website/')
+                    onCTAClick(e, '🔒 Réservé aux personnes que j\'accompagne', 'https://romainbour.framer.website/')
                   }
                 }}
               >
                 <div className="flex items-center gap-2 sm:gap-3">
                   <span className="text-lg sm:text-xl">🔒</span>
                   <span className="font-semibold text-xs sm:text-base whitespace-nowrap">
-                    Réservé aux membres du bootcamp
+                    Réservé aux personnes que j&apos;accompagne
                   </span>
                 </div>
                 <span className="text-[10px] sm:text-xs text-white/80 font-normal">
