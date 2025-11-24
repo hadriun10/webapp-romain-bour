@@ -221,7 +221,7 @@ export default function ResultsPage() {
 
     // Envoyer au webhook N8n pour tous les CTAs bootcamp
     // N8n pourra récupérer l'email via le code depuis sa base de données
-    const ctaNamesToTrack = ['Booker un call', '🔒 Réservé aux personnes que j\'accompagne']
+    const ctaNamesToTrack = ['Booker un call', '🔒 Clique ici pour débloquer cette section']
     if (ctaNamesToTrack.includes(ctaName)) {
       const webhookData = {
         email: userEmail || null, // Email si disponible, sinon null

@@ -220,26 +220,23 @@ export default function DetailSection({
               }}
             >
               <a
-                href="https://romainbour.framer.website/"
+                href="https://calendly.com/romain-visibility/callmemaybe"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-[#074482] text-white px-4 sm:px-6 py-3 sm:py-4 rounded-full shadow-2xl flex flex-col items-center gap-1 pointer-events-auto hover:bg-[#053a6b] transition-colors duration-200 cursor-pointer"
                 style={{ fontFamily: 'var(--font-poppins)' }}
                 onClick={(e) => {
                   if (onCTAClick) {
-                    onCTAClick(e, '🔒 Réservé aux personnes que j\'accompagne', 'https://romainbour.framer.website/')
+                    onCTAClick(e, '🔒 Clique ici pour débloquer cette section', 'https://calendly.com/romain-visibility/callmemaybe')
                   }
                 }}
               >
                 <div className="flex items-center gap-2 sm:gap-3">
                   <span className="text-lg sm:text-xl">🔒</span>
                   <span className="font-semibold text-xs sm:text-base whitespace-nowrap">
-                    Réservé aux personnes que j&apos;accompagne
+                    Clique ici pour débloquer cette section
                   </span>
                 </div>
-                <span className="text-[10px] sm:text-xs text-white/80 font-normal">
-                  Cliquer pour en savoir plus
-                </span>
               </a>
             </motion.div>
           )}
