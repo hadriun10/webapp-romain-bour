@@ -10,6 +10,8 @@ import GlobalScore from '@/components/GlobalScore'
 import SectionScores from '@/components/SectionScores'
 import DetailSection from '@/components/DetailSection'
 import Footer from '@/components/Footer'
+import Navbar from '@/components/Navbar'
+import ContactModal from '@/components/ContactModal'
 import { captureEvent, identifyUser } from '@/lib/posthog'
 
 export default function ResultsPage() {
@@ -39,6 +41,10 @@ export default function ResultsPage() {
   const [animationPhase, setAnimationPhase] = useState(0)
   const [showSpacer, setShowSpacer] = useState(true)
   const [startTime] = useState(() => Date.now())
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isContentUnlocked, setIsContentUnlocked] = useState(false)
+  const [showFooter, setShowFooter] = useState(false)
 
   // Track page view
   useEffect(() => {
@@ -179,10 +185,12 @@ export default function ResultsPage() {
         }
         
         setLinkedinData(data)
+        setLoading(false) // Mettre loading à false seulement après avoir défini les données
+        setShowFooter(true) // Afficher le Footer seulement après que les données sont chargées
       } catch {
         setError('Erreur lors du chargement de l\'analyse LinkedIn')
-      } finally {
         setLoading(false)
+        setShowFooter(false) // Ne pas afficher le Footer en cas d'erreur
       }
     }
 
@@ -205,7 +213,7 @@ export default function ResultsPage() {
 
   // Handler pour les clics sur les CTAs
   // L'email est récupéré depuis Supabase via linkedinData.email
-  const handleCTAClick = (e: React.MouseEvent<HTMLAnchorElement>, ctaName: string, url: string) => {
+  const handleCTAClick = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, ctaName: string, url: string) => {
     // Récupérer l'email depuis Supabase (stocké dans linkedinData)
     const userEmail = linkedinData?.email || null
     
@@ -219,19 +227,24 @@ export default function ResultsPage() {
       email: userEmail
     })
 
-    // Envoyer au webhook N8n pour tous les CTAs bootcamp
-    // N8n pourra récupérer l'email via le code depuis sa base de données
-    const ctaNamesToTrack = ['Booker un call', '🔒 Clique ici pour débloquer cette section']
+    // Si c'est le bouton "Clique ici pour débloquer cette section", ouvrir la popup
+    if (ctaName === '🔒 Clique ici pour débloquer cette section') {
+      e.preventDefault()
+      setIsModalOpen(true)
+      return
+    }
+
+    // Pour les autres CTAs, envoyer au webhook N8n
+    const ctaNamesToTrack = ['Booker un call']
     if (ctaNamesToTrack.includes(ctaName)) {
       const webhookData = {
-        email: userEmail || null, // Email si disponible, sinon null
+        email: userEmail || null,
         cta_name: ctaName,
         cta_url: url,
-        code: code, // N8n peut utiliser ce code pour retrouver l'email
+        code: code,
         timestamp: new Date().toISOString()
       }
       
-      // Utiliser fetch avec keepalive pour garantir l'envoi même si la page redirige
       fetch('https://n8n.hadrien-grosbois.ovh/webhook/click-cta', {
         method: 'POST',
         headers: {
@@ -245,6 +258,52 @@ export default function ResultsPage() {
     }
   }
 
+  // Handler pour la soumission du formulaire de contact
+  const handleModalSubmit = async (data: {
+    objective: string
+    currentSituation: string
+    howToAdvance: string
+    blockingPoint?: string
+  }) => {
+    setIsSubmitting(true)
+    const userEmail = linkedinData?.email || null
+
+    try {
+      const webhookData = {
+        email: userEmail || null,
+        cta_name: '🔒 Clique ici pour débloquer cette section',
+        cta_url: 'https://calendly.com/romain-visibility/callmemaybe',
+        code: code,
+        objective: data.objective,
+        current_situation: data.currentSituation,
+        how_to_advance: data.howToAdvance,
+        blocking_point: data.blockingPoint || null,
+        timestamp: new Date().toISOString()
+      }
+
+      const response = await fetch('https://n8n.hadrien-grosbois.ovh/webhook/click-cta', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(webhookData)
+      })
+
+      if (response.ok) {
+        setIsModalOpen(false)
+        setIsContentUnlocked(true) // Débloquer le contenu
+        // Optionnel : afficher un message de succès
+      } else {
+        throw new Error('Erreur lors de l\'envoi')
+      }
+    } catch (error) {
+      console.error('Erreur webhook:', error)
+      // Optionnel : afficher un message d'erreur
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   // Faire apparaître la section bleue immédiatement après le début des section scores
   useEffect(() => {
     if (animationPhase >= 1) {
@@ -252,101 +311,17 @@ export default function ResultsPage() {
     }
   }, [animationPhase])
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white relative overflow-hidden">
-        {/* Background avec carreaux gris clairs dessinés à la main */}
-        <div className="absolute inset-0 pointer-events-none">
-          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="handDrawnGrid" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-                {/* Carreaux avec des lignes légèrement irrégulières */}
-                <path d="M 0 0 L 60 0" stroke="#f3f4f6" strokeWidth="1" fill="none" opacity="0.6"/>
-                <path d="M 0 0 L 0 60" stroke="#f3f4f6" strokeWidth="1" fill="none" opacity="0.6"/>
-                
-                {/* Lignes horizontales avec légères variations */}
-                <path d="M 0 20 L 60 20" stroke="#e5e7eb" strokeWidth="0.8" fill="none" opacity="0.4"/>
-                <path d="M 0 40 L 60 40" stroke="#e5e7eb" strokeWidth="0.8" fill="none" opacity="0.4"/>
-                
-                {/* Lignes verticales avec légères variations */}
-                <path d="M 20 0 L 20 60" stroke="#e5e7eb" strokeWidth="0.8" fill="none" opacity="0.4"/>
-                <path d="M 40 0 L 40 60" stroke="#e5e7eb" strokeWidth="0.8" fill="none" opacity="0.4"/>
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#handDrawnGrid)"/>
-          </svg>
-        </div>
-        
-        <div className="flex items-center justify-center min-h-screen relative z-10">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Chargement de votre analyse LinkedIn...</p>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  // Pas de return anticipé - on affiche la Navbar même pendant le chargement ou en cas d'erreur
 
-  if (error || !linkedinData) {
-    return (
-      <div className="min-h-screen bg-white relative overflow-hidden">
-        {/* Background avec carreaux gris clairs dessinés à la main */}
-        <div className="absolute inset-0 pointer-events-none">
-          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="handDrawnGrid" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-                {/* Carreaux avec des lignes légèrement irrégulières */}
-                <path d="M 0 0 L 60 0" stroke="#f3f4f6" strokeWidth="1" fill="none" opacity="0.6"/>
-                <path d="M 0 0 L 0 60" stroke="#f3f4f6" strokeWidth="1" fill="none" opacity="0.6"/>
-                
-                {/* Lignes horizontales avec légères variations */}
-                <path d="M 0 20 L 60 20" stroke="#e5e7eb" strokeWidth="0.8" fill="none" opacity="0.4"/>
-                <path d="M 0 40 L 60 40" stroke="#e5e7eb" strokeWidth="0.8" fill="none" opacity="0.4"/>
-                
-                {/* Lignes verticales avec légères variations */}
-                <path d="M 20 0 L 20 60" stroke="#e5e7eb" strokeWidth="0.8" fill="none" opacity="0.4"/>
-                <path d="M 40 0 L 40 60" stroke="#e5e7eb" strokeWidth="0.8" fill="none" opacity="0.4"/>
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#handDrawnGrid)"/>
-          </svg>
-        </div>
-        
-        <div className="flex items-center justify-center min-h-screen relative z-10">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Analyse non trouvée</h1>
-            <p className="text-gray-600 mb-6">{error}</p>
-            <Link 
-              href="/" 
-              className="bg-[#2C2C2C] text-white px-6 py-3 rounded-lg hover:bg-[#3C3C3C] transition-colors text-sm border border-[#555555] shadow-sm"
-              style={{ 
-                boxShadow: 'inset 0 2px 0 0 #666666, inset 0 -2px 0 0 #666666, inset 2px 0 0 0 #666666, inset -2px 0 0 0 #666666, 0 1px 3px rgba(0, 0, 0, 0.1)' 
-              }}
-              onClick={() => {
-                captureEvent('cta_clicked', {
-                  cta_name: 'Retour à l\'accueil',
-                  cta_url: '/',
-                  code: code
-                })
-              }}
-            >
-              Retour à l&apos;accueil
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Calculer le score de la sélection avant les sections
-  const selectionTotalScore = linkedinData.selection_critere_1_points_obtenus + 1 + 1
+  // Calculer le score de la sélection avant les sections (seulement si linkedinData existe)
+  const selectionTotalScore = linkedinData ? linkedinData.selection_critere_1_points_obtenus + 1 + 1 : 0
   const selectionTotalMax = 15
   
   // Calculer le score de crédibilité (Services forcé à 1)
-  const credTotalScore = linkedinData.cred_critere_1_points_obtenus + (linkedinData.cred_critere_3_points_obtenus || 0) + 1
+  const credTotalScore = linkedinData ? linkedinData.cred_critere_1_points_obtenus + (linkedinData.cred_critere_3_points_obtenus || 0) + 1 : 0
   
   // Préparer les données pour les sections LinkedIn
-  const sections = [
+  const sections = linkedinData ? [
     {
       name: 'Photo de profil',
       score: linkedinData.photo_total_points,
@@ -387,7 +362,7 @@ export default function ResultsPage() {
       score: credTotalScore,
       maxScore: linkedinData.cred_total_maximum
     }
-  ]
+  ] : []
 
   // Fonction pour créer les critères d'une catégorie avec les nouveaux critères
   const createCriteria = (category: string, count: number) => {
@@ -414,16 +389,16 @@ export default function ResultsPage() {
     return criteria
   }
 
-  // Préparer les critères détaillés pour chaque catégorie
-  const bannerCriteria = createCriteria('banner', linkedinData.banner_total_categories)
-  const photoCriteria = createCriteria('photo', linkedinData.photo_total_categories)
-  const headlineCriteria = createCriteria('headline', linkedinData.headline_total_categories)
-  const aboutCriteria = createCriteria('about', linkedinData.about_total_categories)
+  // Préparer les critères détaillés pour chaque catégorie (seulement si linkedinData existe)
+  const bannerCriteria = linkedinData ? createCriteria('banner', linkedinData.banner_total_categories) : []
+  const photoCriteria = linkedinData ? createCriteria('photo', linkedinData.photo_total_categories) : []
+  const headlineCriteria = linkedinData ? createCriteria('headline', linkedinData.headline_total_categories) : []
+  const aboutCriteria = linkedinData ? createCriteria('about', linkedinData.about_total_categories) : []
   
   // Créer les critères pour Espace Sélection (1 réel + 2 factices)
   // Total : 15 points (5+5+5)
   // IMPORTANT : Critères 2 et 3 sont TOUJOURS floutés (indépendamment du score)
-  const selectionCriteria = [
+  const selectionCriteria = linkedinData ? [
     // Critère 1 : vient de la database - TOUJOURS VISIBLE
     {
       name: 'CTA sur le premier élément de sélection',
@@ -457,14 +432,14 @@ export default function ResultsPage() {
       isMaxScore: false,
       shouldBlur: true
     }
-  ]
+  ] : []
   
-  const contenuCriteria = createCriteria('contenu', linkedinData.contenu_total_categories)
-  const experiencesCriteria = createCriteria('experiences', linkedinData.experiences_total_categories)
+  const contenuCriteria = linkedinData ? createCriteria('contenu', linkedinData.contenu_total_categories) : []
+  const experiencesCriteria = linkedinData ? createCriteria('experiences', linkedinData.experiences_total_categories) : []
   
   // Créer les critères de crédibilité dans le bon ordre : Compétences → Recommandations → Services
   // IMPORTANT : Services est TOUJOURS flouté (indépendamment du score)
-  const credCriteria = [
+  const credCriteria = linkedinData ? [
     // Critère 1 : Compétences (de la DB) - VISIBLE
     {
       name: getCriteriaTitle(linkedinData.cred_critere_1_titre),
@@ -498,7 +473,7 @@ export default function ResultsPage() {
       isMaxScore: false,
       shouldBlur: true
     }
-  ]
+  ] : []
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
@@ -524,53 +499,41 @@ export default function ResultsPage() {
         </svg>
       </div>
 
-      {/* Header avec texte Romain Bour */}
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-        className="bg-white shadow-sm py-4 relative z-10"
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 relative overflow-visible">
-          <div className="text-center">
-            <h1 style={{
-              fontFamily: 'var(--font-poppins)',
-              fontSize: '2rem',
-              fontWeight: 600,
-              color: '#191919',
-              letterSpacing: '-0.02em'
-            }}>
-              Romain Bour
-            </h1>
-            <p style={{
-              fontFamily: 'var(--font-poppins)',
-              fontSize: '1rem',
-              fontWeight: 400,
-              color: '#191919',
-              marginTop: '0.5rem'
-            }}>
-              J&apos;aide les indépendants à transformer leurs 3 likes en 10 clients
-            </p>
-          </div>
-          {/* Image retirée sur demande */}
-        </div>
-      </motion.header>
+      {/* Navbar */}
+      <div className="relative z-20 mb-8">
+        <Navbar />
+      </div>
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 relative z-10">
-        {/* Espaceur invisible pour centrer la barre de chargement */}
-        {showSpacer && (
-          <motion.div
-            initial={{ height: '15vh' }}
-            animate={{ height: showSpacer ? '15vh' : 0 }}
-            exit={{ height: 0 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="w-full"
-          />
-        )}
+        {loading ? (
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600" style={{ fontFamily: 'var(--font-poppins)' }}>Chargement de votre analyse LinkedIn...</p>
+            </div>
+          </div>
+        ) : error || !linkedinData ? (
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="text-center">
+              <p className="text-red-600" style={{ fontFamily: 'var(--font-poppins)' }}>{error || 'Analyse LinkedIn non trouvée'}</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Espaceur invisible pour centrer la barre de chargement */}
+            {showSpacer && (
+              <motion.div
+                initial={{ height: '15vh' }}
+                animate={{ height: showSpacer ? '15vh' : 0 }}
+                exit={{ height: 0 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className="w-full"
+              />
+            )}
 
-        {/* Global Score */}
-        <GlobalScore
+            {/* Global Score */}
+            <GlobalScore
           score={linkedinData.global_total_points - linkedinData.selection_critere_1_points_obtenus + selectionTotalScore - linkedinData.cred_critere_2_points_obtenus + 1}
           maxScore={linkedinData.global_total_maximum - linkedinData.selection_total_maximum + selectionTotalMax}
           onComplete={handleGlobalScoreComplete}
@@ -596,6 +559,7 @@ export default function ResultsPage() {
               image={linkedinData.photo_url}
               imageAspectRatio="1 / 1"
               onCTAClick={handleCTAClick}
+              unlockContent={isContentUnlocked}
             />
 
             <DetailSection
@@ -608,6 +572,7 @@ export default function ResultsPage() {
               image={linkedinData.cover_url}
               imageAspectRatio="1584 / 396"
               onCTAClick={handleCTAClick}
+              unlockContent={isContentUnlocked}
             />
             
             <DetailSection
@@ -618,6 +583,7 @@ export default function ResultsPage() {
               delay={0.9}
               blurLastN={2}
               onCTAClick={handleCTAClick}
+              unlockContent={isContentUnlocked}
             />
             
             <DetailSection
@@ -628,6 +594,7 @@ export default function ResultsPage() {
               delay={1.05}
               blurLastN={2}
               onCTAClick={handleCTAClick}
+              unlockContent={isContentUnlocked}
             />
             
             <DetailSection
@@ -638,6 +605,7 @@ export default function ResultsPage() {
               delay={1.2}
               disableSort={true}
               onCTAClick={handleCTAClick}
+              unlockContent={isContentUnlocked}
             />
             
             <div className="mt-10">
@@ -683,6 +651,7 @@ export default function ResultsPage() {
               delay={1.35}
               blurLastN={1}
               onCTAClick={handleCTAClick}
+              unlockContent={isContentUnlocked}
             />
             
             <DetailSection
@@ -693,6 +662,7 @@ export default function ResultsPage() {
               delay={1.5}
               blurLastN={2}
               onCTAClick={handleCTAClick}
+              unlockContent={isContentUnlocked}
             />
             
             <DetailSection
@@ -703,6 +673,7 @@ export default function ResultsPage() {
               delay={1.65}
               disableSort={true}
               onCTAClick={handleCTAClick}
+              unlockContent={isContentUnlocked}
             />
             
             <div className="mt-10">
@@ -735,8 +706,19 @@ export default function ResultsPage() {
             </div>
           </div>
         )}
+          </>
+        )}
       </main>
-      <Footer />
+      {/* Footer - seulement affiché quand le chargement est terminé, l'animation du GlobalScore est finie et showFooter est true */}
+      {!loading && animationPhase > 0 && showFooter ? <Footer /> : null}
+      
+      {/* Modal de contact */}
+      <ContactModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleModalSubmit}
+        isSubmitting={isSubmitting}
+      />
     </div>
   )
 }

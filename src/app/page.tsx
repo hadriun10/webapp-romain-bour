@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import SectionScores from '@/components/SectionScores'
 import Footer from '@/components/Footer'
+import Navbar from '@/components/Navbar'
 import { useNotification } from '@/hooks/useNotification'
 import { captureEvent, identifyUser } from '@/lib/posthog'
 
@@ -157,6 +158,11 @@ export default function Home() {
         <div className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60" 
              style={{ backgroundImage: 'url(/romainbour-bg.png)' }}>
         </div>
+      </div>
+
+      {/* Navbar */}
+      <div className="relative z-20 mb-8">
+        <Navbar />
       </div>
 
       {/* Main Content - Layout 2 colonnes */}

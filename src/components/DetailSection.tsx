@@ -25,7 +25,8 @@ interface DetailSectionProps {
   disableSort?: boolean
   image?: string | null
   imageAspectRatio?: string
-  onCTAClick?: (e: React.MouseEvent<HTMLAnchorElement>, ctaName: string, url: string) => void
+  onCTAClick?: (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, ctaName: string, url: string) => void
+  unlockContent?: boolean
 }
 
 export default function DetailSection({ 
@@ -38,7 +39,8 @@ export default function DetailSection({
   disableSort = false,
   image = null,
   imageAspectRatio = '1584 / 396',
-  onCTAClick
+  onCTAClick,
+  unlockContent = false
 }: DetailSectionProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
@@ -56,8 +58,12 @@ export default function DetailSection({
         return scoreB - scoreA // Du plus haut au plus bas
       })
   
-  // Appliquer le floutage APRÈS le tri (ou non-tri)
+  // Appliquer le floutage APRÈS le tri (ou non-tri) - sauf si le contenu est débloqué
   const criteriaWithBlur = sortedCriteria.map((criterion, index, array) => {
+    // Si le contenu est débloqué, ne pas flouter
+    if (unlockContent) {
+      return { ...criterion, shouldBlur: false }
+    }
     // Garder le floutage existant OU flouter les N derniers critères APRÈS le tri
     if (criterion.shouldBlur || (blurLastN > 0 && index >= array.length - blurLastN)) {
       return { ...criterion, shouldBlur: true }
@@ -70,7 +76,7 @@ export default function DetailSection({
     .map((criterion, index) => criterion.shouldBlur ? index : -1)
     .filter(index => index !== -1)
   
-  const hasBlurredContent = blurredIndices.length > 0
+  const hasBlurredContent = !unlockContent && blurredIndices.length > 0
   
   // Calculer la position centrale des blocs floutés (en pourcentage)
   // Chaque critère occupe environ (100 / n)% de l'espace
@@ -219,13 +225,12 @@ export default function DetailSection({
                 transform: 'translate(-50%, -50%)'
               }}
             >
-              <a
-                href="https://calendly.com/romain-visibility/callmemaybe"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
                 className="bg-[#074482] text-white px-4 sm:px-6 py-3 sm:py-4 rounded-full shadow-2xl flex flex-col items-center gap-1 pointer-events-auto hover:bg-[#053a6b] transition-colors duration-200 cursor-pointer"
                 style={{ fontFamily: 'var(--font-poppins)' }}
                 onClick={(e) => {
+                  e.preventDefault()
                   if (onCTAClick) {
                     onCTAClick(e, '🔒 Clique ici pour débloquer cette section', 'https://calendly.com/romain-visibility/callmemaybe')
                   }
@@ -237,7 +242,7 @@ export default function DetailSection({
                     Clique ici pour débloquer cette section
                   </span>
                 </div>
-              </a>
+              </button>
             </motion.div>
           )}
         </div>
