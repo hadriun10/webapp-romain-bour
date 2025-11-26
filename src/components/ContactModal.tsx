@@ -205,11 +205,11 @@ export default function ContactModal({ isOpen, onClose, onSubmit, isSubmitting =
 
                 {/* Question 3 - Menu déroulant */}
                 <Dropdown
-                  label="Comment tu veux avancer dans les prochaines semaines ?"
+                  label="Comment tu veux progresser après ton analyse ?"
                   options={[
-                    'Je veux avancer seul avec des ressources',
-                    'Je suis curieux de voir comment un accompagnement pourrait m\'aider',
-                    'Je cherche un accompagnement pour avancer plus vite'
+                    'Je veux avancer seul avec les ressources',
+                    'Je veux un plan clair pour appliquer ce qui bloque',
+                    'Je veux être guidé pour corriger rapidement ce qui ne va pas'
                   ]}
                   value={howToAdvance}
                   onChange={setHowToAdvance}
