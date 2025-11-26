@@ -365,16 +365,16 @@ export default function ResultsPage() {
   ] : []
 
   // Fonction pour créer les critères d'une catégorie avec les nouveaux critères
-  const createCriteria = (category: string, count: number) => {
+  const createCriteria = (category: string, count: number, data: LinkedInData) => {
     const criteria = []
     const mappedSection = SECTION_MAPPING[category as keyof typeof SECTION_MAPPING] || category
     const sectionCriteria = LINKEDIN_CRITERIA[mappedSection as keyof typeof LINKEDIN_CRITERIA] || []
     
     for (let i = 1; i <= count; i++) {
-      const criteriaTitle = sectionCriteria[i - 1] || linkedinData[`${category}_critere_${i}_titre` as keyof LinkedInData] as string
-      const score = linkedinData[`${category}_critere_${i}_points_obtenus` as keyof LinkedInData] as number
-      const maxScore = linkedinData[`${category}_critere_${i}_points_maximum` as keyof LinkedInData] as number
-      const feedback = linkedinData[`${category}_critere_${i}_explication` as keyof LinkedInData] as string
+      const criteriaTitle = sectionCriteria[i - 1] || data[`${category}_critere_${i}_titre` as keyof LinkedInData] as string
+      const score = data[`${category}_critere_${i}_points_obtenus` as keyof LinkedInData] as number
+      const maxScore = data[`${category}_critere_${i}_points_maximum` as keyof LinkedInData] as number
+      const feedback = data[`${category}_critere_${i}_explication` as keyof LinkedInData] as string
       
       criteria.push({
         name: getCriteriaTitle(criteriaTitle),
@@ -390,10 +390,10 @@ export default function ResultsPage() {
   }
 
   // Préparer les critères détaillés pour chaque catégorie (seulement si linkedinData existe)
-  const bannerCriteria = linkedinData ? createCriteria('banner', linkedinData.banner_total_categories) : []
-  const photoCriteria = linkedinData ? createCriteria('photo', linkedinData.photo_total_categories) : []
-  const headlineCriteria = linkedinData ? createCriteria('headline', linkedinData.headline_total_categories) : []
-  const aboutCriteria = linkedinData ? createCriteria('about', linkedinData.about_total_categories) : []
+  const bannerCriteria = linkedinData ? createCriteria('banner', linkedinData.banner_total_categories, linkedinData) : []
+  const photoCriteria = linkedinData ? createCriteria('photo', linkedinData.photo_total_categories, linkedinData) : []
+  const headlineCriteria = linkedinData ? createCriteria('headline', linkedinData.headline_total_categories, linkedinData) : []
+  const aboutCriteria = linkedinData ? createCriteria('about', linkedinData.about_total_categories, linkedinData) : []
   
   // Créer les critères pour Espace Sélection (1 réel + 2 factices)
   // Total : 15 points (5+5+5)
@@ -434,8 +434,8 @@ export default function ResultsPage() {
     }
   ] : []
   
-  const contenuCriteria = linkedinData ? createCriteria('contenu', linkedinData.contenu_total_categories) : []
-  const experiencesCriteria = linkedinData ? createCriteria('experiences', linkedinData.experiences_total_categories) : []
+  const contenuCriteria = linkedinData ? createCriteria('contenu', linkedinData.contenu_total_categories, linkedinData) : []
+  const experiencesCriteria = linkedinData ? createCriteria('experiences', linkedinData.experiences_total_categories, linkedinData) : []
   
   // Créer les critères de crédibilité dans le bon ordre : Compétences → Recommandations → Services
   // IMPORTANT : Services est TOUJOURS flouté (indépendamment du score)
