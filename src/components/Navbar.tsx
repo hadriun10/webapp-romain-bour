@@ -134,17 +134,8 @@ export default function Navbar() {
                 className="text-sm font-medium whitespace-nowrap text-[#074482]"
                 style={{ fontFamily: 'var(--font-poppins)' }}
               >
-                +80 clients accompagnés
+                +500 profils analysés
               </span>
-            </Link>
-            <Link
-              href="https://www.linkedin.com/in/romainbour/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-1.5 bg-[#074482] text-white text-sm font-semibold hover:bg-[#053a6b] transition-colors rounded-lg border border-[#074482]"
-              style={{ fontFamily: 'var(--font-poppins)' }}
-            >
-              Me contacter
             </Link>
           </div>
         </div>

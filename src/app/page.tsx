@@ -4,7 +4,6 @@ import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import SectionScores from '@/components/SectionScores'
 import Footer from '@/components/Footer'
-import Navbar from '@/components/Navbar'
 import { useNotification } from '@/hooks/useNotification'
 import { captureEvent, identifyUser } from '@/lib/posthog'
 
@@ -160,9 +159,26 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Navbar */}
+      {/* Bandeau simple */}
       <div className="relative z-20 mb-8">
-        <Navbar />
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="bg-white border border-gray-300 rounded-lg py-3 px-8 shadow-md">
+            <div className="text-center">
+              <h2
+                className="text-3xl font-semibold text-[#191919] mb-1"
+                style={{ fontFamily: 'var(--font-poppins)' }}
+              >
+                Romain Bour
+              </h2>
+              <p
+                className="text-base text-[#374151]"
+                style={{ fontFamily: 'var(--font-poppins)' }}
+              >
+                J&apos;aide les indépendants à transformer leurs 3 likes en 10 clients
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Main Content - Layout 2 colonnes */}
