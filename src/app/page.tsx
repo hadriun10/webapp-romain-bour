@@ -159,28 +159,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Bandeau simple */}
-      <div className="relative z-20 mb-8">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="bg-white border border-gray-300 rounded-lg py-3 px-8 shadow-md">
-            <div className="text-center">
-              <h2
-                className="text-3xl font-semibold text-[#191919] mb-1"
-                style={{ fontFamily: 'var(--font-poppins)' }}
-              >
-                Romain Bour
-              </h2>
-              <p
-                className="text-base text-[#374151]"
-                style={{ fontFamily: 'var(--font-poppins)' }}
-              >
-                J&apos;aide les indépendants à transformer leurs 3 likes en 10 clients
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Main Content - Layout 2 colonnes */}
       <main className="max-w-7xl mx-auto px-6 py-12 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end">
@@ -206,7 +184,7 @@ export default function Home() {
                   color: '#074482'
                 }}
               >
-                Un outil conçu à partir de l&apos;analyse de plus de 200 profils LinkedIn
+                Un outil conçu à partir de l&apos;analyse de plus de 500 profils LinkedIn
               </motion.div>
 
               {/* Titre */}
