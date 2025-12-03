@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import SectionScores from '@/components/SectionScores'
-import Footer from '@/components/Footer'
 import { useNotification } from '@/hooks/useNotification'
 import { captureEvent, identifyUser } from '@/lib/posthog'
 
@@ -13,7 +12,6 @@ export default function Home() {
   const [isChecked, setIsChecked] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showTooltip, setShowTooltip] = useState(false)
-  const [profileLinkError, setProfileLinkError] = useState('')
   const { notifications, success, error, removeNotification } = useNotification()
 
   // Track page view
@@ -73,32 +71,13 @@ export default function Home() {
     }
   ]
 
-  const validateProfileLink = (value: string) => {
-    if (!value) {
-      return ''
-    }
-
-    if (!value.startsWith('https://www.linkedin.com/in')) {
-      return '⚠️ Le lien doit commencer par "https://www.linkedin.com/in".'
-    }
-
-    return ''
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     
-    const currentLinkError = validateProfileLink(profileLink)
-    if (currentLinkError) {
-      setProfileLinkError(currentLinkError)
-      setIsSubmitting(false)
-      return
-    }
-
     try {
       // Envoyer au webhook N8n
-      const response = await fetch('https://n8n.hadrien-grosbois.ovh/webhook/ad7525b9-8a18-47ea-8e89-74a26b00add9', {
+      const response = await fetch('https://n8n.hadrien-grosbois.ovh/webhook/linkedin-tool-us', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -130,7 +109,6 @@ export default function Home() {
         setProfileLink('')
         setEmail('')
         setIsChecked(false)
-        setProfileLinkError('')
         } else {
         throw new Error('Erreur lors de l\'envoi')
       }
@@ -184,7 +162,7 @@ export default function Home() {
                   color: '#074482'
                 }}
               >
-                Un outil conçu à partir de l&apos;analyse de plus de 500 profils LinkedIn
+                Un outil conçu à partir de l&apos;analyse de plus de 200 profils LinkedIn
               </motion.div>
 
               {/* Titre */}
@@ -252,22 +230,12 @@ export default function Home() {
                     type="url"
                     id="profileLink"
                     value={profileLink}
-                    onChange={(e) => {
-                      const value = e.target.value
-                      setProfileLink(value)
-                      setProfileLinkError(validateProfileLink(value))
-                    }}
+                    onChange={(e) => setProfileLink(e.target.value)}
                     required
-                    aria-invalid={profileLinkError ? 'true' : 'false'}
                     className="w-full px-4 py-3 border-2 border-[#074482]/30 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-[#074482] text-sm"
                     style={{ fontFamily: 'var(--font-poppins)' }}
                     placeholder="https://linkedin.com/in/ton-profil"
                   />
-                  {profileLinkError && (
-                    <p className="mt-2 text-sm text-red-600" style={{ fontFamily: 'var(--font-poppins)' }}>
-                      {profileLinkError}
-                    </p>
-                  )}
                 </div>
 
                 {/* Champ email */}
@@ -310,7 +278,7 @@ export default function Home() {
                 {/* Bouton */}
                   <button
                     type="submit"
-                  disabled={!profileLink || !email || !isChecked || isSubmitting || !!profileLinkError}
+                  disabled={!profileLink || !email || !isChecked || isSubmitting}
                   className="w-full bg-[#074482] text-white px-6 py-3.5 rounded-full font-semibold hover:bg-[#053a6b] disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
                     style={{
                       fontFamily: 'var(--font-poppins)',
@@ -379,7 +347,6 @@ export default function Home() {
 
         </div>
       </main>
-      <Footer />
     </div>
   )
 }
