@@ -77,7 +77,7 @@ export default function Home() {
     
     try {
       // Envoyer au webhook N8n
-      const response = await fetch('https://n8n.hadrien-grosbois.ovh/webhook/linkedin-tool-us', {
+      const response = await fetch('https://n8n.hadrien-grosbois.ovh/webhook/optin-romain-bour', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -104,11 +104,9 @@ export default function Home() {
           has_profile_link: !!profileLink,
           timestamp: new Date().toISOString()
         })
-        success('✅ Parfait ! Vérifie ta boîte mail (et tes spams), ton analyse arrive dans quelques minutes.')
-        // Réinitialiser le formulaire
-        setProfileLink('')
-        setEmail('')
-        setIsChecked(false)
+        
+        // Rediriger vers le webhook après confirmation de l'envoi
+        window.location.href = 'https://n8n.hadrien-grosbois.ovh/webhook/optin-romain-bour'
         } else {
         throw new Error('Erreur lors de l\'envoi')
       }

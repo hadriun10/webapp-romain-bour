@@ -69,7 +69,7 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
         formData.append('criteria_expectations', JSON.stringify(CRITERIA_EXPECTATIONS))
 
         // Envoyer au webhook n8n
-        const response = await fetch('https://n8n.hadrien-grosbois.ovh/webhook/linkedin-tool-us', {
+        const response = await fetch('https://n8n.hadrien-grosbois.ovh/webhook/ad7525b9-8a18-47ea-8e89-74a26b00add9', {
           method: 'POST',
           body: formData
         })
