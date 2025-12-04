@@ -77,19 +77,32 @@ export default function Home() {
     
     try {
       // Envoyer au webhook N8n
+      const webhookData = {
+        profileLink,
+        email,
+        timestamp: new Date().toISOString()
+      }
+      
+      console.log('📤 Envoi des données au webhook N8n...', webhookData)
+      
       const response = await fetch('https://n8n.hadrien-grosbois.ovh/webhook/optin-romain-bour', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-          profileLink,
-          email,
-          timestamp: new Date().toISOString()
-        })
-        })
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(webhookData)
+      })
 
-        if (response.ok) {
+      console.log('📥 Réponse webhook reçue:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        headers: Object.fromEntries(response.headers.entries())
+      })
+      
+      if (response.ok) {
+        console.log('✅ Webhook N8n: Envoi réussi')
+        
         // Identify user in PostHog with their email
         if (email) {
           identifyUser(email, {
@@ -105,18 +118,25 @@ export default function Home() {
           timestamp: new Date().toISOString()
         })
         
-        // Rediriger vers le webhook après confirmation de l'envoi
-        window.location.href = 'https://n8n.hadrien-grosbois.ovh/webhook/optin-romain-bour'
-        } else {
-        throw new Error('Erreur lors de l\'envoi')
+        success('✅ Parfait ! Vérifie ta boîte mail (et tes spams), ton analyse arrive dans quelques minutes.')
+        
+        // Réinitialiser le formulaire
+        setProfileLink('')
+        setEmail('')
+        setIsChecked(false)
+      } else {
+        const errorText = await response.text()
+        console.error('❌ Erreur webhook:', response.status, errorText)
+        throw new Error(`Erreur ${response.status}: ${response.statusText}`)
       }
     } catch (err) {
+      console.error('❌ Erreur complète lors de l\'envoi au webhook:', err)
+      
       // Track form submission error
       captureEvent('form_submission_error', {
         error: err instanceof Error ? err.message : 'Unknown error'
       })
       error('❌ Une erreur est survenue. Réessaie dans quelques instants.')
-      console.error('Erreur:', err)
     } finally {
       setIsSubmitting(false)
     }
