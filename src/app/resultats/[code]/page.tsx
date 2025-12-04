@@ -10,6 +10,7 @@ import GlobalScore from '@/components/GlobalScore'
 import SectionScores from '@/components/SectionScores'
 import DetailSection from '@/components/DetailSection'
 import Footer from '@/components/Footer'
+import ContactModal from '@/components/ContactModal'
 import { captureEvent, identifyUser } from '@/lib/posthog'
 
 export default function ResultsPage() {
@@ -39,6 +40,9 @@ export default function ResultsPage() {
   const [animationPhase, setAnimationPhase] = useState(0)
   const [showSpacer, setShowSpacer] = useState(true)
   const [startTime] = useState(() => Date.now())
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isContentUnlocked, setIsContentUnlocked] = useState(false)
 
   // Track page view
   useEffect(() => {
@@ -209,7 +213,7 @@ export default function ResultsPage() {
     // Récupérer l'email depuis Supabase (stocké dans linkedinData)
     const userEmail = linkedinData?.email || null
     
-    console.log('🔵 CTA cliqué:', { ctaName, userEmail, code, linkedinData: !!linkedinData })
+    console.log('🔵 CTA cliqué:', { ctaName, userEmail, code, url, linkedinData: !!linkedinData })
     
     // Track dans PostHog
     captureEvent('cta_clicked', {
@@ -218,6 +222,13 @@ export default function ResultsPage() {
       code: code,
       email: userEmail
     })
+
+    // Si c'est le bouton de déblocage, ouvrir le modal
+    if (ctaName === '🔒 Clique ici pour débloquer cette section') {
+      e.preventDefault()
+      setIsModalOpen(true)
+      return
+    }
 
     // Envoyer au webhook N8n pour tous les CTAs bootcamp
     // N8n pourra récupérer l'email via le code depuis sa base de données
@@ -242,6 +253,81 @@ export default function ResultsPage() {
       }).catch(error => {
         console.error('Erreur webhook:', error)
       })
+    }
+    
+    // Pour les autres CTAs, rediriger vers l'URL
+    if (url && ctaName !== '🔒 Clique ici pour débloquer cette section') {
+      // Petit délai pour permettre l'envoi du webhook
+      setTimeout(() => {
+        window.open(url, '_blank', 'noopener,noreferrer')
+      }, 100)
+    }
+  }
+
+  // Handler pour la soumission du modal
+  const handleModalSubmit = async (data: {
+    objective: string
+    currentSituation: string
+    howToAdvance: string
+    blockingPoint?: string
+  }) => {
+    setIsSubmitting(true)
+    
+    try {
+      const userEmail = linkedinData?.email || null
+      
+      // Envoyer les données du questionnaire au webhook click-cta
+      const webhookData = {
+        email: userEmail || null,
+        cta_name: '🔒 Clique ici pour débloquer cette section',
+        cta_url: 'https://calendly.com/romain-visibility/callmemaybe',
+        code: code,
+        objective: data.objective,
+        current_situation: data.currentSituation,
+        how_to_advance: data.howToAdvance,
+        blocking_point: data.blockingPoint || null,
+        timestamp: new Date().toISOString()
+      }
+      
+      console.log('📤 Envoi du questionnaire au webhook click-cta...', webhookData)
+      
+      const response = await fetch('https://n8n.hadrien-grosbois.ovh/webhook/click-cta', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(webhookData),
+        keepalive: true
+      })
+      
+      console.log('📥 Réponse webhook click-cta:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok
+      })
+      
+      if (response.ok) {
+        console.log('✅ Questionnaire envoyé avec succès')
+        
+        // Débloquer le contenu
+        setIsContentUnlocked(true)
+        setIsModalOpen(false)
+        
+        // Track dans PostHog
+        captureEvent('questionnaire_submitted', {
+          code: code,
+          email: userEmail
+        })
+      } else {
+        const errorText = await response.text()
+        console.error('❌ Erreur webhook click-cta:', response.status, errorText)
+        throw new Error(`Erreur ${response.status}: ${response.statusText}`)
+      }
+    } catch (error) {
+      console.error('❌ Erreur complète lors de la soumission du questionnaire:', error)
+      alert(`Erreur lors de l'envoi: ${error instanceof Error ? error.message : 'Erreur inconnue'}. Réessaie.`)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -596,6 +682,7 @@ export default function ResultsPage() {
               image={linkedinData.photo_url}
               imageAspectRatio="1 / 1"
               onCTAClick={handleCTAClick}
+              unlockContent={isContentUnlocked}
             />
 
             <DetailSection
@@ -608,6 +695,7 @@ export default function ResultsPage() {
               image={linkedinData.cover_url}
               imageAspectRatio="1584 / 396"
               onCTAClick={handleCTAClick}
+              unlockContent={isContentUnlocked}
             />
             
             <DetailSection
@@ -618,6 +706,7 @@ export default function ResultsPage() {
               delay={0.9}
               blurLastN={2}
               onCTAClick={handleCTAClick}
+              unlockContent={isContentUnlocked}
             />
             
             <DetailSection
@@ -628,6 +717,7 @@ export default function ResultsPage() {
               delay={1.05}
               blurLastN={2}
               onCTAClick={handleCTAClick}
+              unlockContent={isContentUnlocked}
             />
             
             <DetailSection
@@ -638,6 +728,7 @@ export default function ResultsPage() {
               delay={1.2}
               disableSort={true}
               onCTAClick={handleCTAClick}
+              unlockContent={isContentUnlocked}
             />
             
             <div className="mt-10">
@@ -683,6 +774,7 @@ export default function ResultsPage() {
               delay={1.35}
               blurLastN={1}
               onCTAClick={handleCTAClick}
+              unlockContent={isContentUnlocked}
             />
             
             <DetailSection
@@ -693,6 +785,7 @@ export default function ResultsPage() {
               delay={1.5}
               blurLastN={2}
               onCTAClick={handleCTAClick}
+              unlockContent={isContentUnlocked}
             />
             
             <DetailSection
@@ -703,6 +796,7 @@ export default function ResultsPage() {
               delay={1.65}
               disableSort={true}
               onCTAClick={handleCTAClick}
+              unlockContent={isContentUnlocked}
             />
             
             <div className="mt-10">
@@ -737,6 +831,14 @@ export default function ResultsPage() {
         )}
       </main>
       <Footer />
+      
+      {/* Modal de questionnaire de qualification */}
+      <ContactModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleModalSubmit}
+        isSubmitting={isSubmitting}
+      />
     </div>
   )
 }
