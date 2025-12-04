@@ -205,7 +205,7 @@ export default function ResultsPage() {
 
   // Handler pour les clics sur les CTAs
   // L'email est récupéré depuis Supabase via linkedinData.email
-  const handleCTAClick = (e: React.MouseEvent<HTMLAnchorElement>, ctaName: string, url: string) => {
+  const handleCTAClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>, ctaName: string, url: string) => {
     // Récupérer l'email depuis Supabase (stocké dans linkedinData)
     const userEmail = linkedinData?.email || null
     
