@@ -13,6 +13,7 @@ interface GlobalScoreProps {
 export default function GlobalScore({ score, maxScore, onComplete }: GlobalScoreProps) {
   const [animationComplete, setAnimationComplete] = useState(false)
   const [shouldStartCounter, setShouldStartCounter] = useState(false)
+  const [shouldMoveScore, setShouldMoveScore] = useState(false)
 
   // Assurer que les valeurs sont bien numériques
   const safeScore = score || 0
@@ -20,6 +21,17 @@ export default function GlobalScore({ score, maxScore, onComplete }: GlobalScore
 
   // Animation de la barre avec vitesse constante
   const progress = safeMaxScore > 0 ? (safeScore / safeMaxScore) * 100 : 0
+  
+  // Déterminer le texte selon le score
+  const getStandardText = () => {
+    if (progress < 75) {
+      return 'très en dessous du standard'
+    } else if (progress < 95) {
+      return 'en dessous du standard'
+    } else {
+      return 'au standard'
+    }
+  }
   const motionValue = useMotionValue(0)
   
   const width = useTransform(motionValue, (latest) => `${latest}%`)
@@ -70,6 +82,10 @@ export default function GlobalScore({ score, maxScore, onComplete }: GlobalScore
 
   const handleComplete = () => {
     setAnimationComplete(true)
+    // Démarrer l'animation de déplacement du score après un court délai
+    setTimeout(() => {
+      setShouldMoveScore(true)
+    }, 200)
   }
 
   useEffect(() => {
@@ -125,28 +141,110 @@ export default function GlobalScore({ score, maxScore, onComplete }: GlobalScore
           </div>
           
           {/* Case isolée pour le score */}
-          <div className="flex justify-center">
-            <motion.div
-              className="bg-[#074482] text-white border-2 border-[#074482] rounded-2xl px-6 sm:px-8 py-3 sm:py-4 shadow-lg"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: 0.2 }}
-              style={{
-                fontFamily: 'var(--font-poppins)'
-              }}
-            >
-              <div className="text-center">
-                <div className="text-3xl sm:text-4xl font-bold text-white">
-                  <AnimatedCounter 
-                    value={safeScore} 
-                    duration={6000}
-                    shouldStart={shouldStartCounter}
-                    onComplete={handleCounterComplete}
-                  />
-                  <span className="text-xl sm:text-2xl text-white/70">/{safeMaxScore}</span>
+          <div className="relative w-full" style={{ minHeight: '80px' }}>
+            {/* Desktop: texte à gauche */}
+            {shouldMoveScore && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ 
+                  opacity: 1,
+                  x: 0
+                }}
+                transition={{ 
+                  opacity: { duration: 0.4, delay: 0.4 },
+                  x: { duration: 0.4, delay: 0.4 }
+                }}
+                className="hidden sm:block absolute left-0 top-0 pr-4"
+                style={{
+                  fontFamily: 'var(--font-poppins)',
+                  fontSize: '14px',
+                  lineHeight: '1.6',
+                  color: '#191919',
+                  maxWidth: 'calc(100% - 200px)'
+                }}
+              >
+                <p>
+                  Ton profil est <span style={{ color: '#F04438', fontWeight: 700 }}>{getStandardText()}</span>. La majorité des professionnels que j&apos;accompagne dépassent <span style={{ color: '#10B981', fontWeight: 700 }}>95/100</span>.
+                </p>
+                <p className="mt-1">
+                  👉 Tu perds aujourd&apos;hui en <span style={{ textDecoration: 'underline' }}>visibilité</span>, en <span style={{ textDecoration: 'underline' }}>crédibilité</span> et en <span style={{ textDecoration: 'underline' }}>opportunités</span>.
+                </p>
+                <p className="mt-1">
+                  Il est <span style={{ color: '#F04438', fontWeight: 700 }}>urgent</span> de corriger ton profil pour débloquer davantage de leads et renforcer ton réseau.
+                </p>
+              </motion.div>
+            )}
+            
+            {/* Mobile: score centré + texte en dessous */}
+            <div className="flex flex-col items-center">
+              {/* Bloc de score - toujours centré sur mobile, se déplace à droite sur desktop */}
+              <motion.div
+                className={`bg-[#074482] text-white border-2 border-[#074482] rounded-2xl px-6 sm:px-8 py-3 sm:py-4 shadow-lg relative ${
+                  shouldMoveScore ? 'sm:absolute sm:right-0' : ''
+                }`}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ 
+                  opacity: 1, 
+                  scale: 1
+                }}
+                transition={{ 
+                  opacity: { duration: 0.3, delay: 0.2 },
+                  scale: { duration: 0.3, delay: 0.2 }
+                }}
+                style={{
+                  fontFamily: 'var(--font-poppins)',
+                  display: 'inline-block',
+                  whiteSpace: 'nowrap',
+                  // Transition seulement sur desktop
+                  transition: shouldMoveScore ? 'right 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), margin-right 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'none',
+                  transitionDelay: shouldMoveScore ? '0.2s' : '0s'
+                }}
+              >
+                <div className="text-center">
+                  <div className="text-3xl sm:text-4xl font-bold text-white">
+                    <AnimatedCounter 
+                      value={safeScore} 
+                      duration={6000}
+                      shouldStart={shouldStartCounter}
+                      onComplete={handleCounterComplete}
+                    />
+                    <span className="text-xl sm:text-2xl text-white/70">/{safeMaxScore}</span>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+              
+              {/* Mobile: texte en dessous du score */}
+              {shouldMoveScore && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ 
+                    opacity: 1,
+                    y: 0
+                  }}
+                  transition={{ 
+                    opacity: { duration: 0.4, delay: 0.4 },
+                    y: { duration: 0.4, delay: 0.4 }
+                  }}
+                  className="block sm:hidden mt-4 text-center w-full px-4"
+                  style={{
+                    fontFamily: 'var(--font-poppins)',
+                    fontSize: '14px',
+                    lineHeight: '1.6',
+                    color: '#191919'
+                  }}
+                >
+                  <p>
+                    Ton profil est <span style={{ color: '#F04438', fontWeight: 700 }}>{getStandardText()}</span>. La majorité des professionnels que j&apos;accompagne dépassent <span style={{ color: '#10B981', fontWeight: 700 }}>95/100</span>.
+                  </p>
+                  <p className="mt-1">
+                    👉 Tu perds aujourd&apos;hui en <span style={{ textDecoration: 'underline' }}>visibilité</span>, en <span style={{ textDecoration: 'underline' }}>crédibilité</span> et en <span style={{ textDecoration: 'underline' }}>opportunités</span>.
+                  </p>
+                  <p className="mt-1">
+                    Il est <span style={{ color: '#F04438', fontWeight: 700 }}>urgent</span> de corriger ton profil pour débloquer davantage de leads et renforcer ton réseau.
+                  </p>
+                </motion.div>
+              )}
+            </div>
           </div>
         </div>
       </motion.div>
