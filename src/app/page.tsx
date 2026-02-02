@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import SectionScores from '@/components/SectionScores'
 import VideoModal from '@/components/VideoModal'
+import LinkedInSearch from '@/components/LinkedInSearch'
 import { captureEvent, identifyUser } from '@/lib/posthog'
 
 export default function Home() {
@@ -11,7 +12,6 @@ export default function Home() {
   const [email, setEmail] = useState('')
   const [isChecked, setIsChecked] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [showTooltip, setShowTooltip] = useState(false)
   const [showVideoModal, setShowVideoModal] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -217,47 +217,11 @@ export default function Home() {
               className="bg-white rounded-2xl shadow-lg p-6 border-2 border-[#074482]/30"
             >
                 <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Champ lien LinkedIn */}
-                <div>
-                  <label htmlFor="profileLink" className="block mb-2" style={{
-                    fontFamily: 'var(--font-poppins)',
-                    fontSize: '14px',
-                    fontWeight: 500,
-                    color: '#374151'
-                  }}>
-                    Lien de ton profil LinkedIn
-                    <span className="lg:hidden relative inline-block ml-1">
-                      <span 
-                        className="text-[#074482] cursor-pointer"
-                        onClick={() => setShowTooltip(!showTooltip)}
-                      >
-                        (Où le trouver)
-                      </span>
-                      {showTooltip && (
-                        <span className="absolute left-0 bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-lg z-50" style={{ fontFamily: 'var(--font-poppins)' }}>
-                          <ul className="list-none space-y-1">
-                            <li>– Ouvre l&apos;application LinkedIn</li>
-                            <li>– Va sur ton profil</li>
-                            <li>– Appuie sur les trois petits points</li>
-                            <li>– Appuie sur partager via</li>
-                            <li>– Appuie sur &quot;copier le lien&quot;</li>
-                          </ul>
-                          <div className="absolute top-full left-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
-                        </span>
-                      )}
-                    </span>
-                  </label>
-                  <input
-                    type="url"
-                    id="profileLink"
-                    value={profileLink}
-                    onChange={(e) => setProfileLink(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 border-2 border-[#074482]/30 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-[#074482] text-sm"
-                    style={{ fontFamily: 'var(--font-poppins)' }}
-                    placeholder="https://linkedin.com/in/ton-profil"
-                  />
-                </div>
+                {/* Recherche profil LinkedIn */}
+                <LinkedInSearch
+                  onProfileSelect={setProfileLink}
+                  value={profileLink}
+                />
 
                 {/* Champ email */}
                   <div>
