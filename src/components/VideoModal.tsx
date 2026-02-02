@@ -56,7 +56,7 @@ export default function VideoModal({
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             className="fixed inset-0 z-[101] flex items-center justify-center p-4"
           >
-            <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full overflow-hidden relative">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden relative">
               {/* Bouton fermer */}
               <button
                 onClick={onClose}
@@ -66,14 +66,13 @@ export default function VideoModal({
               </button>
 
               {/* Lecteur vidéo */}
-              <div className="relative w-full bg-black">
+              <div className="relative w-full flex justify-center bg-black">
                 <video
                   ref={videoRef}
                   src={videoSrc}
                   controls
                   playsInline
-                  className="w-full h-auto max-h-[70vh] object-contain"
-                  style={{ aspectRatio: '16/9' }}
+                  className="h-auto max-h-[60vh] w-auto max-w-full object-contain"
                 >
                   Ton navigateur ne supporte pas la lecture vidéo.
                 </video>
