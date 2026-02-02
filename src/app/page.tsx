@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import SectionScores from '@/components/SectionScores'
-import { useNotification } from '@/hooks/useNotification'
+import VideoModal from '@/components/VideoModal'
 import { captureEvent, identifyUser } from '@/lib/posthog'
 
 export default function Home() {
@@ -12,7 +12,8 @@ export default function Home() {
   const [isChecked, setIsChecked] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showTooltip, setShowTooltip] = useState(false)
-  const { notifications, success, error, removeNotification } = useNotification()
+  const [showVideoModal, setShowVideoModal] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   // Track page view
   useEffect(() => {
@@ -118,7 +119,9 @@ export default function Home() {
           timestamp: new Date().toISOString()
         })
         
-        success('✅ Parfait ! Vérifie ta boîte mail (et tes spams), ton analyse arrive dans quelques minutes.')
+        // Ouvrir la modal vidéo au lieu de la notification
+        setShowVideoModal(true)
+        setErrorMessage(null)
         
         // Réinitialiser le formulaire
         setProfileLink('')
@@ -136,7 +139,7 @@ export default function Home() {
       captureEvent('form_submission_error', {
         error: err instanceof Error ? err.message : 'Unknown error'
       })
-      error('❌ Une erreur est survenue. Réessaie dans quelques instants.')
+      setErrorMessage('❌ Une erreur est survenue. Réessaie dans quelques instants.')
     } finally {
       setIsSubmitting(false)
     }
@@ -315,37 +318,28 @@ export default function Home() {
               </form>
             </motion.div>
 
-            {/* Notifications en dessous du formulaire */}
-            <div className="space-y-2">
-              {notifications.map((notification) => (
-                <motion.div
-                  key={notification.id}
-                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
-                  className={`px-6 py-4 rounded-xl shadow-lg ${
-                    notification.type === 'success'
-                      ? 'bg-blue-500 text-white'
-                      : notification.type === 'error'
-                      ? 'bg-red-500 text-white'
-                      : 'bg-gray-800 text-white'
-                  }`}
-                  style={{ fontFamily: 'var(--font-poppins)' }}
-                >
-                  <div className="flex items-center justify-between gap-4">
-                    <p className="text-sm font-medium">{notification.message}</p>
-                    <button
-                      onClick={() => removeNotification(notification.id)}
-                      className="text-white hover:text-gray-200 transition-colors"
-                    >
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </button>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+            {/* Message d'erreur */}
+            {errorMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
+                className="mt-4 px-6 py-4 rounded-xl shadow-lg bg-red-500 text-white"
+                style={{ fontFamily: 'var(--font-poppins)' }}
+              >
+                <div className="flex items-center justify-between gap-4">
+                  <p className="text-sm font-medium">{errorMessage}</p>
+                  <button
+                    onClick={() => setErrorMessage(null)}
+                    className="text-white hover:text-gray-200 transition-colors"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+              </motion.div>
+            )}
           </div>
 
           {/* COLONNE DROITE - Preview des scores */}
@@ -365,6 +359,14 @@ export default function Home() {
 
         </div>
       </main>
+
+      {/* Modal vidéo de confirmation */}
+      <VideoModal
+        isOpen={showVideoModal}
+        onClose={() => setShowVideoModal(false)}
+        videoSrc="/Romain Bour.mp4"
+        autoPlay={true}
+      />
     </div>
   )
 }
