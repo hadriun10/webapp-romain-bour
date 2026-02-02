@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const APIFY_TOKEN = process.env.APIFY_API_TOKEN
+const APIFY_TOKEN = process.env.APIFY_TOKEN
 
 interface LinkedInProfile {
   id: string
