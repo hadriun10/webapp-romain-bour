@@ -26,7 +26,7 @@ export default function GlobalScore({ score, maxScore, onComplete }: GlobalScore
   const getStandardText = () => {
     if (progress < 75) {
       return 'très en dessous du standard'
-    } else if (progress < 95) {
+    } else if (progress < 81) {
       return 'en dessous du standard'
     } else {
       return 'au standard'
@@ -164,7 +164,7 @@ export default function GlobalScore({ score, maxScore, onComplete }: GlobalScore
                 }}
               >
                 <p>
-                  Ton profil est <span style={{ color: '#F04438', fontWeight: 700 }}>{getStandardText()}</span>. La majorité des professionnels que j&apos;accompagne dépassent <span style={{ color: '#10B981', fontWeight: 700 }}>95/100</span>.
+                  Ton profil est <span style={{ color: '#F04438', fontWeight: 700 }}>{getStandardText()}</span>. La majorité des professionnels que j&apos;accompagne dépassent <span style={{ color: '#10B981', fontWeight: 700 }}>81/100</span>.
                 </p>
                 <p className="mt-1">
                   👉 Tu perds aujourd&apos;hui en <span style={{ textDecoration: 'underline' }}>visibilité</span>, en <span style={{ textDecoration: 'underline' }}>crédibilité</span> et en <span style={{ textDecoration: 'underline' }}>opportunités</span>.
@@ -234,7 +234,7 @@ export default function GlobalScore({ score, maxScore, onComplete }: GlobalScore
                   }}
                 >
                   <p>
-                    Ton profil est <span style={{ color: '#F04438', fontWeight: 700 }}>{getStandardText()}</span>. La majorité des professionnels que j&apos;accompagne dépassent <span style={{ color: '#10B981', fontWeight: 700 }}>95/100</span>.
+                    Ton profil est <span style={{ color: '#F04438', fontWeight: 700 }}>{getStandardText()}</span>. La majorité des professionnels que j&apos;accompagne dépassent <span style={{ color: '#10B981', fontWeight: 700 }}>81/100</span>.
                   </p>
                   <p className="mt-1">
                     👉 Tu perds aujourd&apos;hui en <span style={{ textDecoration: 'underline' }}>visibilité</span>, en <span style={{ textDecoration: 'underline' }}>crédibilité</span> et en <span style={{ textDecoration: 'underline' }}>opportunités</span>.
