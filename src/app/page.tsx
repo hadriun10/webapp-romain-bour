@@ -183,7 +183,7 @@ export default function Home() {
                   color: '#074482'
                 }}
               >
-                Un outil conçu à partir de l&apos;analyse de plus de 200 profils LinkedIn
+                Un outil conçu à partir de l&apos;analyse de plus de 700 profils LinkedIn
               </motion.div>
 
               {/* Titre */}
