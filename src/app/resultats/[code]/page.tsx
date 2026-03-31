@@ -44,6 +44,16 @@ export default function ResultsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isContentUnlocked, setIsContentUnlocked] = useState(false)
 
+  // Auto-unlock content when ?admin is present
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      if (urlParams.has('admin')) {
+        setIsContentUnlocked(true)
+      }
+    }
+  }, [])
+
   // Track page view
   useEffect(() => {
     captureEvent('results_page_viewed', { code: code })

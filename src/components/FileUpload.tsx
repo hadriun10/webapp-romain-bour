@@ -175,7 +175,7 @@ export default function FileUpload({ onProfileLinkSubmit, onEmailSubmit, isUploa
               <button
                 type="submit"
                 disabled={!email || !profileLink || !acceptInfo || isUploading}
-                className="w-full bg-[#074482] text-white py-3 px-6 rounded-full font-semibold hover:bg-[#053a6b] disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="w-full bg-[#1378d1] text-white py-3 px-6 rounded-full font-semibold hover:bg-[#0f6bb8] disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl"
                 style={{
                   fontFamily: 'var(--font-poppins)',
                   fontSize: '16px',
